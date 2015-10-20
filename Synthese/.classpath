@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path="src"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="lib" path="C:/Users/Latsuj/workspace/PFE/Synthese/lib/jdom.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Latsuj/workspace/PFE/Synthese/lib/swt_64bits_3.655.jar"/>
+	<classpathentry kind="output" path="bin"/>
+</classpath>
