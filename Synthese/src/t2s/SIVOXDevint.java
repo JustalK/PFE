@@ -283,7 +283,6 @@ public class SIVOXDevint {
 	}
 	
 	public static void clean() throws IOException {
-		jk.
 		for(int i=0;i<listFilename.size();i++) {
 			Path tmp = Paths.get(listFilename.get(i)+".pho");
 			Files.delete(tmp);
@@ -291,7 +290,7 @@ public class SIVOXDevint {
 			try {
 				Files.delete(tmp);
 			} catch(FileSystemException e) {
-				
+				e.printStackTrace();
 			}
 		}
 	}
