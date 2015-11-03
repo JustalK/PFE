@@ -5,6 +5,7 @@ import java.awt.event.KeyListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.File;
+import java.io.IOException;
 
 import javax.swing.JFrame;
 import javax.swing.WindowConstants;
@@ -72,27 +73,16 @@ public abstract class DevintFrameListener extends JFrame implements KeyListener 
         addWindowListener(new WindowAdapter() {
             public void windowClosing(WindowEvent e) {
     		  final File folder = new File(System.getProperty("java.io.tmpdir"));
-    		  listFilesForFolder(folder);
+    		  try {
+				voix.clean();
+			} catch (IOException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
               System.exit(0);
             }
           });
  	}
-	
-	/**
-	 * Permet de parcourir la liste des fichier d'un repertoire
-	 * @param folder
-	 */
-	public void listFilesForFolder(final File folder) {
-	    for (final File fileEntry : folder.listFiles()) {
-	        if (fileEntry.isDirectory()) {
-	            listFilesForFolder(fileEntry);
-	        } else {
-	            if("pho".equals(fileEntry.getName().substring(fileEntry.getName().lastIndexOf(".")+1))) {
-	            	fileEntry.delete();
-	            }
-	        }
-	    }
-	}
 	
     /** gestion des touches
      * ESC fait sortir de la fenêtre courante

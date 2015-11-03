@@ -705,7 +705,8 @@ public class SIVOXProsodieTabItem extends CTabItem {
 			tableProsodie.removeAll();
 			String ligne;
 			Analyser an = new Analyser(text, i.getNumeroProsodie());
-			Vector<Phoneme> listePhonemes = an.analyserGroupes();
+			String filename = ConfigFile.rechercher("REPERTOIRE_PHO_WAV") + ConfigFile.rechercher("FICHIER_PHO_WAV") + an.getTexte().hashCode() + ".pho";
+			Vector<Phoneme> listePhonemes = an.analyserGroupes(filename);
 			for(Iterator<Phoneme> it = listePhonemes.iterator() ; it.hasNext() ; )
 			{
 				TableItem itemLigne = new TableItem(tableProsodie, SWT.NONE);

@@ -17,7 +17,13 @@ package t2s;
 
 import java.io.File;
 import java.io.FileWriter;
+import java.io.IOException;
+import java.nio.file.FileSystemException;
 import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Vector;
 
 import t2s.newProsodies.Analyser;
@@ -33,13 +39,13 @@ import t2s.util.ConfigFile;
  * @author Ecole Polytechnique Universitaire Nice Sophia Antipolis
  */
 public class SIVOXDevint {
-	private JukeBox	           jk;	     // pour jouer les wav
+	private static JukeBox	           jk;	     // pour jouer les wav
 	private LecteurTexte	   lt;	     // pour choisir une voix
 	private SynthetiseurMbrola	s;
 	private Analyser	       an;
 	private boolean	           on;	     // true/false pour valider/invalider la synthèse SIVOX
 	private int	               prosodie; // code la prosodie utilisée, de 1 à 3 (3 par défaut)
-	
+	private static List<String>	listFilename;
 	/**
 	 * Constructeur par défaut : voix de Thierry
 	 * prosodie = 3, la plus performante
@@ -50,11 +56,7 @@ public class SIVOXDevint {
 		this.on = true;
 		lt.setVoix(1);
 		this.prosodie = 3;
-	}
-	
-	public void clean() {
-		final File folder = new File(System.getProperty("java.io.tmpdir"));
-		listFilesForFolder(folder);
+		this.listFilename = new ArrayList<String>();
 	}
 	
 	public void listFilesForFolder(final File folder) {
@@ -126,8 +128,10 @@ public class SIVOXDevint {
 			return;
 		}
 		an = new Analyser(text, this.prosodie);
+		String filename = ConfigFile.rechercher("REPERTOIRE_PHO_WAV") + ConfigFile.rechercher("FICHIER_PHO_WAV") + an.getTexte().hashCode();
+		this.listFilename.add(filename);
 		@SuppressWarnings("unused")
-		final Vector<Phoneme> listePhonemes = an.analyserGroupes();
+		final Vector<Phoneme> listePhonemes = an.analyserGroupes(filename+".pho");
 		s = new SynthetiseurMbrola(jk, lt.getVoix(), ConfigFile.rechercher("REPERTOIRE_PHO_WAV"), ConfigFile.rechercher("FICHIER_PHO_WAV")+ text.hashCode());
 		s.play(wait);
 	}
@@ -238,7 +242,10 @@ public class SIVOXDevint {
 	public void muet(final String text, final String out) {
 		// if ( !on ) return;
 		an = new Analyser(text, this.prosodie);
-		final Vector<Phoneme> listePhonemes = an.analyserGroupes();
+		String filename = ConfigFile.rechercher("REPERTOIRE_PHO_WAV") + ConfigFile.rechercher("FICHIER_PHO_WAV") + an.getTexte().hashCode();
+		this.listFilename.add(filename);
+		@SuppressWarnings("unused")
+		final Vector<Phoneme> listePhonemes = an.analyserGroupes(filename+".pho");
 		final String chainePho = an.afficher(listePhonemes);
 		try {
 			final FileWriter fw = new FileWriter(out + ".pho");
@@ -262,8 +269,10 @@ public class SIVOXDevint {
 			return;
 		}
 		an = new Analyser(text, this.prosodie);
+		String filename = ConfigFile.rechercher("REPERTOIRE_PHO_WAV") + ConfigFile.rechercher("FICHIER_PHO_WAV") + an.getTexte().hashCode();
+		this.listFilename.add(filename);
 		@SuppressWarnings("unused")
-		final Vector<Phoneme> listePhonemes = an.analyserGroupes();
+		final Vector<Phoneme> listePhonemes = an.analyserGroupes(filename+ ".pho");
 		s = new SynthetiseurMbrola(jk, lt.getVoix(), ConfigFile.rechercher("REPERTOIRE_PHO_WAV"), ConfigFile.rechercher("FICHIER_PHO_WAV") + text.hashCode());
 		// System.out.println("RAPIDITE: "+ConfigFile.rechercher("RAPIDITE"));
 		if (flagloop) {
@@ -273,4 +282,17 @@ public class SIVOXDevint {
 		}
 	}
 	
+	public static void clean() throws IOException {
+		jk.
+		for(int i=0;i<listFilename.size();i++) {
+			Path tmp = Paths.get(listFilename.get(i)+".pho");
+			Files.delete(tmp);
+			tmp = Paths.get(listFilename.get(i)+".wav");
+			try {
+				Files.delete(tmp);
+			} catch(FileSystemException e) {
+				
+			}
+		}
+	}
 }

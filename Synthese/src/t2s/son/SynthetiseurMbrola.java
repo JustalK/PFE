@@ -30,6 +30,9 @@
 
 package t2s.son;
 
+import java.io.IOException;
+
+import t2s.SIVOXDevint;
 import t2s.util.ConfigFile;
 
 /** pour de synthetiser un fichier sonore a partir d'un fichier de phonemes */
@@ -150,12 +153,39 @@ public class SynthetiseurMbrola {
 			FR = ConfigFile.rechercher("FR7");
 		}
 		// chaine de caractere contenant la commande mbrola
+		//TODO Changer cela pour que le mbrola suiva la config, actuellement il faut l'installer a cote de java
+		this.exe = "C:/Users/Latsuj/Desktop/donneesMbrola/Mbrola/WindowsMbrolaExe/mbrola.exe";
+		voix = "C:/Users/Latsuj/Desktop/donneesMbrola/Mbrola/fr2/fr2";
 		final String cmd = this.exe + " -t " + RAPIDITE + " " + " -f " + FR + " " + " -v " + VOLUME + " " + voix + " " + this.pathFichier + this.fichier + ".pho " + this.pathFichier + this.fichier
 		        + ".wav";
-		// System.out.println(cmd);
+		
+
+		try {
+			Process proc = Runtime.getRuntime().exec(cmd);
+			proc.waitFor();
+			System.out.println("Test en cours HAHA");
+		} catch (IOException e2) {
+			try {
+				SIVOXDevint.clean();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			e2.printStackTrace();
+		} catch (InterruptedException e) {
+			try {
+				SIVOXDevint.clean();
+			} catch (IOException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+			e.printStackTrace();
+		}
+
+		/**
 		try {
 			// long start = System.currentTimeMillis();
-			final Process proc = r.exec(cmd);
+			
 			boolean finished = false;
 			while (!finished) {
 				try {
@@ -167,8 +197,14 @@ public class SynthetiseurMbrola {
 				}
 			}
 		} catch (final Exception e) {
-			System.out.println("SynthetiseurMbrola: " + mode + " erreur!");
+			System.out.println("SynthetiseurMbrola: " + mode + " erreurs !");
+			try {
+				SIVOXDevint.clean();
+			} catch (IOException e1) {
+				e1.printStackTrace();
+			}
 		}
+		**/
 	}
 	
 }

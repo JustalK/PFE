@@ -156,8 +156,4 @@ public class Jeu extends FenetreAbstraite implements ActionListener{
 		Font f = Preferences.getData().getCurrentFont();
 		lb1.setFont(f);
 	}
-
-	public void cleanTmp() {
-		Preferences.getData().getVoice().clean();
-	}
 }

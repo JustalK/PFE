@@ -7,6 +7,9 @@ package t2s.son;
 import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.concurrent.locks.ReentrantLock;
 
 import javax.sound.sampled.AudioFormat;
@@ -141,6 +144,7 @@ public class JukeBox {
 			}
 		}
 		
+		@SuppressWarnings("deprecation")
 		private void unlink() {
 			running = false;
 			
@@ -158,10 +162,16 @@ public class JukeBox {
 			
 			terminated = true;
 			mutex.unlock();
-			
+
+			System.out.println("zzzzz");
 			if (eraseAudioFileAfterPlayback) {
-				File file = new File(filename);
-				file.delete();
+				System.out.println("aezaeaezeaz");
+				Path tmp = Paths.get(filename);
+				try {
+					Files.delete(tmp);
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
 			}
 			
 		}
@@ -293,6 +303,10 @@ public class JukeBox {
 			player = null;
 		}
 		p.stopPlayback(force);
+	}
+	
+	public void kill() {
+		Thread.currentThread().stop();
 	}
 	
 }

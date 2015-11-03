@@ -15,6 +15,7 @@
 package t2s.newProsodies;
 
 import java.io.FileWriter;
+import java.util.List;
 import java.util.Vector;
 
 import t2s.exception.AnalyseException;
@@ -32,7 +33,6 @@ public class Analyser {
 	
 	private final String	texte;
 	private final int	 prosodie;
-	
 	// private Prosodie1 p1;
 	// private Prosodie2 p2;
 	// private Prosodie3 p3;
@@ -44,7 +44,7 @@ public class Analyser {
 	
 	private static String	CHEMIN_REGLES	= ConfigFile.rechercher("CHEMIN_REGLES");
 	
-	public Vector<Phoneme> analyserGroupes() {
+	public Vector<Phoneme> analyserGroupes(String filename) {
 		final Vector<Phrase> phrases = new Vector<Phrase>();
 		String chainePhonemes;
 		final Pretraitement pt = new Pretraitement(this.texte);
@@ -71,9 +71,8 @@ public class Analyser {
 					} else {
 						chainePhonemes = afficher(new Prosodie3(phrases).prosodier());
 					}
-					// System.out.println(chainePhonemes);
 					try {
-						final FileWriter fw = new FileWriter(ConfigFile.rechercher("REPERTOIRE_PHO_WAV") + ConfigFile.rechercher("FICHIER_PHO_WAV") + texte.hashCode() + ".pho");
+						final FileWriter fw = new FileWriter(filename);
 						fw.write(chainePhonemes);
 						fw.close();
 					} catch (final Exception e) {
@@ -95,6 +94,10 @@ public class Analyser {
 		} else {
 			return new Prosodie3(phrases).prosodier();
 		}
+	}
+	
+	public String getTexte() {
+		return this.texte;
 	}
 	
 	public String afficher(final Vector<Phoneme> l) {
