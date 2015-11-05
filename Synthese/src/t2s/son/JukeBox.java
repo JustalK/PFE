@@ -5,19 +5,28 @@
 package t2s.son;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 
 public class JukeBox {
 	
 	private Player player;
+	private List<Player> listPlayerBackgroundMusics;
+	private String previousSong;
 	
-	public void stop(boolean stop) {
+	public JukeBox() {
+		player = null;
+		listPlayerBackgroundMusics = new ArrayList<Player>();
+	}
+	
+	public void stop(boolean stop) 
+	{
+		
 	}
 
-	// False, wait , true
-	public void playSound(String path, boolean loop, final boolean waitUntilAudioEnds) {
-		//Player p = new Player(filename, loop, waitUntilAudioEnds, eraseAudioFileAfterPlayback);
-		//playSound(p);
+	public void playSound(String path) {
 		File song = new File(path); 
+		System.out.println(path);
 		// Is the file exist ?
 		if(song.exists()) {
 			// If it's the first start, we have not any player
@@ -26,8 +35,15 @@ public class JukeBox {
 				player.interrupt();
 				if(player.isAlive()) {
 					System.err.println("Le thread is not over !");	
+				} else {
+					System.out.println(previousSong);
+					File pho = new File(previousSong+".pho");
+					File wav = new File(previousSong+".wav");
+					pho.delete();
+					wav.delete();
 				}
 			}
+			previousSong = song.getAbsolutePath().replaceFirst("[.][^.]+$", "");
 			player = new Player(path);
 			player.start();
 		} else {
@@ -35,9 +51,8 @@ public class JukeBox {
 		}
 	}	
 	
-	// False, wait , true
-	public void playSound(String filename, boolean loop, final boolean waitUntilAudioEnds, boolean eraseAudioFileAfterPlayback) {
-		//Player p = new Player(filename, loop, waitUntilAudioEnds, eraseAudioFileAfterPlayback);
-		//playSound(p);
-	}
+	public void playBackgroundMusic(String filename) {
+		
+	}	
+	
 }

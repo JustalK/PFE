@@ -17,57 +17,29 @@ import javax.sound.sampled.LineListener;
 import javax.sound.sampled.LineUnavailableException;
 import javax.sound.sampled.UnsupportedAudioFileException;
 
-public class Player extends Thread implements LineListener {
+public class Player extends Thread {
 
 	private AudioClip ac;
-	boolean playCompleted;
-	private File file;
-	private Clip audioClip;
-	
+	private String path;
 	public Player(String path) {
-		this.file = new File(path);
+		this.path = path;
 	}
 	
 	@Override
 	public void run() {
 		try {
-			AudioInputStream audioStream = AudioSystem.getAudioInputStream(this.file);
-			AudioFormat format = audioStream.getFormat();
-			DataLine.Info info = new DataLine.Info(Clip.class, format);
-			this.audioClip = (Clip) AudioSystem.getLine(info);
-			audioClip.addLineListener(this);
-			audioClip.open(audioStream);
-			audioClip.start();
-		} catch (LineUnavailableException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+    		URL u = new URL("file:"  + path);
+    		ac = Applet.newAudioClip(u);
+    		ac.play();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (UnsupportedAudioFileException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
 	}
 	
 	/**
 	 * Permet de fermer le thread en cours d'utilisation de maniere propre
 	 */
 	public void stopSong() {
-		Thread.interrupted();
-		audioClip.close();
-	}
-
-	@Override
-	public void update(LineEvent event) {
-		LineEvent.Type type = event.getType();
-		
-		// Ferme le thread de maniere propre si l'on arrive a la fin du .wav
-		if(type == LineEvent.Type.STOP) {
-			Thread.interrupted();
-			audioClip.close();
-		}
-		
+		ac.stop();
 	}
 }

@@ -103,7 +103,7 @@ public class SIVOXDevint {
 	 *            nom du fichier (wave) à lire
 	 */
 	public void loopWav(final String fichier) {
-		this.jk.playSound(fichier, true, false);
+		this.jk.playBackgroundMusic(fichier);
 	}
 	
 	/**
@@ -173,7 +173,7 @@ public class SIVOXDevint {
 	 *            wave à lire
 	 */
 	public void playWav(final String fichier, boolean wait) {
-		this.jk.playSound(fichier, false, wait);
+		this.jk.playSound(fichier);
 	}
 	
 	/**
@@ -275,23 +275,10 @@ public class SIVOXDevint {
 		final Vector<Phoneme> listePhonemes = an.analyserGroupes(filename+ ".pho");
 		s = new SynthetiseurMbrola(jk, lt.getVoix(), ConfigFile.rechercher("REPERTOIRE_PHO_WAV"), ConfigFile.rechercher("FICHIER_PHO_WAV") + text.hashCode());
 		// System.out.println("RAPIDITE: "+ConfigFile.rechercher("RAPIDITE"));
-		if (flagloop) {
-			s.loop();
-		} else {
-			s.play(wait);
-		}
+		s.play(wait);
 	}
 	
 	public static void clean() throws IOException {
-		for(int i=0;i<listFilename.size();i++) {
-			Path tmp = Paths.get(listFilename.get(i)+".pho");
-			Files.delete(tmp);
-			tmp = Paths.get(listFilename.get(i)+".wav");
-			try {
-				Files.delete(tmp);
-			} catch(FileSystemException e) {
-				e.printStackTrace();
-			}
-		}
+
 	}
 }

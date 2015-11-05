@@ -110,12 +110,12 @@ public class SynthetiseurMbrola {
 	/** Pour creer le fichier wav et le lire dans un JuxeBox */
 	public void play(boolean wait) {
 		prepare("play");
-		this.jb.playSound(this.pathFichier + this.fichier + ".wav", false, wait, true);
+		this.jb.playSound(this.pathFichier + this.fichier + ".wav");
 	}
 	
 	public void loop() {
 		prepare("play");
-		this.jb.playSound(this.pathFichier + this.fichier + ".wav", true, false, true);
+		this.jb.playBackgroundMusic(this.pathFichier + this.fichier + ".wav");
 	}
 	
 	/**
