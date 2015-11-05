@@ -2,25 +2,72 @@ package t2s.son;
 
 import java.applet.Applet;
 import java.applet.AudioClip;
+import java.io.File;
+import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 
-public class Player extends Thread {
+import javax.sound.sampled.AudioFormat;
+import javax.sound.sampled.AudioInputStream;
+import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.Clip;
+import javax.sound.sampled.DataLine;
+import javax.sound.sampled.LineEvent;
+import javax.sound.sampled.LineListener;
+import javax.sound.sampled.LineUnavailableException;
+import javax.sound.sampled.UnsupportedAudioFileException;
+
+public class Player extends Thread implements LineListener {
 
 	private AudioClip ac;
+	boolean playCompleted;
+	private File file;
+	private Clip audioClip;
 	
 	public Player(String path) {
-		try {
-			URL u = new URL("file:"  + path);
-			ac = Applet.newAudioClip(u);
-		} catch (MalformedURLException e) {
-			e.printStackTrace();
-		}
+		this.file = new File(path);
 	}
 	
 	@Override
 	public void run() {
-		System.out.println("azezaeazezae");
-		ac.play();
+		try {
+			AudioInputStream audioStream = AudioSystem.getAudioInputStream(this.file);
+			AudioFormat format = audioStream.getFormat();
+			DataLine.Info info = new DataLine.Info(Clip.class, format);
+			this.audioClip = (Clip) AudioSystem.getLine(info);
+			audioClip.addLineListener(this);
+			audioClip.open(audioStream);
+			audioClip.start();
+		} catch (LineUnavailableException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (UnsupportedAudioFileException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+	}
+	
+	/**
+	 * Permet de fermer le thread en cours d'utilisation de maniere propre
+	 */
+	public void stopSong() {
+		Thread.interrupted();
+		audioClip.close();
+	}
+
+	@Override
+	public void update(LineEvent event) {
+		LineEvent.Type type = event.getType();
+		
+		// Ferme le thread de maniere propre si l'on arrive a la fin du .wav
+		if(type == LineEvent.Type.STOP) {
+			Thread.interrupted();
+			audioClip.close();
+		}
+		
 	}
 }

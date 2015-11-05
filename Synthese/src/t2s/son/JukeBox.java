@@ -18,7 +18,16 @@ public class JukeBox {
 		//Player p = new Player(filename, loop, waitUntilAudioEnds, eraseAudioFileAfterPlayback);
 		//playSound(p);
 		File song = new File(path); 
+		// Is the file exist ?
 		if(song.exists()) {
+			// If it's the first start, we have not any player
+			if(player!=null) {
+				player.stopSong();
+				player.interrupt();
+				if(player.isAlive()) {
+					System.err.println("Le thread is not over !");	
+				}
+			}
 			player = new Player(path);
 			player.start();
 		} else {
