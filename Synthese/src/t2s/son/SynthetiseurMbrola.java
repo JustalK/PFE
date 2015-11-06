@@ -31,8 +31,6 @@
 package t2s.son;
 
 import java.io.IOException;
-
-import t2s.SIVOXDevint;
 import t2s.util.ConfigFile;
 
 /** pour de synthetiser un fichier sonore a partir d'un fichier de phonemes */
@@ -123,14 +121,13 @@ public class SynthetiseurMbrola {
 	 */
 	public void muet() {
 		prepare("muet");
+		this.jb.saveMuet(this.pathFichier + this.fichier + ".wav");
 	}
 	
 	/**
 	 * prepare le processus pour la transformation des phonemes en wave
 	 */
 	private void prepare(final String mode) {
-		final Runtime r = Runtime.getRuntime();
-		// System.out.println(Integer.parseInt(NBVOIX)+1);
 		if (voix.equals(VOIX1)) {
 			FR = ConfigFile.rechercher("FR1");
 		}
@@ -168,30 +165,6 @@ public class SynthetiseurMbrola {
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
-
-		/**
-		try {
-			// long start = System.currentTimeMillis();
-			
-			boolean finished = false;
-			while (!finished) {
-				try {
-					Thread.sleep(10);
-					proc.exitValue();
-					finished = true;
-				} catch (final IllegalThreadStateException e) {
-					// pas encore termine
-				}
-			}
-		} catch (final Exception e) {
-			System.out.println("SynthetiseurMbrola: " + mode + " erreurs !");
-			try {
-				SIVOXDevint.clean();
-			} catch (IOException e1) {
-				e1.printStackTrace();
-			}
-		}
-		**/
 	}
 	
 }

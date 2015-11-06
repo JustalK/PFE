@@ -5,4 +5,5 @@ public interface Constants {
 	int PLAY_TEXTE = 1;
 	int LOOP_WAV = 2;
 	int LOOP_TEXTE = 3;
+	int MUET = 4;
 }

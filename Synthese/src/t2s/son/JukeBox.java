@@ -12,11 +12,34 @@ public class JukeBox {
 	
 	private Player player;
 	private List<Player> listPlayerBackgroundMusics;
+	private List<Player> listPlayerWaiting;
 	private String previousSong;
 	
 	public JukeBox() {
 		player = null;
 		listPlayerBackgroundMusics = new ArrayList<Player>();
+		listPlayerWaiting = new ArrayList<Player>();
+	}
+	
+	
+	
+	/**
+	 * Permet de jouer un fichier creer de maniere silencieuse
+	 * @param path Le chemin ver le fichier que l'on souhaite lire
+	 * @param loop Si true on lira le fichier en boucle
+	 * @author Justal "Latsuj" Kevin
+	 * @email justal.kevin@gmail.com
+	 */
+	public void playMuet(String path,boolean loop) {
+		File song = new File(path);
+		if(song.exists()) {
+			for(int i=0;i<listPlayerWaiting.size();i++) {
+				if(path!=null && path.equals(listPlayerWaiting.get(i).getPath())) {
+					listPlayerWaiting.get(i).setLoop(loop);
+					listPlayerWaiting.get(i).start();
+				}
+			}
+		}
 	}
 	
 	public void playBackgroundMusic(String path) 
@@ -84,7 +107,9 @@ public class JukeBox {
 	
 	/**
 	 * Permet de finir tous les threads courant petu importe ce qu'ils font.
+	 *
 	 */
+	//TODO DUPLICATION ! I HAVE TO CHANGE THAT
 	public void killThread() {
 		if(player!=null) {
 			closeCurrentThreadPlayer();
@@ -95,6 +120,22 @@ public class JukeBox {
 			File pho = new File(listPlayerBackgroundMusics.get(i).getPath().replaceFirst("[.][^.]+$", "")+".pho");
 			wav.delete();
 			pho.delete();
+		}
+		for(int i=0;i<listPlayerWaiting.size();i++) {
+			listPlayerWaiting.get(i).stopSong();
+			File wav = new File(listPlayerWaiting.get(i).getPath().replaceFirst("[.][^.]+$", "")+".wav");
+			File pho = new File(listPlayerWaiting.get(i).getPath().replaceFirst("[.][^.]+$", "")+".pho");
+			wav.delete();
+			pho.delete();			
+		}
+		
+	}
+
+	public void saveMuet(String path) {
+		File song = new File(path);
+		if(song.exists()) {
+			Player tmp = new Player(path,false);
+			listPlayerWaiting.add(tmp);
 		}
 	}
 	

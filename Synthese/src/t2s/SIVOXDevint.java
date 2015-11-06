@@ -15,12 +15,8 @@
 
 package t2s;
 
-import java.io.FileWriter;
 import java.io.IOException;
-import java.util.Vector;
-
 import t2s.newProsodies.Analyser;
-import t2s.prosodie.Phoneme;
 import t2s.son.JukeBox;
 import t2s.son.LecteurTexte;
 import t2s.son.SynthetiseurMbrola;
@@ -71,8 +67,8 @@ public class SIVOXDevint implements Constants {
 	 * @return Le nom du fichier
 	 */
 	public String loopText(final String text) {			
-		String filename = createSynthetiseur(text);
-		play("", LOOP_TEXTE);
+		String filename = createSynthetiseur(text,"");
+		action("", LOOP_TEXTE);
 		return filename;
 	}
 
@@ -83,8 +79,8 @@ public class SIVOXDevint implements Constants {
 	 * @email justal.kevin@gmail.com
 	 */
 	public void playText(final String text) {	
-		createSynthetiseur(text);
-		this.play("", PLAY_TEXTE);
+		createSynthetiseur(text,"");
+		this.action("", PLAY_TEXTE);
 	}	
 
 	/**
@@ -101,16 +97,18 @@ public class SIVOXDevint implements Constants {
 	/**
 	 * Permet de creer un synthetiseur avec un certain texte
 	 * @param text Le texte qui sera utilise pour creer le fichier de phoneme
+	 * @param filename Le nom du fichier qui sera creer. Si le filename est la string vide, on cree un fichier avec le nom inscrit dans la variable
 	 * @return Le nom du fichier qui sera cree
 	 * @author Justal "Latsuj" Kevin
 	 * @email justal.kevin@gmail.com
 	 */
-	private String createSynthetiseur(String text) {
+	private String createSynthetiseur(String text,String filename) {
 		an = new Analyser(text, this.prosodie);
-		String filename = ConfigFile.rechercher("REPERTOIRE_PHO_WAV") + ConfigFile.rechercher("FICHIER_PHO_WAV") + an.getTexte().hashCode();
-		@SuppressWarnings("unused")
-		final Vector<Phoneme> listePhonemes = an.analyserGroupes(filename+ ".pho");
-		s = new SynthetiseurMbrola(jk, lt.getVoix(), ConfigFile.rechercher("REPERTOIRE_PHO_WAV"), ConfigFile.rechercher("FICHIER_PHO_WAV") + text.hashCode());
+		if(filename=="" || filename==null) {
+			s = new SynthetiseurMbrola(jk, lt.getVoix(), ConfigFile.rechercher("REPERTOIRE_PHO_WAV"), ConfigFile.rechercher("FICHIER_PHO_WAV") + text.hashCode());
+		} else {
+			s = new SynthetiseurMbrola(jk, lt.getVoix(), ConfigFile.rechercher("REPERTOIRE_PHO_WAV"), ConfigFile.rechercher("FICHIER_PHO_WAV") + text.hashCode());			
+		}
 		return ConfigFile.rechercher("FICHIER_PHO_WAV") + an.getTexte().hashCode();
 	}
 	
@@ -121,7 +119,7 @@ public class SIVOXDevint implements Constants {
 	 * @email justal.kevin@gmail.com
 	 */
 	public void loopWav(final String path) {
-		this.play(path, LOOP_WAV);
+		this.action(path, LOOP_WAV);
 	}
 	
 	/**
@@ -131,7 +129,7 @@ public class SIVOXDevint implements Constants {
 	 * @email justal.kevin@gmail.com
 	 */
 	public void playWav(final String path) {
-		this.play(path, PLAY_WAV);
+		this.action(path, PLAY_WAV);
 	}
 	
 	/**
@@ -145,9 +143,9 @@ public class SIVOXDevint implements Constants {
 	@Deprecated
 	public void playWav(final String path,final boolean loop) {
 		if(loop) {
-			this.play(path, LOOP_WAV);
+			this.action(path, LOOP_WAV);
 		} else {
-			this.play(path, PLAY_WAV);
+			this.action(path, PLAY_WAV);
 		}
 	}
 	
@@ -210,23 +208,13 @@ public class SIVOXDevint implements Constants {
 	/**
 	 * Permet de creer des fichiers phoneme qui ne seront pas lu par la synthese vocale
 	 * @param text Le texte que l'on souhaite lire
-	 * @param out Le nom du fichier
+	 * @param filename Le nom du fichier qui sera cree
+	 * @author Justal "Latsuj" Kevin
+	 * @email justal.kevin@gmail.com
 	 */
-	public void muet(final String text, final String out) {
-		// if ( !on ) return;
-		an = new Analyser(text, this.prosodie);
-		String filename = ConfigFile.rechercher("REPERTOIRE_PHO_WAV") + ConfigFile.rechercher("FICHIER_PHO_WAV") + an.getTexte().hashCode();
-		final Vector<Phoneme> listePhonemes = an.analyserGroupes(filename+".pho");
-		final String chainePho = an.afficher(listePhonemes);
-		try {
-			final FileWriter fw = new FileWriter(out + ".pho");
-			fw.write(chainePho);
-			fw.close();
-		} catch (final Exception e) {
-			System.err.println("SIVOXDevint#muet : Erreur creation fichier phoneme.");
-		}
-		s = new SynthetiseurMbrola(jk, lt.getVoix(), out, "");
-		s.muet();
+	public void muet(final String text, final String filename) {
+		createSynthetiseur(text,filename);
+		action("", MUET);
 	}
 	
 	/**
@@ -236,7 +224,7 @@ public class SIVOXDevint implements Constants {
 	 * @author Justal "Latsuj" Kevin
 	 * @email justal.kevin@gmail.com
 	 */
-	private void play(final String path, int type) {
+	private void action(final String path, int type) {
 		if (!this.on) {
 			return;
 		}
@@ -249,6 +237,8 @@ public class SIVOXDevint implements Constants {
 			case PLAY_TEXTE:s.play(true);
 				break;
 			case PLAY_WAV: this.jk.playSound(path);
+				break;
+			case MUET: s.muet();
 				break;
 			default:
 				break;

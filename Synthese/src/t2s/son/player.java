@@ -22,9 +22,18 @@ public class Player extends Thread {
 	private AudioClip ac;
 	private String path;
 	private boolean loop;
+	private URL u;
+	
 	public Player(String path,boolean loop) {
 		this.path = path;
 		this.loop = loop;
+		try {
+			u = new URL("file:"  + path);
+		} catch (MalformedURLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		ac = Applet.newAudioClip(u);
 	}
 	
 	public String getPath() {
@@ -33,17 +42,15 @@ public class Player extends Thread {
 	
 	@Override
 	public void run() {
-		try {
-    		URL u = new URL("file:"  + path);
-    		ac = Applet.newAudioClip(u);
-    		if(loop) {
-    			ac.loop();
-    		} else {
-        		ac.play();
-    		}
-		} catch (IOException e) {
-			e.printStackTrace();
+		if(loop) {
+			ac.loop();
+		} else {
+    		ac.play();
 		}
+	}
+	
+	public void setLoop(boolean loop) {
+		this.loop = loop;
 	}
 	
 	/**
