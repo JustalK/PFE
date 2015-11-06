@@ -15,6 +15,5 @@ public class LancementJeu{
 
     public static void main(String args[]) throws IOException{
 			new jeu.MenuJeu("Exemple de jeu");
-			SIVOXDevint.clean();
     }
 }

@@ -72,16 +72,26 @@ public class SIVOXDevint implements Constants {
 		lt.setVoix(vox);
 	}
 	
-	/**
-	 * Pour lire un texte long à voix haute en boucle
-	 * 
-	 * @param text
-	 *            , chaîne à lire à voix haute
-	 */
-	public void loopText(final String text) {
-		play(text, LOOP_TEXTE);
-	}
 	
+	public String loopText(final String text) {			
+		String filename = createSynthetiseur(text);
+		play(text, LOOP_TEXTE);
+		return filename;
+	}
+
+	public void playText(final String text) {	
+		createSynthetiseur(text);
+		this.play(text, PLAY_TEXTE);
+	}	
+	
+	private String createSynthetiseur(String text) {
+		an = new Analyser(text, this.prosodie);
+		String filename = ConfigFile.rechercher("REPERTOIRE_PHO_WAV") + ConfigFile.rechercher("FICHIER_PHO_WAV") + an.getTexte().hashCode();
+		@SuppressWarnings("unused")
+		final Vector<Phoneme> listePhonemes = an.analyserGroupes(filename+ ".pho");
+		s = new SynthetiseurMbrola(jk, lt.getVoix(), ConfigFile.rechercher("REPERTOIRE_PHO_WAV"), ConfigFile.rechercher("FICHIER_PHO_WAV") + text.hashCode());
+		return ConfigFile.rechercher("FICHIER_PHO_WAV") + an.getTexte().hashCode();
+	}
 	/**
 	 * Pour lire le son d'un fichier .wav en boucle
 	 * 
@@ -119,16 +129,6 @@ public class SIVOXDevint implements Constants {
 		final Vector<Phoneme> listePhonemes = an.analyserGroupes(filename+".pho");
 		s = new SynthetiseurMbrola(jk, lt.getVoix(), ConfigFile.rechercher("REPERTOIRE_PHO_WAV"), ConfigFile.rechercher("FICHIER_PHO_WAV")+ text.hashCode());
 		s.play(wait);
-	}
-	
-	/**
-	 * Pour lire un texte long à voix haute
-	 * 
-	 * @param text
-	 *            , chaîne à lire à voix haute
-	 */
-	public void playText(final String text) {
-		this.play(text, PLAY_TEXTE);
 	}
 	
 	@Deprecated
@@ -228,13 +228,6 @@ public class SIVOXDevint implements Constants {
 	public void play(final String text, int type) {
 		if (!this.on) {
 			return;
-		}
-		if(type==LOOP_TEXTE || type==PLAY_TEXTE) {
-			an = new Analyser(text, this.prosodie);
-			String filename = ConfigFile.rechercher("REPERTOIRE_PHO_WAV") + ConfigFile.rechercher("FICHIER_PHO_WAV") + an.getTexte().hashCode();
-			@SuppressWarnings("unused")
-			final Vector<Phoneme> listePhonemes = an.analyserGroupes(filename+ ".pho");
-			s = new SynthetiseurMbrola(jk, lt.getVoix(), ConfigFile.rechercher("REPERTOIRE_PHO_WAV"), ConfigFile.rechercher("FICHIER_PHO_WAV") + text.hashCode());
 		}
 		
 		switch(type) {

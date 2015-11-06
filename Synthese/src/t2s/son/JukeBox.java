@@ -19,17 +19,23 @@ public class JukeBox {
 		listPlayerBackgroundMusics = new ArrayList<Player>();
 	}
 	
-	public void stop() 
+	public void playBackgroundMusic(String path) 
 	{
-		
-	}
-
+		File song = new File(path);
+		if(song.exists()) {
+			Player tmp = new Player(path,true);
+			listPlayerBackgroundMusics.add(tmp);
+			tmp.start();
+		}
+	}		
+	
 	public void playSound(String path) 
 	{
 		File song = new File(path); 
 		// Is the file exist ?
 		if(song.exists()) {
 			// If it's the first start, we have not any player
+			
 			if(player!=null) {
 				closeCurrentThreadPlayer();
 			}
@@ -40,16 +46,23 @@ public class JukeBox {
 			System.err.println("Le fichier suivant est introuvable :\n"+path);
 		}
 	}	
-	
-	public void playBackgroundMusic(String path) 
-	{
-		File song = new File(path);
-		if(song.exists()) {
-			Player tmp = new Player(path,true);
-			listPlayerBackgroundMusics.add(tmp);
-			tmp.start();
+
+	/**
+	 * Permet de savoir si le fichier lu est un fichier "ressources"
+	 * @param path Path du fichier 
+	 * @return Retourne true si le fichier est une ressource ou false sinon
+	 */
+	private boolean isRessources(String path) {
+		if(path!=null && path.contains("ressources")) {
+			return true;
 		}
-	}	
+		return false;
+	}
+	
+	public void stop() 
+	{
+		
+	}
 	
 	/**
 	 * Permet de supprimer proprement le dernier fichier wav et pho utilisé
@@ -60,10 +73,12 @@ public class JukeBox {
 		if(player.isAlive()) {
 			System.err.println("Le thread is not over !");	
 		} else {
-			File pho = new File(previousSong+".pho");
-			File wav = new File(previousSong+".wav");
-			pho.delete();
-			wav.delete();
+			if(!isRessources(player.getPath())) {
+				File pho = new File(previousSong+".pho");
+				File wav = new File(previousSong+".wav");
+				pho.delete();
+				wav.delete();
+			}
 		}		
 	}
 	
