@@ -121,7 +121,7 @@ public class GestionSon extends FenetreAbstraite implements ActionListener{
     		text += "par exemple si on lit la question dans un fichier texte";
     		text += "il faut lire directement le texte avec playText";
     		// texte long, interruptible car un seul paramètre
-    		System.out.println(voix.loopText(text));
+    		voix.loopText(text);
     	}
     	else if (source.equals(question1)) {
     		// on lit le wav, non interruptible car (true)
@@ -133,7 +133,8 @@ public class GestionSon extends FenetreAbstraite implements ActionListener{
         	int x = r.nextInt(100000);
         	int y = r.nextInt(30);
         	String text = x + " + " + y + " = ";
-        	voix.playText(text);
+        	//voix.playText(text);
+        	voix.muet(text, "aaaa");
     	}
     	// on redonne le focus au JFrame principal 
     	// (après un clic, le focus est sur le bouton)

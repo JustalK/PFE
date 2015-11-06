@@ -65,24 +65,46 @@ public class SIVOXDevint implements Constants {
 		lt.setVoix(vox);
 	}
 	
-	
+	/**
+	 * Permet de lire un texte par la synthese vocale de maniere repetitive
+	 * @param text le texte que l'on souhaite faire lire par la synthese vocale
+	 * @return Le nom du fichier
+	 */
 	public String loopText(final String text) {			
 		String filename = createSynthetiseur(text);
-		play(text, LOOP_TEXTE);
+		play("", LOOP_TEXTE);
 		return filename;
 	}
 
+	/**
+	 * Permet de faire lire un texte par la synthese vocale une seul fois
+	 * @param text le texte que l'on souhaite faire lire par la synthese vocale
+	 * @author Justal "Latsuj" Kevin
+	 * @email justal.kevin@gmail.com
+	 */
 	public void playText(final String text) {	
 		createSynthetiseur(text);
-		this.play(text, PLAY_TEXTE);
+		this.play("", PLAY_TEXTE);
 	}	
 
+	/**
+	 * This method is deprecated ! 
+	 * @param text Le texte que l'on souhaite faire lire par la synthese vocale
+	 * @author Justal "Latsuj" Kevin
+	 * @email justal.kevin@gmail.com
+	 */
 	@Deprecated
 	public void playShortText(final String text) {
-		createSynthetiseur(text);
-		this.play(text, PLAY_TEXTE);
+		playText(text);
 	}
 	
+	/**
+	 * Permet de creer un synthetiseur avec un certain texte
+	 * @param text Le texte qui sera utilise pour creer le fichier de phoneme
+	 * @return Le nom du fichier qui sera cree
+	 * @author Justal "Latsuj" Kevin
+	 * @email justal.kevin@gmail.com
+	 */
 	private String createSynthetiseur(String text) {
 		an = new Analyser(text, this.prosodie);
 		String filename = ConfigFile.rechercher("REPERTOIRE_PHO_WAV") + ConfigFile.rechercher("FICHIER_PHO_WAV") + an.getTexte().hashCode();
@@ -91,32 +113,41 @@ public class SIVOXDevint implements Constants {
 		s = new SynthetiseurMbrola(jk, lt.getVoix(), ConfigFile.rechercher("REPERTOIRE_PHO_WAV"), ConfigFile.rechercher("FICHIER_PHO_WAV") + text.hashCode());
 		return ConfigFile.rechercher("FICHIER_PHO_WAV") + an.getTexte().hashCode();
 	}
+	
 	/**
-	 * Pour lire le son d'un fichier .wav en boucle
-	 * 
-	 * @param fichier
-	 *            nom du fichier (wave) à lire
+	 * Permet de lire le fichier wav en boucle
+	 * @param String Le chemin vers le fichier que l'on souhaite lire
+	 * @author Justal "Latsuj" Kevin
+	 * @email justal.kevin@gmail.com
 	 */
-	public void loopWav(final String fichier) {
-		this.play(fichier, LOOP_WAV);
+	public void loopWav(final String path) {
+		this.play(path, LOOP_WAV);
 	}
 	
 	/**
-	 * Pour lire le son d'un fichier .wav
-	 * 
-	 * @param fichier
-	 *            wave à lire
+	 * Permet de lire un fichier wav une fois
+	 * @param path Le chemin vers le fichier que l'on souhaite lire
+	 * @author Justal "Latsuj" Kevin
+	 * @email justal.kevin@gmail.com
 	 */
-	public void playWav(final String fichier) {
-		this.play(fichier, PLAY_WAV);
+	public void playWav(final String path) {
+		this.play(path, PLAY_WAV);
 	}
 	
+	/**
+	 * This method is deprecated ! 
+	 * @param path Le chemin vers le fichier
+	 * @param loop Definie si le fichier doit etre lu de maniere repetitive
+	 * @see playWav(final String path)
+	 * @author Justal "Latsuj" Kevin
+	 * @email justal.kevin@gmail.com
+	 */
 	@Deprecated
-	public void playWav(final String text,boolean loop) {
+	public void playWav(final String path,final boolean loop) {
 		if(loop) {
-			this.play(text, LOOP_WAV);
+			this.play(path, LOOP_WAV);
 		} else {
-			this.play(text, PLAY_WAV);
+			this.play(path, PLAY_WAV);
 		}
 	}
 	
@@ -161,21 +192,26 @@ public class SIVOXDevint implements Constants {
 		}
 	}
 	
-	// Pour basculer entre voix on / voix off
+	/**
+	 * Permet d'activer ou de desactiver la voix de synthese
+	 */
 	public void toggle() {
 		this.on = !this.on;
 	}
 	
 	/**
-	 * renvoie l'état du toggle voix on/voix off
-	 * 
-	 * @return
+	 * Permet de retourner l'etat de la voix de synthese
+	 * @return Retourne true si la voix de synthese est activee, false sinon
 	 */
 	public boolean getToggle() {
 		return this.on;
 	}
 	
-	// pour créer des fichiers wave en silence
+	/**
+	 * Permet de creer des fichiers phoneme qui ne seront pas lu par la synthese vocale
+	 * @param text Le texte que l'on souhaite lire
+	 * @param out Le nom du fichier
+	 */
 	public void muet(final String text, final String out) {
 		// if ( !on ) return;
 		an = new Analyser(text, this.prosodie);
@@ -187,14 +223,20 @@ public class SIVOXDevint implements Constants {
 			fw.write(chainePho);
 			fw.close();
 		} catch (final Exception e) {
-			System.out.println("erreur création fichier phonème.");
+			System.err.println("SIVOXDevint#muet : Erreur creation fichier phoneme.");
 		}
 		s = new SynthetiseurMbrola(jk, lt.getVoix(), out, "");
 		s.muet();
 	}
 	
-	// appelé par loopText et playText avec valeur flagloop diff�rente
-	private void play(final String text, int type) {
+	/**
+	 * Permet de gerer les differentes lectures en fonction des variables
+	 * @param path Le path du fichier wav a lire, si il y a un fichier a lire 
+	 * @param type Le type de la lecture
+	 * @author Justal "Latsuj" Kevin
+	 * @email justal.kevin@gmail.com
+	 */
+	private void play(final String path, int type) {
 		if (!this.on) {
 			return;
 		}
@@ -202,11 +244,11 @@ public class SIVOXDevint implements Constants {
 		switch(type) {
 			case LOOP_TEXTE: s.loop();
 				break;
-			case LOOP_WAV: this.jk.playBackgroundMusic(text);
+			case LOOP_WAV: this.jk.playBackgroundMusic(path);
 				break;
 			case PLAY_TEXTE:s.play(true);
 				break;
-			case PLAY_WAV: this.jk.playSound(text);
+			case PLAY_WAV: this.jk.playSound(path);
 				break;
 			default:
 				break;
@@ -216,6 +258,7 @@ public class SIVOXDevint implements Constants {
 	/**
 	 * Permet de nettoyer l'application en supprimant les fichiers temporaires utilisés.
 	 * @throws IOException
+	 * @author Justal "Latsuj" Kevin
 	 */
 	public void clean() throws IOException {
 		this.jk.killThread();
