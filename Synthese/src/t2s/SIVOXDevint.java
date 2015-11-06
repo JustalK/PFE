@@ -274,11 +274,18 @@ public class SIVOXDevint {
 		@SuppressWarnings("unused")
 		final Vector<Phoneme> listePhonemes = an.analyserGroupes(filename+ ".pho");
 		s = new SynthetiseurMbrola(jk, lt.getVoix(), ConfigFile.rechercher("REPERTOIRE_PHO_WAV"), ConfigFile.rechercher("FICHIER_PHO_WAV") + text.hashCode());
-		// System.out.println("RAPIDITE: "+ConfigFile.rechercher("RAPIDITE"));
-		s.play(wait);
+		if(flagloop) {
+			s.play(wait);
+		} else {
+			s.loop();
+		}
 	}
 	
+	/**
+	 * Permet de nettoyer l'application en supprimant les fichiers temporaires utilisés.
+	 * @throws IOException
+	 */
 	public static void clean() throws IOException {
-
+		jk.killThread();
 	}
 }

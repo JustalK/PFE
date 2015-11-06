@@ -163,7 +163,6 @@ public class SynthetiseurMbrola {
 		try {
 			Process proc = Runtime.getRuntime().exec(cmd);
 			proc.waitFor();
-			System.out.println("Test en cours HAHA");
 		} catch (IOException e2) {
 			try {
 				SIVOXDevint.clean();

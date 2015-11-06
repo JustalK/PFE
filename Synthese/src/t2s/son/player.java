@@ -21,8 +21,14 @@ public class Player extends Thread {
 
 	private AudioClip ac;
 	private String path;
-	public Player(String path) {
+	private boolean loop;
+	public Player(String path,boolean loop) {
 		this.path = path;
+		this.loop = loop;
+	}
+	
+	public String getPath() {
+		return path;
 	}
 	
 	@Override
@@ -30,7 +36,11 @@ public class Player extends Thread {
 		try {
     		URL u = new URL("file:"  + path);
     		ac = Applet.newAudioClip(u);
-    		ac.play();
+    		if(loop) {
+    			ac.loop();
+    		} else {
+        		ac.play();
+    		}
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -41,5 +51,6 @@ public class Player extends Thread {
 	 */
 	public void stopSong() {
 		ac.stop();
+		Thread.interrupted();
 	}
 }
