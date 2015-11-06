@@ -2239,9 +2239,12 @@ public class InterfaceGenerale extends InterfaceBase {
 	 */
 	public void lectureAssistant(String phrase)
 	{
+		//TODO WHAT I'M GONNA DO HERE
+		/**
 		try {
 			assistant.playShortText(phrase, false);
 		} catch (Exception e) {}
+		**/
 	}
 	
 	/**

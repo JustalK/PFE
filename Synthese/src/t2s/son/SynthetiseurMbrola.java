@@ -164,20 +164,8 @@ public class SynthetiseurMbrola {
 			Process proc = Runtime.getRuntime().exec(cmd);
 			proc.waitFor();
 		} catch (IOException e2) {
-			try {
-				SIVOXDevint.clean();
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
 			e2.printStackTrace();
 		} catch (InterruptedException e) {
-			try {
-				SIVOXDevint.clean();
-			} catch (IOException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
-			}
 			e.printStackTrace();
 		}
 

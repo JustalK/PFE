@@ -15,15 +15,8 @@
 
 package t2s;
 
-import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.nio.file.FileSystemException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Vector;
 
 import t2s.newProsodies.Analyser;
@@ -39,7 +32,7 @@ import t2s.util.ConfigFile;
  * @author Ecole Polytechnique Universitaire Nice Sophia Antipolis
  */
 public class SIVOXDevint implements Constants {
-	private static JukeBox	           jk;	     // pour jouer les wav
+	private JukeBox	           jk;	     // pour jouer les wav
 	private LecteurTexte	   lt;	     // pour choisir une voix
 	private SynthetiseurMbrola	s;
 	private Analyser	       an;
@@ -83,6 +76,12 @@ public class SIVOXDevint implements Constants {
 		createSynthetiseur(text);
 		this.play(text, PLAY_TEXTE);
 	}	
+
+	@Deprecated
+	public void playShortText(final String text) {
+		createSynthetiseur(text);
+		this.play(text, PLAY_TEXTE);
+	}
 	
 	private String createSynthetiseur(String text) {
 		an = new Analyser(text, this.prosodie);
@@ -99,45 +98,7 @@ public class SIVOXDevint implements Constants {
 	 *            nom du fichier (wave) à lire
 	 */
 	public void loopWav(final String fichier) {
-		this.jk.playBackgroundMusic(fichier);
-	}
-	
-	/**
-	 * Pour lire un texte court (sans ponctuation) à voix haute
-	 * 
-	 * @param text
-	 *            , chaîne de caractères à lire à voix haute
-	 */
-	
-	public void playShortText(final String text) {
-		this.playShortText(text, false);
-	}
-	/**
-	 * Pour lire un texte court (sans ponctuation) à voix haute
-	 * 
-	 * @param text
-	 *            , chaîne de caractères à lire à voix haute
-	 */
-	
-	public void playShortText(final String text, boolean wait) {
-		if (!this.on) {
-			return;
-		}
-		an = new Analyser(text, this.prosodie);
-		String filename = ConfigFile.rechercher("REPERTOIRE_PHO_WAV") + ConfigFile.rechercher("FICHIER_PHO_WAV") + an.getTexte().hashCode();
-		@SuppressWarnings("unused")
-		final Vector<Phoneme> listePhonemes = an.analyserGroupes(filename+".pho");
-		s = new SynthetiseurMbrola(jk, lt.getVoix(), ConfigFile.rechercher("REPERTOIRE_PHO_WAV"), ConfigFile.rechercher("FICHIER_PHO_WAV")+ text.hashCode());
-		s.play(wait);
-	}
-	
-	@Deprecated
-	public void playWav(final String text,boolean loop) {
-		if(loop) {
-			this.play(text, LOOP_WAV);
-		} else {
-			this.play(text, PLAY_WAV);
-		}
+		this.play(fichier, LOOP_WAV);
 	}
 	
 	/**
@@ -148,6 +109,15 @@ public class SIVOXDevint implements Constants {
 	 */
 	public void playWav(final String fichier) {
 		this.play(fichier, PLAY_WAV);
+	}
+	
+	@Deprecated
+	public void playWav(final String text,boolean loop) {
+		if(loop) {
+			this.play(text, LOOP_WAV);
+		} else {
+			this.play(text, PLAY_WAV);
+		}
 	}
 	
 	/**
@@ -210,7 +180,6 @@ public class SIVOXDevint implements Constants {
 		// if ( !on ) return;
 		an = new Analyser(text, this.prosodie);
 		String filename = ConfigFile.rechercher("REPERTOIRE_PHO_WAV") + ConfigFile.rechercher("FICHIER_PHO_WAV") + an.getTexte().hashCode();
-		@SuppressWarnings("unused")
 		final Vector<Phoneme> listePhonemes = an.analyserGroupes(filename+".pho");
 		final String chainePho = an.afficher(listePhonemes);
 		try {
@@ -225,7 +194,7 @@ public class SIVOXDevint implements Constants {
 	}
 	
 	// appelé par loopText et playText avec valeur flagloop diff�rente
-	public void play(final String text, int type) {
+	private void play(final String text, int type) {
 		if (!this.on) {
 			return;
 		}
@@ -233,7 +202,7 @@ public class SIVOXDevint implements Constants {
 		switch(type) {
 			case LOOP_TEXTE: s.loop();
 				break;
-			case LOOP_WAV:
+			case LOOP_WAV: this.jk.playBackgroundMusic(text);
 				break;
 			case PLAY_TEXTE:s.play(true);
 				break;
@@ -248,7 +217,7 @@ public class SIVOXDevint implements Constants {
 	 * Permet de nettoyer l'application en supprimant les fichiers temporaires utilisés.
 	 * @throws IOException
 	 */
-	public static void clean() throws IOException {
-		jk.killThread();
+	public void clean() throws IOException {
+		this.jk.killThread();
 	}
 }
