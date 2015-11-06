@@ -754,7 +754,7 @@ public class SIVOXProsodieTabItem extends CTabItem {
 	public void stopperProsodie() throws SIVOXException
 	{
 		try {
-			jk.stop(false);
+			jk.stop();
 		} catch (Exception e) {
 			throw new SIVOXException("Erreur : impossible de stopper la lecture de la prosodie","impossible de stopper la lecture de la prosodi");
 		}

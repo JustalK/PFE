@@ -784,7 +784,7 @@ public class Chant {
 	{
 		if(jk != null)
 		{
-			jk.stop(true);
+			jk.stop();
 		}
 	}
 }

@@ -19,7 +19,7 @@ public class JukeBox {
 		listPlayerBackgroundMusics = new ArrayList<Player>();
 	}
 	
-	public void stop(boolean stop) 
+	public void stop() 
 	{
 		
 	}

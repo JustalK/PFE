@@ -38,14 +38,13 @@ import t2s.util.ConfigFile;
  * 
  * @author Ecole Polytechnique Universitaire Nice Sophia Antipolis
  */
-public class SIVOXDevint {
+public class SIVOXDevint implements Constants {
 	private static JukeBox	           jk;	     // pour jouer les wav
 	private LecteurTexte	   lt;	     // pour choisir une voix
 	private SynthetiseurMbrola	s;
 	private Analyser	       an;
 	private boolean	           on;	     // true/false pour valider/invalider la synthèse SIVOX
 	private int	               prosodie; // code la prosodie utilisée, de 1 à 3 (3 par défaut)
-	private static List<String>	listFilename;
 	/**
 	 * Constructeur par défaut : voix de Thierry
 	 * prosodie = 3, la plus performante
@@ -56,19 +55,6 @@ public class SIVOXDevint {
 		this.on = true;
 		lt.setVoix(1);
 		this.prosodie = 3;
-		this.listFilename = new ArrayList<String>();
-	}
-	
-	public void listFilesForFolder(final File folder) {
-	    for (final File fileEntry : folder.listFiles()) {
-	        if (fileEntry.isDirectory()) {
-	            listFilesForFolder(fileEntry);
-	        } else {
-	            if("pho".equals(fileEntry.getName().substring(fileEntry.getName().lastIndexOf(".")+1))) {
-	            	fileEntry.delete();
-	            }
-	        }
-	    }
 	}
 	
 	/**
@@ -93,7 +79,7 @@ public class SIVOXDevint {
 	 *            , chaîne à lire à voix haute
 	 */
 	public void loopText(final String text) {
-		play(text, true, false);
+		play(text, LOOP_TEXTE);
 	}
 	
 	/**
@@ -129,7 +115,6 @@ public class SIVOXDevint {
 		}
 		an = new Analyser(text, this.prosodie);
 		String filename = ConfigFile.rechercher("REPERTOIRE_PHO_WAV") + ConfigFile.rechercher("FICHIER_PHO_WAV") + an.getTexte().hashCode();
-		this.listFilename.add(filename);
 		@SuppressWarnings("unused")
 		final Vector<Phoneme> listePhonemes = an.analyserGroupes(filename+".pho");
 		s = new SynthetiseurMbrola(jk, lt.getVoix(), ConfigFile.rechercher("REPERTOIRE_PHO_WAV"), ConfigFile.rechercher("FICHIER_PHO_WAV")+ text.hashCode());
@@ -143,17 +128,16 @@ public class SIVOXDevint {
 	 *            , chaîne à lire à voix haute
 	 */
 	public void playText(final String text) {
-		this.playText(text, false);
+		this.play(text, PLAY_TEXTE);
 	}
 	
-	/**
-	 * Pour lire un texte long à voix haute
-	 * 
-	 * @param text
-	 *            , chaîne à lire à voix haute
-	 */
-	public void playText(final String text, boolean wait) {
-		play(text, false, wait);
+	@Deprecated
+	public void playWav(final String text,boolean loop) {
+		if(loop) {
+			this.play(text, LOOP_WAV);
+		} else {
+			this.play(text, PLAY_WAV);
+		}
 	}
 	
 	/**
@@ -163,17 +147,7 @@ public class SIVOXDevint {
 	 *            wave à lire
 	 */
 	public void playWav(final String fichier) {
-		this.playWav(fichier, false);
-	}
-	
-	/**
-	 * Pour lire le son d'un fichier .wav
-	 * 
-	 * @param fichier
-	 *            wave à lire
-	 */
-	public void playWav(final String fichier, boolean wait) {
-		this.jk.playSound(fichier);
+		this.play(fichier, PLAY_WAV);
 	}
 	
 	/**
@@ -202,7 +176,6 @@ public class SIVOXDevint {
 	public void setVoix(final int voix) {
 		int vox;
 		final int nbvoix = Integer.parseInt(ConfigFile.rechercher("NBVOIX")); // nombre de voix disponibles dans ressources
-		System.out.println(nbvoix);
 		vox = (voix > nbvoix) ? nbvoix : voix;
 		vox = (voix < 1) ? 1 : voix;
 		lt.setVoix(vox);
@@ -214,13 +187,7 @@ public class SIVOXDevint {
 	 */
 	public void stop() {
 		if (this.jk != null) {
-			this.jk.stop(false);
-		}
-	}
-	
-	public void forceStop() {
-		if (this.jk != null) {
-			this.jk.stop(true);
+			this.jk.stop();
 		}
 	}
 	
@@ -243,7 +210,6 @@ public class SIVOXDevint {
 		// if ( !on ) return;
 		an = new Analyser(text, this.prosodie);
 		String filename = ConfigFile.rechercher("REPERTOIRE_PHO_WAV") + ConfigFile.rechercher("FICHIER_PHO_WAV") + an.getTexte().hashCode();
-		this.listFilename.add(filename);
 		@SuppressWarnings("unused")
 		final Vector<Phoneme> listePhonemes = an.analyserGroupes(filename+".pho");
 		final String chainePho = an.afficher(listePhonemes);
@@ -259,25 +225,29 @@ public class SIVOXDevint {
 	}
 	
 	// appelé par loopText et playText avec valeur flagloop diff�rente
-	public void play(final String text, final boolean flagloop) {
-		this.play(text, flagloop, false);
-	}
-	
-	// appelé par loopText et playText avec valeur flagloop diff�rente
-	public void play(final String text, final boolean flagloop, boolean wait) {
+	public void play(final String text, int type) {
 		if (!this.on) {
 			return;
 		}
-		an = new Analyser(text, this.prosodie);
-		String filename = ConfigFile.rechercher("REPERTOIRE_PHO_WAV") + ConfigFile.rechercher("FICHIER_PHO_WAV") + an.getTexte().hashCode();
-		this.listFilename.add(filename);
-		@SuppressWarnings("unused")
-		final Vector<Phoneme> listePhonemes = an.analyserGroupes(filename+ ".pho");
-		s = new SynthetiseurMbrola(jk, lt.getVoix(), ConfigFile.rechercher("REPERTOIRE_PHO_WAV"), ConfigFile.rechercher("FICHIER_PHO_WAV") + text.hashCode());
-		if(flagloop) {
-			s.play(wait);
-		} else {
-			s.loop();
+		if(type==LOOP_TEXTE || type==PLAY_TEXTE) {
+			an = new Analyser(text, this.prosodie);
+			String filename = ConfigFile.rechercher("REPERTOIRE_PHO_WAV") + ConfigFile.rechercher("FICHIER_PHO_WAV") + an.getTexte().hashCode();
+			@SuppressWarnings("unused")
+			final Vector<Phoneme> listePhonemes = an.analyserGroupes(filename+ ".pho");
+			s = new SynthetiseurMbrola(jk, lt.getVoix(), ConfigFile.rechercher("REPERTOIRE_PHO_WAV"), ConfigFile.rechercher("FICHIER_PHO_WAV") + text.hashCode());
+		}
+		
+		switch(type) {
+			case LOOP_TEXTE: s.loop();
+				break;
+			case LOOP_WAV:
+				break;
+			case PLAY_TEXTE:s.play(true);
+				break;
+			case PLAY_WAV: this.jk.playSound(text);
+				break;
+			default:
+				break;
 		}
 	}
 	

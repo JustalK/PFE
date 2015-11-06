@@ -267,7 +267,7 @@ public class ChantDevint {
 	public void stop()
 	{
 		if (this.jk != null) {
-			this.jk.stop(false);
+			this.jk.stop();
 		}
 	}
 	
