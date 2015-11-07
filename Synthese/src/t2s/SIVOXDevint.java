@@ -138,10 +138,10 @@ public class SIVOXDevint implements Constants {
 	private String createSynthetiseur(String text,String filename) {
 		an = new Analyser(text, this.prosodie);
 		if(filename=="" || filename==null) {
-			final Vector<Phoneme> listePhonemes = an.analyserGroupes(""+text.hashCode());
+			an.analyserGroupes(""+text.hashCode());
 			s = new SynthetiseurMbrola(jk, lt.getVoix(), ConfigFile.rechercher("REPERTOIRE_PHO_WAV"), ConfigFile.rechercher("FICHIER_PHO_WAV") + text.hashCode());
 		} else {
-			final Vector<Phoneme> listePhonemes = an.analyserGroupes(filename);
+			an.analyserGroupes(filename);
 			s = new SynthetiseurMbrola(jk, lt.getVoix(), ConfigFile.rechercher("REPERTOIRE_PHO_WAV"), ConfigFile.rechercher("FICHIER_PHO_WAV") + filename);			
 		}
 		return ConfigFile.rechercher("FICHIER_PHO_WAV") + an.getTexte().hashCode();
@@ -238,12 +238,56 @@ public class SIVOXDevint implements Constants {
 	/**
 	 * Pour stopper la synthèse vocale et donc arréter le son en cours de lecture
 	 * on stoppe le jukebox jk, qui lit les sons wave, le lecteur texte lt, et la synthèse s
+	 * @author Justal "Latsuj" Kevin
+	 * @email justal.kevin@gmail.com
 	 */
 	public void stop() {
 		if (this.jk != null) {
 			this.jk.stop();
+		} else {
+			logger.info("La jukebox n'a pas ete inititalise");
 		}
 	}
+	
+	/**
+	 * Permet de stopper un fichier son en particulier
+	 * @param path Le chemin du son dont l'on souhaite arreter la lecture
+	 * @author Justal "Latsuj" Kevin
+	 * @email justal.kevin@gmail.com
+	 */
+	public void stop(String path) {
+		if (this.jk != null) {
+			this.jk.stop(path);
+		} else {
+			logger.info("La jukebox n'a pas ete inititalise");
+		}
+	}
+	
+	/**
+	 * Permet de stopper l'ensemble des sons qui sont jouer de maniere repetitive
+	 * @author Justal "Latsuj" Kevin
+	 * @email justal.kevin@gmail.com
+	 */
+	public void stopBackgroundMusics() {
+		if (this.jk != null) {
+			this.jk.stopBackgroundMusic();;
+		} else {
+			logger.info("La jukebox n'a pas ete inititalise");
+		}
+	}
+
+	/**
+	 * Permet de stopper l'ensemble des sons qui sont jouer sauf ceux qui sont jouer de maniere repetitive
+	 * @author Justal "Latsuj" Kevin
+	 * @email justal.kevin@gmail.com
+	 */
+	public void stopNonBackgroundMusics() {
+		if (this.jk != null) {
+			this.jk.stopNonBackgroundMusic();
+		} else {
+			logger.info("La jukebox n'a pas ete inititalise");
+		}
+	}	
 	
 	/**
 	 * Permet d'activer ou de desactiver la voix de synthese

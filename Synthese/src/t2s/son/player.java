@@ -22,6 +22,8 @@ public class Player extends Thread implements Constants {
 	 * Permet de creer un objet avec un path menant au fichier wav que l'on souhaite lire et son mode de lecture (repetitive ou no)
 	 * @param path Le chemin vers le ficheir que l'on souhaite lire
 	 * @param loop Le mode de lecture. Si true, lecture repetitive. Si false, lecture unique.
+	 * @author Justal "Latsuj" Kevin
+	 * @email justal.kevin@gmail.com
 	 */
 	public Player(String path,boolean loop) {
 		logger.info("Player.class : Creation d'un player en mode loop="+loop+" pour "+path);
@@ -39,6 +41,8 @@ public class Player extends Thread implements Constants {
 	/**
 	 * Permet de retourner le chemin du fichier de ce lecteur
 	 * @return Le path du fichier wav
+	 * @author Justal "Latsuj" Kevin
+	 * @email justal.kevin@gmail.com
 	 */
 	public String getPath() {
 		return path;
@@ -57,6 +61,8 @@ public class Player extends Thread implements Constants {
 	/**
 	 * Permet de definir le mode de lecture du fichier
 	 * @param loop Si true, mode de lecture repetitive. Si false, mode de lecture unique.
+	 * @author Justal "Latsuj" Kevin
+	 * @email justal.kevin@gmail.com
 	 */
 	public void setLoop(boolean loop) {
 		logger.info("Player.class : Changement de lecture du fichier "+this.path);
@@ -65,6 +71,8 @@ public class Player extends Thread implements Constants {
 	
 	/**
 	 * Permet de fermer le thread en cours d'utilisation de maniere propre
+	 * @author Justal "Latsuj" Kevin
+	 * @email justal.kevin@gmail.com
 	 */
 	public void stopSong() {
 		logger.info("Player.class : Fermeture du fichier "+this.path);

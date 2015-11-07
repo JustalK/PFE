@@ -15,9 +15,9 @@
 package t2s.newProsodies;
 
 import java.io.FileWriter;
-import java.util.List;
 import java.util.Vector;
 
+import t2s.Constants;
 import t2s.exception.AnalyseException;
 import t2s.exception.PlusDePhraseException;
 import t2s.prosodie.Phoneme;
@@ -25,24 +25,18 @@ import t2s.traitement.Arbre;
 import t2s.traitement.Phrase;
 import t2s.traitement.Pretraitement;
 import t2s.util.ConfigFile;
-// import t2s.prosodie.CoupleProsodie;
-// import t2s.traitement.AnalyseException;
-// import t2s.traitement.PlusDePhraseException;
 
-public class Analyser {
+public class Analyser implements Constants {
 	
-	private final String	texte;
-	private final int	 prosodie;
-	// private Prosodie1 p1;
-	// private Prosodie2 p2;
-	// private Prosodie3 p3;
+	private final String texte;
+	private final int prosodie;
+	
+	private static String	CHEMIN_REGLES	= ConfigFile.rechercher("CHEMIN_REGLES");
 	
 	public Analyser(final String t, final int p) {
 		this.texte = t;
 		this.prosodie = p;
 	}
-	
-	private static String	CHEMIN_REGLES	= ConfigFile.rechercher("CHEMIN_REGLES");
 	
 	public Vector<Phoneme> analyserGroupes(String filename) {
 		final Vector<Phrase> phrases = new Vector<Phrase>();
@@ -64,20 +58,13 @@ public class Analyser {
 							}
 						}
 					}
-					if (this.prosodie == 1) {
-						chainePhonemes = afficher(new Prosodie1(phrases).prosodier());
-					} else if (this.prosodie == 2) {
-						chainePhonemes = afficher(new Prosodie2(phrases).prosodier());
-					} else {
-						chainePhonemes = afficher(new Prosodie3(phrases).prosodier());
-					}
+					chainePhonemes = afficher(prosodier(phrases));
 					try {
 						final FileWriter fw = new FileWriter(ConfigFile.rechercher("REPERTOIRE_PHO_WAV") + ConfigFile.rechercher("FICHIER_PHO_WAV") + filename + ".pho");
 						fw.write(chainePhonemes);
 						fw.close();
 					} catch (final Exception e) {
-						System.out.println("SI_VOX WARNING: Erreur avec le fichier .pho");
-						e.printStackTrace();
+						logger.warning("La creation du fichier "+filename+" a echoue ou a recontrer un probleme !");
 					}
 					p = pt.nouvellePhrase();
 				}
@@ -87,12 +74,19 @@ public class Analyser {
 		} catch (final AnalyseException aa) {
 			System.err.println(aa);
 		}
+		return prosodier(phrases);
+	}
+	
+	public Vector<Phoneme> prosodier(Vector<Phrase> phrases) {
 		if (this.prosodie == 1) {
 			return new Prosodie1(phrases).prosodier();
 		} else if (this.prosodie == 2) {
 			return new Prosodie2(phrases).prosodier();
-		} else {
+		} else if(this.prosodie == 3) {
 			return new Prosodie3(phrases).prosodier();
+		} else {
+			logger.warning("La prosodie a une valeur incorrecte ("+this.prosodie+")");
+			return null;
 		}
 	}
 	

@@ -24,6 +24,8 @@ public class JukeBox implements Constants {
 	
 	/**
 	 * Permet de creer un JukeBox
+	 * @author Justal "Latsuj" Kevin
+	 * @email justal.kevin@gmail.com
 	 */
 	public JukeBox() {
 		logger.info("JukeBox.Class : Creation d'un JukeBox");
@@ -35,6 +37,8 @@ public class JukeBox implements Constants {
 	/**
 	 * Permet de lancer la lecture d'un son de maniere repetitive
 	 * @param path Le pchemin du fichier que l'on souhaite lire de maniere continue
+	 * @author Justal "Latsuj" Kevin
+	 * @email justal.kevin@gmail.com
 	 */
 	public void playBackgroundMusic(String path) 
 	{
@@ -52,13 +56,15 @@ public class JukeBox implements Constants {
 	/**
 	 * Permet de lancer la lecture d'un son de maniere unique
 	 * @param path Le chemin du fichier que l'on souhaite lire
+	 * @author Justal "Latsuj" Kevin
+	 * @email justal.kevin@gmail.com
 	 */
 	public void playSound(String path) 
 	{
 		logger.info("JukeBox.Class : Lancement d'une lecture unique de "+path);
 		File song = new File(path); 
 		if(song.exists()) {
-			if(player!=null) {
+			if(player!=null && path!=null && !path.equals(player.getPath())) {
 				closeCurrentThreadPlayer();
 			}
 			previousSong = song.getAbsolutePath().replaceFirst("[.][^.]+$", "");
@@ -70,12 +76,88 @@ public class JukeBox implements Constants {
 	}	
 	
 	/**
-	 * Permet d'arreter la lecture de tous les fichiers
+	 * Permet d'arreter tous les fichiers lues
+	 * @author Justal "Latsuj" Kevin
+	 * @email justal.kevin@gmail.com
 	 */
 	public void stop() 
 	{
-		//TODO A faire
+		logger.info("Arret de la lecture de tous les sons");
+		if(player!=null) {
+			player.stopSong();
+		}
+		stopList(listPlayerWaiting);	
+		stopList(listPlayerBackgroundMusics);	
 	}
+
+	/**
+	 * Le chemin du fichier que l'on souhaite fermer
+	 * @param path Le chemin du fichier que l'on souhaite stopper
+	 * @return Retourne true si le fichier a ete stoppe, false sinon
+	 * @author Justal "Latsuj" Kevin
+	 * @email justal.kevin@gmail.com
+	 */
+	public boolean stop(String path) {
+		if(path!=null) {
+			if(player!=null && path.equals(player.getPath())) {
+				logger.info("Arret de la lecture du fichier : "+path);
+				player.stopSong();
+				return true;
+			}
+			for(int i=0;i<listPlayerWaiting.size();i++) {
+				if(path.equals(listPlayerWaiting.get(i).getPath())) {
+					logger.info("Arret de la lecture du fichier : "+path);
+					listPlayerWaiting.get(i).stopSong();
+					return true;
+				}
+			}
+			for(int i=0;i<listPlayerBackgroundMusics.size();i++) {
+				if(path.equals(listPlayerBackgroundMusics.get(i).getPath())) {
+					logger.info("Arret de la lecture du fichier : "+path);
+					listPlayerBackgroundMusics.get(i).stopSong();
+					return true;
+				}
+			}
+		}
+		logger.warning("Le fichier n'existe pas : "+path);
+		return false;
+	}
+	
+	/**
+	 * Permet d'arreter la lecture de tous les fichiers qui ont ete joue avec Loop
+	 * @author Justal "Latsuj" Kevin
+	 * @email justal.kevin@gmail.com
+	 */
+	public void stopBackgroundMusic() 
+	{
+		logger.info("Arret de la lecture de tous les sons qui boucle");
+		stopList(listPlayerBackgroundMusics);
+	}	
+	
+	/**
+	 * Permet d'arreter tous les son jouer sauf ceux en jouer en boucle
+	 * @author Justal "Latsuj" Kevin
+	 * @email justal.kevin@gmail.com
+	 */
+	public void stopNonBackgroundMusic() {
+		logger.info("Arret de la lecture de tous les sons sauf ceux jouer en boucle");
+		if(player!=null) {
+			player.stopSong();
+		}
+		stopList(listPlayerWaiting);	
+	}
+	
+	/**
+	 * Permet de stopper la lecture d'une liste
+	 * @param list La liste dont on souhaite stopper la lecture
+	 * @author Justal "Latsuj" Kevin
+	 * @email justal.kevin@gmail.com
+	 */
+	private void stopList(List<Player> list) {
+		for(int i=0;i<list.size();i++) {
+			list.get(i).stopSong();
+		}		
+	}	
 	
 	/**
 	 * Permet de jouer un fichier creer de maniere silencieuse
@@ -102,6 +184,8 @@ public class JukeBox implements Constants {
 	/**
 	 * Permet de sauvegarder les fichiers creer de maniere silencieuse
 	 * @param path Le chemin vers les fichiers creer de maniere silencieuse
+	 * @author Justal "Latsuj" Kevin
+	 * @email justal.kevin@gmail.com
 	 */
 	public void saveMuet(String path) {
 		logger.info("JukeBox.Class : Fermeture du fichier "+path);
@@ -118,6 +202,8 @@ public class JukeBox implements Constants {
 	 * Permet de savoir si le fichier lu est un fichier "ressources"
 	 * @param path Path du fichier 
 	 * @return Retourne true si le fichier est une ressource ou false sinon
+	 * @author Justal "Latsuj" Kevin
+	 * @email justal.kevin@gmail.com
 	 */
 	private boolean isRessources(String path) {
 		if(path!=null && path.contains("ressources")) {
@@ -128,6 +214,8 @@ public class JukeBox implements Constants {
 	
 	/**
 	 * Permet de finir tous les threads courant petu importe ce qu'ils font.
+	 * @author Justal "Latsuj" Kevin
+	 * @email justal.kevin@gmail.com
 	 */
 	public void killThread() {
 		logger.info("JukeBox.Class : Fermer l'ensemble des threads");
@@ -138,6 +226,8 @@ public class JukeBox implements Constants {
 
 	/**
 	 * Permet de supprimer proprement le dernier fichier wav et pho utilisé
+	 * @author Justal "Latsuj" Kevin
+	 * @email justal.kevin@gmail.com
 	 */
 	public void closeCurrentThreadPlayer() {
 		if(player!=null) {
@@ -161,6 +251,8 @@ public class JukeBox implements Constants {
 	/**
 	 * Permet de fermer tous les threads proprement contenu dans une liste
 	 * @param list La liste dont on souhaite supprimer les threads
+	 * @author Justal "Latsuj" Kevin
+	 * @email justal.kevin@gmail.com
 	 */
 	private void killList(List<Player> list) {
 		for(int i=0;i<list.size();i++) {
