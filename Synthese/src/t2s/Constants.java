@@ -8,5 +8,7 @@ public interface Constants {
 	int LOOP_WAV = 2;
 	int LOOP_TEXTE = 3;
 	int MUET = 4;
+	int PLAY_MUET = 5;
+	int LOOP_MUET = 6;
 	Logger logger = Logger.getLogger("Information");
 }

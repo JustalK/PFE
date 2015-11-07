@@ -1,24 +1,16 @@
 package t2s.son;
 
-import java.applet.Applet;
-import java.applet.AudioClip;
-import java.io.File;
-import java.io.IOException;
+import java.applet.*;
 import java.net.MalformedURLException;
 import java.net.URL;
 
-import javax.sound.sampled.AudioFormat;
-import javax.sound.sampled.AudioInputStream;
-import javax.sound.sampled.AudioSystem;
-import javax.sound.sampled.Clip;
-import javax.sound.sampled.DataLine;
-import javax.sound.sampled.LineEvent;
-import javax.sound.sampled.LineListener;
-import javax.sound.sampled.LineUnavailableException;
-import javax.sound.sampled.UnsupportedAudioFileException;
-
 import t2s.Constants;
 
+/**
+ * Fonction permettant d'adresser un son a un lecteur (un thread)
+ * @author Justal "Latsuj" Kevin
+ * @email justal.kevin@gmail.com
+ */
 public class Player extends Thread implements Constants {
 
 	private AudioClip ac;
@@ -26,19 +18,28 @@ public class Player extends Thread implements Constants {
 	private boolean loop;
 	private URL u;
 	
+	/**
+	 * Permet de creer un objet avec un path menant au fichier wav que l'on souhaite lire et son mode de lecture (repetitive ou no)
+	 * @param path Le chemin vers le ficheir que l'on souhaite lire
+	 * @param loop Le mode de lecture. Si true, lecture repetitive. Si false, lecture unique.
+	 */
 	public Player(String path,boolean loop) {
 		logger.info("Player.class : Creation d'un player en mode loop="+loop+" pour "+path);
 		this.path = path;
 		this.loop = loop;
+		
 		try {
 			u = new URL("file:"  + path);
+			ac = Applet.newAudioClip(u);
 		} catch (MalformedURLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			logger.warning("Player.class : Creation d'un player impossible (path incorrect)");
 		}
-		ac = Applet.newAudioClip(u);
 	}
 	
+	/**
+	 * Permet de retourner le chemin du fichier de ce lecteur
+	 * @return Le path du fichier wav
+	 */
 	public String getPath() {
 		return path;
 	}
@@ -53,6 +54,10 @@ public class Player extends Thread implements Constants {
 		}
 	}
 	
+	/**
+	 * Permet de definir le mode de lecture du fichier
+	 * @param loop Si true, mode de lecture repetitive. Si false, mode de lecture unique.
+	 */
 	public void setLoop(boolean loop) {
 		logger.info("Player.class : Changement de lecture du fichier "+this.path);
 		this.loop = loop;
@@ -64,6 +69,5 @@ public class Player extends Thread implements Constants {
 	public void stopSong() {
 		logger.info("Player.class : Fermeture du fichier "+this.path);
 		ac.stop();
-		Thread.interrupted();
 	}
 }

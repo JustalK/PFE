@@ -10,6 +10,11 @@ import java.util.List;
 
 import t2s.Constants;
 
+/**
+ * Permet de creer le jukebox qui gera les sons 
+ * @author Justal "Latsuj" Kevin
+ * @email justal.kevin@gmail.com
+ */
 public class JukeBox implements Constants {
 	
 	private Player player;
@@ -17,13 +22,60 @@ public class JukeBox implements Constants {
 	private List<Player> listPlayerWaiting;
 	private String previousSong;
 	
+	/**
+	 * Permet de creer un JukeBox
+	 */
 	public JukeBox() {
+		logger.info("JukeBox.Class : Creation d'un JukeBox");
 		player = null;
 		listPlayerBackgroundMusics = new ArrayList<Player>();
 		listPlayerWaiting = new ArrayList<Player>();
 	}
 	
+	/**
+	 * Permet de lancer la lecture d'un son de maniere repetitive
+	 * @param path Le pchemin du fichier que l'on souhaite lire de maniere continue
+	 */
+	public void playBackgroundMusic(String path) 
+	{
+		logger.info("JukeBox.Class : Lancement d'une lecture en boucle de "+path);
+		File song = new File(path);
+		if(song.exists()) {
+			Player tmp = new Player(path,true);
+			listPlayerBackgroundMusics.add(tmp);
+			tmp.start();
+		} else {
+			logger.warning("JukeBox.Class : Le fichier n'existe pas "+path);
+		}
+	}		
 	
+	/**
+	 * Permet de lancer la lecture d'un son de maniere unique
+	 * @param path Le chemin du fichier que l'on souhaite lire
+	 */
+	public void playSound(String path) 
+	{
+		logger.info("JukeBox.Class : Lancement d'une lecture unique de "+path);
+		File song = new File(path); 
+		if(song.exists()) {
+			if(player!=null) {
+				closeCurrentThreadPlayer();
+			}
+			previousSong = song.getAbsolutePath().replaceFirst("[.][^.]+$", "");
+			player = new Player(path,false);
+			player.start();
+		} else {
+			logger.warning("JukeBox.Class : Le fichier n'existe pas "+path);	
+		}
+	}	
+	
+	/**
+	 * Permet d'arreter la lecture de tous les fichiers
+	 */
+	public void stop() 
+	{
+		//TODO A faire
+	}
 	
 	/**
 	 * Permet de jouer un fichier creer de maniere silencieuse
@@ -33,6 +85,7 @@ public class JukeBox implements Constants {
 	 * @email justal.kevin@gmail.com
 	 */
 	public void playMuet(String path,boolean loop) {
+		logger.info("JukeBox.Class : Lecture d'un fichier en mode loop="+loop+" pour "+path);
 		File song = new File(path);
 		if(song.exists()) {
 			for(int i=0;i<listPlayerWaiting.size();i++) {
@@ -41,37 +94,26 @@ public class JukeBox implements Constants {
 					listPlayerWaiting.get(i).start();
 				}
 			}
+		} else {
+			logger.warning("JukeBox.Class : Le fichier n'existe pas "+path);	
+		}
+	}	
+	
+	/**
+	 * Permet de sauvegarder les fichiers creer de maniere silencieuse
+	 * @param path Le chemin vers les fichiers creer de maniere silencieuse
+	 */
+	public void saveMuet(String path) {
+		logger.info("JukeBox.Class : Fermeture du fichier "+path);
+		File song = new File(path);
+		if(song.exists()) {
+			Player tmp = new Player(path,false);
+			listPlayerWaiting.add(tmp);
+		} else {
+			logger.warning("JukeBox.Class : Fichier qui n'existe pas ("+path+")");
 		}
 	}
 	
-	public void playBackgroundMusic(String path) 
-	{
-		File song = new File(path);
-		if(song.exists()) {
-			Player tmp = new Player(path,true);
-			listPlayerBackgroundMusics.add(tmp);
-			tmp.start();
-		}
-	}		
-	
-	public void playSound(String path) 
-	{
-		File song = new File(path); 
-		// Is the file exist ?
-		if(song.exists()) {
-			// If it's the first start, we have not any player
-			
-			if(player!=null) {
-				closeCurrentThreadPlayer();
-			}
-			previousSong = song.getAbsolutePath().replaceFirst("[.][^.]+$", "");
-			player = new Player(path,false);
-			player.start();
-		} else {
-			System.err.println("Le fichier suivant est introuvable :\n"+path);
-		}
-	}	
-
 	/**
 	 * Permet de savoir si le fichier lu est un fichier "ressources"
 	 * @param path Path du fichier 
@@ -82,18 +124,24 @@ public class JukeBox implements Constants {
 			return true;
 		}
 		return false;
-	}
+	}	
 	
-	public void stop() 
-	{
-		
+	/**
+	 * Permet de finir tous les threads courant petu importe ce qu'ils font.
+	 */
+	public void killThread() {
+		logger.info("JukeBox.Class : Fermer l'ensemble des threads");
+		closeCurrentThreadPlayer();
+		killList(listPlayerBackgroundMusics);
+		killList(listPlayerWaiting);
 	}
-	
+
 	/**
 	 * Permet de supprimer proprement le dernier fichier wav et pho utilisé
 	 */
 	public void closeCurrentThreadPlayer() {
 		if(player!=null) {
+			logger.info("JukeBox.Class : Fermeture du fichier "+player.getPath());
 			player.stopSong();
 			player.interrupt();
 			while(player.isAlive()) {
@@ -104,46 +152,25 @@ public class JukeBox implements Constants {
 				File wav = new File(previousSong+".wav");
 				pho.delete();
 				wav.delete();
-			}	
-		}
-	}
-	
-	/**
-	 * Permet de finir tous les threads courant petu importe ce qu'ils font.
-	 *
-	 */
-	//TODO DUPLICATION ! I HAVE TO CHANGE THAT
-	public void killThread() {
-		if(player!=null) {
-			closeCurrentThreadPlayer();
-		}
-		for(int i=0;i<listPlayerBackgroundMusics.size();i++) {
-			listPlayerBackgroundMusics.get(i).stopSong();
-			File wav = new File(listPlayerBackgroundMusics.get(i).getPath().replaceFirst("[.][^.]+$", "")+".wav");
-			File pho = new File(listPlayerBackgroundMusics.get(i).getPath().replaceFirst("[.][^.]+$", "")+".pho");
-			if(!isRessources(listPlayerBackgroundMusics.get(i).getPath())) {
-				wav.delete();
-				pho.delete();
+			} else {
+				logger.info("JukeBox.Class : Non suppression du fichier "+player.getPath());
 			}
 		}
-		for(int i=0;i<listPlayerWaiting.size();i++) {
-			listPlayerWaiting.get(i).stopSong();
-			File wav = new File(listPlayerWaiting.get(i).getPath().replaceFirst("[.][^.]+$", "")+".wav");
-			File pho = new File(listPlayerWaiting.get(i).getPath().replaceFirst("[.][^.]+$", "")+".pho");
-			if(!isRessources(listPlayerWaiting.get(i).getPath())) {
+	}	
+	
+	/**
+	 * Permet de fermer tous les threads proprement contenu dans une liste
+	 * @param list La liste dont on souhaite supprimer les threads
+	 */
+	private void killList(List<Player> list) {
+		for(int i=0;i<list.size();i++) {
+			list.get(i).stopSong();
+			File wav = new File(list.get(i).getPath().replaceFirst("[.][^.]+$", "")+".wav");
+			File pho = new File(list.get(i).getPath().replaceFirst("[.][^.]+$", "")+".pho");
+			if(!isRessources(list.get(i).getPath())) {
 				wav.delete();
 				pho.delete();		
 			}
-		}
-		
+		}		
 	}
-
-	public void saveMuet(String path) {
-		File song = new File(path);
-		if(song.exists()) {
-			Player tmp = new Player(path,false);
-			listPlayerWaiting.add(tmp);
-		}
-	}
-	
 }

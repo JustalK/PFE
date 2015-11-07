@@ -121,11 +121,13 @@ public class GestionSon extends FenetreAbstraite implements ActionListener{
     		text += "par exemple si on lit la question dans un fichier texte";
     		text += "il faut lire directement le texte avec playText";
     		// texte long, interruptible car un seul paramètre
-    		voix.loopText(text);
+    		voix.muet(text, "Latsuj");
+    		//voix.playText(text);
     	}
     	else if (source.equals(question1)) {
     		// on lit le wav, non interruptible car (true)
-    		voix.playWav("../ressources/sons/questionCourte.wav",true);
+    		//voix.playWav("../ressources/sons/questionCourte.wav",true);
+    		voix.playWavWithFilename("Latsuj");
     	}
         else if (source.equals(question3)) {
         	// on tire deux nombre aléatoires et on lit l'opération
@@ -134,7 +136,7 @@ public class GestionSon extends FenetreAbstraite implements ActionListener{
         	int y = r.nextInt(30);
         	String text = x + " + " + y + " = ";
         	//voix.playText(text);
-        	voix.muet(text, "aaaa");
+        	//voix.muet(text, "aaaa");
     	}
     	// on redonne le focus au JFrame principal 
     	// (après un clic, le focus est sur le bouton)

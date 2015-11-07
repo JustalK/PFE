@@ -72,7 +72,7 @@ public class Analyser {
 						chainePhonemes = afficher(new Prosodie3(phrases).prosodier());
 					}
 					try {
-						final FileWriter fw = new FileWriter(filename);
+						final FileWriter fw = new FileWriter(ConfigFile.rechercher("REPERTOIRE_PHO_WAV") + ConfigFile.rechercher("FICHIER_PHO_WAV") + filename + ".pho");
 						fw.write(chainePhonemes);
 						fw.close();
 					} catch (final Exception e) {

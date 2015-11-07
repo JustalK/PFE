@@ -156,7 +156,6 @@ public class SynthetiseurMbrola {
 		final String cmd = this.exe + " -t " + RAPIDITE + " " + " -f " + FR + " " + " -v " + VOLUME + " " + voix + " " + this.pathFichier + this.fichier + ".pho " + this.pathFichier + this.fichier
 		        + ".wav";
 		
-
 		try {
 			Process proc = Runtime.getRuntime().exec(cmd);
 			proc.waitFor();

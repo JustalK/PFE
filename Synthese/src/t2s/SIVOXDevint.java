@@ -16,11 +16,13 @@
 package t2s;
 
 import java.io.IOException;
+import java.util.Vector;
 import java.util.logging.FileHandler;
 import java.util.logging.Logger;
 import java.util.logging.SimpleFormatter;
 
 import t2s.newProsodies.Analyser;
+import t2s.prosodie.Phoneme;
 import t2s.son.JukeBox;
 import t2s.son.LecteurTexte;
 import t2s.son.SynthetiseurMbrola;
@@ -55,7 +57,7 @@ public class SIVOXDevint implements Constants {
 	 * @author Justal "Latsuj" Kevin
 	 * @email justal.kevin@gmail.com
 	 */
-	public SIVOXDevint(final int voix) {			
+	public SIVOXDevint(final int voix) {	
 		this(voix,true,3);
 	}	
 	
@@ -68,11 +70,7 @@ public class SIVOXDevint implements Constants {
 	 * @email justal.kevin@gmail.com
 	 */
 	public SIVOXDevint(final int voix,final boolean on,final int prosodie) {
-		this.jk = new JukeBox();
-		this.lt = new LecteurTexte(jk);
-		this.on = on;
-		lt.setVoix(voix);
-		this.prosodie = prosodie;
+		
 		try {
 			FileHandler fh = new FileHandler(System.getProperty("java.io.tmpdir")+"Latsuj.log");
 			logger.addHandler(fh);
@@ -83,7 +81,14 @@ public class SIVOXDevint implements Constants {
 			e.printStackTrace();
 		} catch (IOException e) {
 			e.printStackTrace();
-		}
+		}		
+		
+		this.jk = new JukeBox();
+		this.lt = new LecteurTexte(jk);
+		this.on = on;
+		lt.setVoix(1);
+		this.prosodie = prosodie;
+		this.setVoix(voix);
 		logger.info("Creation d'une SIVOXDevint [ prosodie : "+this.prosodie+" | Voix : "+voix+" | Etat : "+this.on+" ]");
 	}
 	
@@ -133,9 +138,11 @@ public class SIVOXDevint implements Constants {
 	private String createSynthetiseur(String text,String filename) {
 		an = new Analyser(text, this.prosodie);
 		if(filename=="" || filename==null) {
+			final Vector<Phoneme> listePhonemes = an.analyserGroupes(""+text.hashCode());
 			s = new SynthetiseurMbrola(jk, lt.getVoix(), ConfigFile.rechercher("REPERTOIRE_PHO_WAV"), ConfigFile.rechercher("FICHIER_PHO_WAV") + text.hashCode());
 		} else {
-			s = new SynthetiseurMbrola(jk, lt.getVoix(), ConfigFile.rechercher("REPERTOIRE_PHO_WAV"), filename);			
+			final Vector<Phoneme> listePhonemes = an.analyserGroupes(filename);
+			s = new SynthetiseurMbrola(jk, lt.getVoix(), ConfigFile.rechercher("REPERTOIRE_PHO_WAV"), ConfigFile.rechercher("FICHIER_PHO_WAV") + filename);			
 		}
 		return ConfigFile.rechercher("FICHIER_PHO_WAV") + an.getTexte().hashCode();
 	}
@@ -189,6 +196,7 @@ public class SIVOXDevint implements Constants {
 	 */
 	public void setProsodie(final int p) {
 		logger.info("Modification de la prosodie : "+p);
+		
 		if(p<1) {
 			this.prosodie = 1;
 		} else if(p>3) {
@@ -214,6 +222,7 @@ public class SIVOXDevint implements Constants {
 	 */
 	public void setVoix(final int voix) {
 		logger.info("Modification de la voix : "+voix);
+		
 		final int nbvoix = Integer.parseInt(ConfigFile.rechercher("NBVOIX"));
 		int vox;
 		if(voix > nbvoix) {
@@ -266,6 +275,28 @@ public class SIVOXDevint implements Constants {
 	}
 	
 	/**
+	 * Permet de lire un fichier wav a partir de son nom
+	 * @param filename Le nom du fichier que l'on souhaite lire (exemple : latsuj.wav)
+	 * @author Justal "Latsuj" Kevin
+	 * @email justal.kevin@gmail.com
+	 */
+	public void playWavWithFilename(final String filename) {
+		logger.info("SIVOXDevint.class : Lecture unique d'un fichier wav cree silencieusement "+filename);
+		action(System.getProperty("java.io.tmpdir")+ConfigFile.rechercher("FICHIER_PHO_WAV") + filename+".wav", PLAY_MUET);
+	}
+
+	/**
+	 * Permet de lire un fichier wav a partir de son nom
+	 * @param filename Le nom du fichier que l'on souhaite lire (nom de fichier sans l'extension)
+	 * @author Justal "Latsuj" Kevin
+	 * @email justal.kevin@gmail.com
+	 */
+	public void loopWavWithFilename(final String filename) {
+		logger.info("SIVOXDevint.class : Lecture en boucle d'un fichier wav cree silencieusement "+filename);
+		action(System.getProperty("java.io.tmpdir")+ConfigFile.rechercher("FICHIER_PHO_WAV") +filename+".wav", LOOP_MUET);
+	}	
+	
+	/**
 	 * Permet de gerer les differentes lectures en fonction des variables
 	 * @param path Le path du fichier wav a lire, si il y a un fichier a lire 
 	 * @param type Le type de la lecture
@@ -273,7 +304,7 @@ public class SIVOXDevint implements Constants {
 	 * @email justal.kevin@gmail.com
 	 */
 	private void action(final String path, int type) {
-		if (this.on && s!=null && jk!=null) {
+		if (this.on) {
 			switch(type) {
 				case LOOP_TEXTE: s.loop();
 					break;
@@ -281,9 +312,14 @@ public class SIVOXDevint implements Constants {
 					break;
 				case PLAY_TEXTE:s.play(true);
 					break;
-				case PLAY_WAV: this.jk.playSound(path);
+				case PLAY_WAV: 
+					this.jk.playSound(path);
 					break;
 				case MUET: s.muet();
+					break;
+				case PLAY_MUET: this.jk.playMuet(path,false);
+					break;
+				case LOOP_MUET: this.jk.playMuet(path,true);
 					break;
 				default:
 					break;
