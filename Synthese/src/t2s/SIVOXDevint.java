@@ -38,7 +38,6 @@ public class SIVOXDevint implements Constants {
 	private Analyser	       an;
 	private boolean	           on;	     // true/false pour valider/invalider la synthèse SIVOX
 	private int	               prosodie; // code la prosodie utilisée, de 1 à 3 (3 par défaut)
-	private static Logger logger = Logger.getLogger("Information");
 	
 	/**
 	 * Constructeur par défaut : voix de Thierry

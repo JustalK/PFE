@@ -8,7 +8,9 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
-public class JukeBox {
+import t2s.Constants;
+
+public class JukeBox implements Constants {
 	
 	private Player player;
 	private List<Player> listPlayerBackgroundMusics;

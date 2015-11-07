@@ -17,7 +17,9 @@ import javax.sound.sampled.LineListener;
 import javax.sound.sampled.LineUnavailableException;
 import javax.sound.sampled.UnsupportedAudioFileException;
 
-public class Player extends Thread {
+import t2s.Constants;
+
+public class Player extends Thread implements Constants {
 
 	private AudioClip ac;
 	private String path;
@@ -25,6 +27,7 @@ public class Player extends Thread {
 	private URL u;
 	
 	public Player(String path,boolean loop) {
+		logger.info("Player.class : Creation d'un player en mode loop="+loop+" pour "+path);
 		this.path = path;
 		this.loop = loop;
 		try {
@@ -42,6 +45,7 @@ public class Player extends Thread {
 	
 	@Override
 	public void run() {
+		logger.info("Player.class : Lecture du fichier "+this.path);
 		if(loop) {
 			ac.loop();
 		} else {
@@ -50,6 +54,7 @@ public class Player extends Thread {
 	}
 	
 	public void setLoop(boolean loop) {
+		logger.info("Player.class : Changement de lecture du fichier "+this.path);
 		this.loop = loop;
 	}
 	
@@ -57,6 +62,7 @@ public class Player extends Thread {
 	 * Permet de fermer le thread en cours d'utilisation de maniere propre
 	 */
 	public void stopSong() {
+		logger.info("Player.class : Fermeture du fichier "+this.path);
 		ac.stop();
 		Thread.interrupted();
 	}
