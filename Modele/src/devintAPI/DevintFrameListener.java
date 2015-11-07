@@ -73,12 +73,7 @@ public abstract class DevintFrameListener extends JFrame implements KeyListener 
         addWindowListener(new WindowAdapter() {
             public void windowClosing(WindowEvent e) {
     		  final File folder = new File(System.getProperty("java.io.tmpdir"));
-    		  try {
 				voix.clean();
-			} catch (IOException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
-			}
               System.exit(0);
             }
           });

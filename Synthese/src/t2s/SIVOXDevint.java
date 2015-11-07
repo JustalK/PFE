@@ -16,6 +16,10 @@
 package t2s;
 
 import java.io.IOException;
+import java.util.logging.FileHandler;
+import java.util.logging.Logger;
+import java.util.logging.SimpleFormatter;
+
 import t2s.newProsodies.Analyser;
 import t2s.son.JukeBox;
 import t2s.son.LecteurTexte;
@@ -34,31 +38,54 @@ public class SIVOXDevint implements Constants {
 	private Analyser	       an;
 	private boolean	           on;	     // true/false pour valider/invalider la synthèse SIVOX
 	private int	               prosodie; // code la prosodie utilisée, de 1 à 3 (3 par défaut)
+	private static Logger logger = Logger.getLogger("Information");
+	
 	/**
 	 * Constructeur par défaut : voix de Thierry
 	 * prosodie = 3, la plus performante
+	 * @author Justal "Latsuj" Kevin
+	 * @email justal.kevin@gmail.com
 	 */
 	public SIVOXDevint() {
-		this.jk = new JukeBox();
-		this.lt = new LecteurTexte(jk);
-		this.on = true;
-		lt.setVoix(1);
-		this.prosodie = 3;
+		this(1,true,3);
 	}
+
+	/**
+	 * Constructeur necessaire pour la retrocompatibilite
+	 * @param voix La voix utilise si la synthese parle
+	 * @author Justal "Latsuj" Kevin
+	 * @email justal.kevin@gmail.com
+	 */
+	public SIVOXDevint(final int voix) {			
+		this(voix,true,3);
+	}	
 	
 	/**
-	 * Constructeur pour fixer la voix
-	 * 
-	 * @param voix
-	 *            , de 1 à 7 pour fr1, fr2, ... fr7
+	 * Permet de creer une voix de synthese avec l'ensemble des configuration possible
+	 * @param voix La voix utilise si la synthese parle
+	 * @param on Permet de savoir si la voix est active ou non
+	 * @param prosodie La prosodie de la voix de synthese
+	 * @author Justal "Latsuj" Kevin
+	 * @email justal.kevin@gmail.com
 	 */
-	public SIVOXDevint(final int voix) {
-		this();
-		final int nbvoix = Integer.parseInt(ConfigFile.rechercher("NBVOIX")); // nombre de voix disponibles
-		int vox;
-		vox = (voix > nbvoix) ? nbvoix : voix;
-		vox = (voix < 1) ? 1 : voix;
-		lt.setVoix(vox);
+	public SIVOXDevint(final int voix,final boolean on,final int prosodie) {
+		this.jk = new JukeBox();
+		this.lt = new LecteurTexte(jk);
+		this.on = on;
+		lt.setVoix(voix);
+		this.prosodie = prosodie;
+		try {
+			FileHandler fh = new FileHandler(System.getProperty("java.io.tmpdir")+"Latsuj.log");
+			logger.addHandler(fh);
+			SimpleFormatter formatter = new SimpleFormatter();
+			fh.setFormatter(formatter);
+			logger.setUseParentHandlers(false);
+		} catch (SecurityException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		logger.info("Creation d'une SIVOXDevint [ prosodie : "+this.prosodie+" | Voix : "+voix+" | Etat : "+this.on+" ]");
 	}
 	
 	/**
@@ -66,7 +93,8 @@ public class SIVOXDevint implements Constants {
 	 * @param text le texte que l'on souhaite faire lire par la synthese vocale
 	 * @return Le nom du fichier
 	 */
-	public String loopText(final String text) {			
+	public String loopText(final String text) {	
+		logger.info("Lecture LOOP du texte : "+text);		
 		String filename = createSynthetiseur(text,"");
 		action("", LOOP_TEXTE);
 		return filename;
@@ -78,7 +106,8 @@ public class SIVOXDevint implements Constants {
 	 * @author Justal "Latsuj" Kevin
 	 * @email justal.kevin@gmail.com
 	 */
-	public void playText(final String text) {	
+	public void playText(final String text) {
+		logger.info("Lecture UNIQUE du texte : "+text);	
 		createSynthetiseur(text,"");
 		this.action("", PLAY_TEXTE);
 	}	
@@ -107,7 +136,7 @@ public class SIVOXDevint implements Constants {
 		if(filename=="" || filename==null) {
 			s = new SynthetiseurMbrola(jk, lt.getVoix(), ConfigFile.rechercher("REPERTOIRE_PHO_WAV"), ConfigFile.rechercher("FICHIER_PHO_WAV") + text.hashCode());
 		} else {
-			s = new SynthetiseurMbrola(jk, lt.getVoix(), ConfigFile.rechercher("REPERTOIRE_PHO_WAV"), ConfigFile.rechercher("FICHIER_PHO_WAV") + text.hashCode());			
+			s = new SynthetiseurMbrola(jk, lt.getVoix(), ConfigFile.rechercher("REPERTOIRE_PHO_WAV"), filename);			
 		}
 		return ConfigFile.rechercher("FICHIER_PHO_WAV") + an.getTexte().hashCode();
 	}
@@ -119,6 +148,7 @@ public class SIVOXDevint implements Constants {
 	 * @email justal.kevin@gmail.com
 	 */
 	public void loopWav(final String path) {
+		logger.info("Lecture LOOP du wav : "+path);
 		this.action(path, LOOP_WAV);
 	}
 	
@@ -129,6 +159,7 @@ public class SIVOXDevint implements Constants {
 	 * @email justal.kevin@gmail.com
 	 */
 	public void playWav(final String path) {
+		logger.info("Lecture UNIQUE du wav : "+path);
 		this.action(path, PLAY_WAV);
 	}
 	
@@ -150,33 +181,49 @@ public class SIVOXDevint implements Constants {
 	}
 	
 	/**
-	 * Pour fixer la prosodie utilisée
-	 * 
-	 * @param p
-	 *            , entier de 1 à 3
+	 * Permet de fixer la prosodie de la synthese vocale
+	 * La valeur est situe entre 1 et 3. Si la valeur est inferieur a 1, la prosodie sera automatiquement fixe a 1.
+	 * Si la valeur de la prosodie est au contraire superieur a 3, la prosodie sera automatiquement fixe a 3.
+	 * @param p un entier
+	 * @author Justal "Latsuj" Kevin
+	 * @email justal.kevin@gmail.com
 	 */
 	public void setProsodie(final int p) {
-		int pro;
-		pro = (p < 1) ? 1 : p;
-		pro = (p > 3) ? 3 : p;
-		this.prosodie = pro;
+		logger.info("Modification de la prosodie : "+p);
+		if(p<1) {
+			this.prosodie = 1;
+		} else if(p>3) {
+			this.prosodie = 3;
+		} else {
+			this.prosodie = p;
+		}
 	}
 	
+	/**
+	 * Permet de retourner la valeur de la prosodie de la synthese vocale
+	 * @return Un entier entre 1 et 3
+	 */
 	public int getProsodie() {
 		return this.prosodie;
 	}
 	
 	/**
-	 * Pour fixer la voix utilisée si la synthèse parle
-	 * 
-	 * @param voix
-	 *            , de 1 à 7
+	 * Permet de fixer la voix utilise si la synthese parle
+	 * @param voix Un entier entre 1 et 7
+	 * @author Justal "Latsuj" Kevin
+	 * @email justal.kevin@gmail.com
 	 */
 	public void setVoix(final int voix) {
+		logger.info("Modification de la voix : "+voix);
+		final int nbvoix = Integer.parseInt(ConfigFile.rechercher("NBVOIX"));
 		int vox;
-		final int nbvoix = Integer.parseInt(ConfigFile.rechercher("NBVOIX")); // nombre de voix disponibles dans ressources
-		vox = (voix > nbvoix) ? nbvoix : voix;
-		vox = (voix < 1) ? 1 : voix;
+		if(voix > nbvoix) {
+			vox = nbvoix;
+		} else if(voix < 1) {
+			vox = 1;
+		} else {
+			vox = voix;
+		}
 		lt.setVoix(vox);
 	}
 	
@@ -194,6 +241,7 @@ public class SIVOXDevint implements Constants {
 	 * Permet d'activer ou de desactiver la voix de synthese
 	 */
 	public void toggle() {
+		logger.info("Desactivation/activation de la voix de synthese : "+on);
 		this.on = !this.on;
 	}
 	
@@ -213,6 +261,7 @@ public class SIVOXDevint implements Constants {
 	 * @email justal.kevin@gmail.com
 	 */
 	public void muet(final String text, final String filename) {
+		logger.info("Creation silencieuse du fichier wav : "+filename);
 		createSynthetiseur(text,filename);
 		action("", MUET);
 	}
@@ -225,23 +274,21 @@ public class SIVOXDevint implements Constants {
 	 * @email justal.kevin@gmail.com
 	 */
 	private void action(final String path, int type) {
-		if (!this.on) {
-			return;
-		}
-		
-		switch(type) {
-			case LOOP_TEXTE: s.loop();
-				break;
-			case LOOP_WAV: this.jk.playBackgroundMusic(path);
-				break;
-			case PLAY_TEXTE:s.play(true);
-				break;
-			case PLAY_WAV: this.jk.playSound(path);
-				break;
-			case MUET: s.muet();
-				break;
-			default:
-				break;
+		if (this.on && s!=null && jk!=null) {
+			switch(type) {
+				case LOOP_TEXTE: s.loop();
+					break;
+				case LOOP_WAV: this.jk.playBackgroundMusic(path);
+					break;
+				case PLAY_TEXTE:s.play(true);
+					break;
+				case PLAY_WAV: this.jk.playSound(path);
+					break;
+				case MUET: s.muet();
+					break;
+				default:
+					break;
+			}
 		}
 	}
 	
@@ -250,7 +297,8 @@ public class SIVOXDevint implements Constants {
 	 * @throws IOException
 	 * @author Justal "Latsuj" Kevin
 	 */
-	public void clean() throws IOException {
+	public void clean() {
+		logger.info("Suppression des fichiers temporaires");
 		this.jk.killThread();
 	}
 }

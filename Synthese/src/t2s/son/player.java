@@ -58,5 +58,6 @@ public class Player extends Thread {
 	 */
 	public void stopSong() {
 		ac.stop();
+		Thread.interrupted();
 	}
 }

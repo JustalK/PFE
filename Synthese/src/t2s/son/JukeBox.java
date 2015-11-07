@@ -91,18 +91,19 @@ public class JukeBox {
 	 * Permet de supprimer proprement le dernier fichier wav et pho utilisé
 	 */
 	public void closeCurrentThreadPlayer() {
-		player.stopSong();
-		player.interrupt();
-		if(player.isAlive()) {
-			System.err.println("Le thread is not over !");	
-		} else {
+		if(player!=null) {
+			player.stopSong();
+			player.interrupt();
+			while(player.isAlive()) {
+				// On attend que le thread soit ferme pour avancer
+			}
 			if(!isRessources(player.getPath())) {
 				File pho = new File(previousSong+".pho");
 				File wav = new File(previousSong+".wav");
 				pho.delete();
 				wav.delete();
-			}
-		}		
+			}	
+		}
 	}
 	
 	/**
@@ -118,15 +119,19 @@ public class JukeBox {
 			listPlayerBackgroundMusics.get(i).stopSong();
 			File wav = new File(listPlayerBackgroundMusics.get(i).getPath().replaceFirst("[.][^.]+$", "")+".wav");
 			File pho = new File(listPlayerBackgroundMusics.get(i).getPath().replaceFirst("[.][^.]+$", "")+".pho");
-			wav.delete();
-			pho.delete();
+			if(!isRessources(listPlayerBackgroundMusics.get(i).getPath())) {
+				wav.delete();
+				pho.delete();
+			}
 		}
 		for(int i=0;i<listPlayerWaiting.size();i++) {
 			listPlayerWaiting.get(i).stopSong();
 			File wav = new File(listPlayerWaiting.get(i).getPath().replaceFirst("[.][^.]+$", "")+".wav");
 			File pho = new File(listPlayerWaiting.get(i).getPath().replaceFirst("[.][^.]+$", "")+".pho");
-			wav.delete();
-			pho.delete();			
+			if(!isRessources(listPlayerWaiting.get(i).getPath())) {
+				wav.delete();
+				pho.delete();		
+			}
 		}
 		
 	}
