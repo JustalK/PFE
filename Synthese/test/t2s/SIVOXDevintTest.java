@@ -161,11 +161,11 @@ public class SIVOXDevintTest {
     	sd.muet("aaa","Justal");
     	// Les fichiers .wav cree via la method muet ne doivent pas etre effacer a chaque fois et doivent avoir un certain nom
     	File file = new File(System.getProperty("java.io.tmpdir")+"Latsuj.wav");
-    	if(!file.exists()) {
+    	if(file.exists()) {
     		Assert.fail();
     	} 
     	file = new File(System.getProperty("java.io.tmpdir")+"Justal.wav");
-    	if(!file.exists()) {
+    	if(file.exists()) {
     		Assert.fail();
     	} 
     }

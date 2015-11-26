@@ -16,15 +16,15 @@
 package t2s;
 
 import java.io.IOException;
-import java.util.Vector;
+import java.io.InputStream;
+import java.net.URLEncoder;
 import java.util.logging.FileHandler;
-import java.util.logging.Logger;
 import java.util.logging.SimpleFormatter;
 
 import t2s.newProsodies.Analyser;
-import t2s.prosodie.Phoneme;
 import t2s.son.JukeBox;
 import t2s.son.LecteurTexte;
+import t2s.son.SimpleTextToSpeech;
 import t2s.son.SynthetiseurMbrola;
 import t2s.util.ConfigFile;
 
@@ -33,7 +33,7 @@ import t2s.util.ConfigFile;
  * 
  * @author Ecole Polytechnique Universitaire Nice Sophia Antipolis
  */
-public class SIVOXDevint implements Constants {
+public final class SIVOXDevint implements Constants {
 	private JukeBox	           jk;	     // pour jouer les wav
 	private LecteurTexte	   lt;	     // pour choisir une voix
 	private SynthetiseurMbrola	s;
@@ -48,7 +48,7 @@ public class SIVOXDevint implements Constants {
 	 * @email justal.kevin@gmail.com
 	 */
 	public SIVOXDevint() {
-		this(1,true,3);
+		this(VOIX_DEFAUT,true,PROSODIE_DEFAUT);
 	}
 
 	/**
@@ -58,7 +58,7 @@ public class SIVOXDevint implements Constants {
 	 * @email justal.kevin@gmail.com
 	 */
 	public SIVOXDevint(final int voix) {	
-		this(voix,true,3);
+		this(voix,true,PROSODIE_DEFAUT);
 	}	
 	
 	/**
@@ -70,7 +70,6 @@ public class SIVOXDevint implements Constants {
 	 * @email justal.kevin@gmail.com
 	 */
 	public SIVOXDevint(final int voix,final boolean on,final int prosodie) {
-		
 		try {
 			FileHandler fh = new FileHandler(System.getProperty("java.io.tmpdir")+"Latsuj.log");
 			logger.addHandler(fh);
@@ -97,7 +96,7 @@ public class SIVOXDevint implements Constants {
 	 * @param text le texte que l'on souhaite faire lire par la synthese vocale
 	 * @return Le nom du fichier
 	 */
-	public String loopText(final String text) {	
+	public final String loopText(final String text) {	
 		logger.info("Lecture LOOP du texte : "+text);		
 		String filename = createSynthetiseur(text,"");
 		action("", LOOP_TEXTE);
@@ -110,7 +109,7 @@ public class SIVOXDevint implements Constants {
 	 * @author Justal "Latsuj" Kevin
 	 * @email justal.kevin@gmail.com
 	 */
-	public void playText(final String text) {
+	public final void playText(final String text) {
 		logger.info("Lecture UNIQUE du texte : "+text);	
 		createSynthetiseur(text,"");
 		this.action("", PLAY_TEXTE);
@@ -123,7 +122,7 @@ public class SIVOXDevint implements Constants {
 	 * @email justal.kevin@gmail.com
 	 */
 	@Deprecated
-	public void playShortText(final String text) {
+	public final void playShortText(final String text) {
 		playText(text);
 	}
 	
@@ -153,7 +152,7 @@ public class SIVOXDevint implements Constants {
 	 * @author Justal "Latsuj" Kevin
 	 * @email justal.kevin@gmail.com
 	 */
-	public void loopWav(final String path) {
+	public final void loopWav(final String path) {
 		logger.info("Lecture LOOP du wav : "+path);
 		this.action(path, LOOP_WAV);
 	}
@@ -164,7 +163,7 @@ public class SIVOXDevint implements Constants {
 	 * @author Justal "Latsuj" Kevin
 	 * @email justal.kevin@gmail.com
 	 */
-	public void playWav(final String path) {
+	public final void playWav(final String path) {
 		logger.info("Lecture UNIQUE du wav : "+path);
 		this.action(path, PLAY_WAV);
 	}
@@ -178,7 +177,7 @@ public class SIVOXDevint implements Constants {
 	 * @email justal.kevin@gmail.com
 	 */
 	@Deprecated
-	public void playWav(final String path,final boolean loop) {
+	public final void playWav(final String path,final boolean loop) {
 		if(loop) {
 			this.action(path, LOOP_WAV);
 		} else {
@@ -194,7 +193,7 @@ public class SIVOXDevint implements Constants {
 	 * @author Justal "Latsuj" Kevin
 	 * @email justal.kevin@gmail.com
 	 */
-	public void setProsodie(final int p) {
+	public final void setProsodie(final int p) {
 		logger.info("Modification de la prosodie : "+p);
 		
 		if(p<1) {
@@ -210,7 +209,7 @@ public class SIVOXDevint implements Constants {
 	 * Permet de retourner la valeur de la prosodie de la synthese vocale
 	 * @return Un entier entre 1 et 3
 	 */
-	public int getProsodie() {
+	public final int getProsodie() {
 		return this.prosodie;
 	}
 	
@@ -220,7 +219,7 @@ public class SIVOXDevint implements Constants {
 	 * @author Justal "Latsuj" Kevin
 	 * @email justal.kevin@gmail.com
 	 */
-	public void setVoix(final int voix) {
+	public final void setVoix(final int voix) {
 		logger.info("Modification de la voix : "+voix);
 		
 		final int nbvoix = Integer.parseInt(ConfigFile.rechercher("NBVOIX"));
@@ -235,13 +234,18 @@ public class SIVOXDevint implements Constants {
 		lt.setVoix(vox);
 	}
 	
+	public final void googlePlay(String text) throws Exception {
+        String textEncode = URLEncoder.encode(text, "utf-8");
+        new SimpleTextToSpeech().go(textEncode);
+	}
+	
 	/**
 	 * Pour stopper la synthèse vocale et donc arréter le son en cours de lecture
 	 * on stoppe le jukebox jk, qui lit les sons wave, le lecteur texte lt, et la synthèse s
 	 * @author Justal "Latsuj" Kevin
 	 * @email justal.kevin@gmail.com
 	 */
-	public void stop() {
+	public final void stop() {
 		if (this.jk != null) {
 			this.jk.stop();
 		} else {
@@ -255,7 +259,7 @@ public class SIVOXDevint implements Constants {
 	 * @author Justal "Latsuj" Kevin
 	 * @email justal.kevin@gmail.com
 	 */
-	public void stop(String path) {
+	public final void stop(String path) {
 		if (this.jk != null) {
 			this.jk.stop(path);
 		} else {
@@ -268,7 +272,7 @@ public class SIVOXDevint implements Constants {
 	 * @author Justal "Latsuj" Kevin
 	 * @email justal.kevin@gmail.com
 	 */
-	public void stopBackgroundMusics() {
+	public final void stopBackgroundMusics() {
 		if (this.jk != null) {
 			this.jk.stopBackgroundMusic();;
 		} else {
@@ -281,7 +285,7 @@ public class SIVOXDevint implements Constants {
 	 * @author Justal "Latsuj" Kevin
 	 * @email justal.kevin@gmail.com
 	 */
-	public void stopNonBackgroundMusics() {
+	public final void stopNonBackgroundMusics() {
 		if (this.jk != null) {
 			this.jk.stopNonBackgroundMusic();
 		} else {
@@ -292,7 +296,7 @@ public class SIVOXDevint implements Constants {
 	/**
 	 * Permet d'activer ou de desactiver la voix de synthese
 	 */
-	public void toggle() {
+	public final void toggle() {
 		logger.info("Desactivation/activation de la voix de synthese : "+on);
 		this.on = !this.on;
 	}
@@ -301,7 +305,7 @@ public class SIVOXDevint implements Constants {
 	 * Permet de retourner l'etat de la voix de synthese
 	 * @return Retourne true si la voix de synthese est activee, false sinon
 	 */
-	public boolean getToggle() {
+	public final boolean getToggle() {
 		return this.on;
 	}
 	
@@ -312,7 +316,7 @@ public class SIVOXDevint implements Constants {
 	 * @author Justal "Latsuj" Kevin
 	 * @email justal.kevin@gmail.com
 	 */
-	public void muet(final String text, final String filename) {
+	public final void muet(final String text, final String filename) {
 		logger.info("Creation silencieuse du fichier wav : "+filename);
 		createSynthetiseur(text,filename);
 		action("", MUET);
@@ -324,7 +328,7 @@ public class SIVOXDevint implements Constants {
 	 * @author Justal "Latsuj" Kevin
 	 * @email justal.kevin@gmail.com
 	 */
-	public void playWavWithFilename(final String filename) {
+	public final void playWavWithFilename(final String filename) {
 		logger.info("SIVOXDevint.class : Lecture unique d'un fichier wav cree silencieusement "+filename);
 		action(System.getProperty("java.io.tmpdir")+ConfigFile.rechercher("FICHIER_PHO_WAV") + filename+".wav", PLAY_MUET);
 	}
@@ -335,7 +339,7 @@ public class SIVOXDevint implements Constants {
 	 * @author Justal "Latsuj" Kevin
 	 * @email justal.kevin@gmail.com
 	 */
-	public void loopWavWithFilename(final String filename) {
+	public final void loopWavWithFilename(final String filename) {
 		logger.info("SIVOXDevint.class : Lecture en boucle d'un fichier wav cree silencieusement "+filename);
 		action(System.getProperty("java.io.tmpdir")+ConfigFile.rechercher("FICHIER_PHO_WAV") +filename+".wav", LOOP_MUET);
 	}	
@@ -376,7 +380,7 @@ public class SIVOXDevint implements Constants {
 	 * @throws IOException
 	 * @author Justal "Latsuj" Kevin
 	 */
-	public void clean() {
+	public final void clean() {
 		logger.info("Suppression des fichiers temporaires");
 		this.jk.killThread();
 	}

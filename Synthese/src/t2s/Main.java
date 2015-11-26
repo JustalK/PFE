@@ -46,7 +46,7 @@ import java.io.*;
 
 /** La classe éxécutable appelée par le manifeste de l'archive auto éxécutable
  */
-public class Main{
+public final class Main{
 
 	// La méthode principale
 	public static void main (String[] args){

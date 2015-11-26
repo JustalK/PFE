@@ -130,7 +130,13 @@ public class GestionSon extends FenetreAbstraite implements ActionListener{
     		//voix.playWav("../ressources/sons/questionCourte.wav",true);
     		//voix.playWavWithFilename("Latsuj");
     		//voix.stop();
-    		voix.stopNonBackgroundMusics();
+    		//voix.stopNonBackgroundMusics();
+    		try {
+				voix.googlePlay("Je suis une legende");
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
     	}
         else if (source.equals(question3)) {
         	// on tire deux nombre aléatoires et on lit l'opération
