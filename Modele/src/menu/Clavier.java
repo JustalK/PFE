@@ -1,10 +1,10 @@
-package devint;
+package menu;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.util.Set;
 
-public class Clavier extends Thread implements KeyListener,Constantes {
-    private final Set<Integer> keyPressed;
+public class Clavier extends Thread implements KeyListener,ConstantesMenu {
+    private Set<Integer> keyPressed;
     
     public Clavier(Set<Integer> keyPressed) {
         this.keyPressed = keyPressed;

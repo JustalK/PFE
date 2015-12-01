@@ -1,9 +1,12 @@
-package devint;
+package run;
 import java.net.MalformedURLException;
 
+import menu.Menu;
 
-public class Main {
+
+public final class Main {
     public static void main(String[] arg) throws MalformedURLException {
-        new Fenetre();
+        Menu menu = new Menu();
+        menu.loop();
     }
 }
