@@ -1,15 +1,16 @@
 package devint;
 
+import java.awt.event.KeyEvent;
 import java.util.HashSet;
 import java.util.Set;
 
 import javax.swing.JFrame;
+import javax.swing.KeyStroke;
 
+import listener.SpaceAction;
 import menu.Clavier;
 
 public abstract class Fenetre extends JFrame {
-	private Set<Integer> keyPressed;
-    private Clavier clavier;
 	
 	public Fenetre() {
 		// Enleve la barre de menu dans la JFrame - C'est moche sans !
@@ -18,10 +19,11 @@ public abstract class Fenetre extends JFrame {
         // Permet de mettre la fenetre en plein ecran
         this.setExtendedState(MAXIMIZED_BOTH);
         
-
+    	this.getRootPane().getInputMap().put(KeyStroke.getKeyStroke("F2"), "myAction");
+    	this.getRootPane().getActionMap().put("myAction",new SpaceAction());
         // Permet de creer le lecteur (listener - Ty english) de touche
-        keyPressed  = new HashSet<Integer>();
-        clavier = new Clavier(keyPressed);
-        this.addKeyListener(clavier);
+        //keyPressed  = new HashSet<Integer>();
+        //clavier = new Clavier(keyPressed);
+        //this.addKeyListener(clavier);
 	}
 }
