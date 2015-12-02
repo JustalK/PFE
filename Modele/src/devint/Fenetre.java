@@ -1,16 +1,12 @@
 package devint;
 
-import java.awt.event.KeyEvent;
-import java.util.HashSet;
-import java.util.Set;
-
 import javax.swing.Action;
 import javax.swing.JFrame;
 import javax.swing.KeyStroke;
-
-import menu.Clavier;
+import t2s.SIVOXDevint;
 
 public abstract class Fenetre extends JFrame {
+    private SIVOXDevint sivox;
 	
 	public Fenetre() {
 		// Enleve la barre de menu dans la JFrame - C'est moche sans !
@@ -28,10 +24,16 @@ public abstract class Fenetre extends JFrame {
     	addControl("F4",new F4Action());
     	addControl("F5",new F5Action());
     	addControl("ESCAPE",new EchapAction(this));
+    	
+    	this.sivox = new SIVOXDevint(2);
 	}
 	
 	public void addControl(String key,Action action) {
     	this.getRootPane().getInputMap().put(KeyStroke.getKeyStroke(key), key);
     	this.getRootPane().getActionMap().put(key,action);		
+	}
+	
+	public SIVOXDevint getSIVOX() {
+		return sivox;
 	}
 }

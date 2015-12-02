@@ -14,6 +14,7 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
+import t2s.SIVOXDevint;
 import menu.Clavier;
 import menu.ConstantesMenu;
 import menu.Menu;

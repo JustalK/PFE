@@ -12,6 +12,7 @@ import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.KeyStroke;
+import javax.swing.border.LineBorder;
 
 import devint.Fenetre;
 import jeu.Moteur;
@@ -42,17 +43,19 @@ public class Menu extends Fenetre implements ConstantesMenu {
 		
 		addLabel(TITLE_GAME);
     	addMenu("Jouer",new LauchGameListener(this));
+    	addMenu("Option",new LauchGameListener(this));
     	addMenu("Quitter",new CloseListener(this));
     	
     	this.add(menu);
 
     	addControl("DOWN",new DownAction(this));
+    	addControl("UP",new UpAction(this));
     	
         // Affiche la fenetre
         this.setVisible(true);
         
 		menuSelected = 0;
-		this.getRootPane().setDefaultButton(listeBoutton.get(menuSelected));
+		selectedButton(listeBoutton.get(menuSelected));
     }
 
     public void loop() {
@@ -66,8 +69,8 @@ public class Menu extends Fenetre implements ConstantesMenu {
 
 	private void addLabel(String title) {
 		JLabel menu0 = new JLabel(title.toUpperCase(),JLabel.CENTER);
-		menu0.setFont(new Font("Arial", Font.BOLD, TAILLE));
-		menu0.setForeground(Color.WHITE);
+		menu0.setFont(new Font(FONT_TYPE_TITLE, Font.BOLD, FONT_TYPE_SIZE_TITLE));
+		menu0.setForeground(FOREGROUND_TITLE);
         c.fill = GridBagConstraints.BOTH;
         c.ipady = 100;      
         c.weightx = 1.0;
@@ -84,11 +87,7 @@ public class Menu extends Fenetre implements ConstantesMenu {
     	if(title!=null) {
 			JButton button = new JButton(title.toUpperCase());
 			button.addActionListener(action);
-			
-			button.setFont(new Font("Arial", Font.BOLD, TAILLE));
-			button.setForeground(Color.WHITE);
-			button.setBackground(Color.red);
-			button.setFocusPainted(false);
+			unselectedButton(button);
 	        c.fill = GridBagConstraints.BOTH;
 	        c.ipady = 100;  
 	        c.weightx = 1.0;
@@ -107,11 +106,33 @@ public class Menu extends Fenetre implements ConstantesMenu {
 	}
 	
 	public void down() {
-		if(menuSelected<listeBoutton.size()-1) {
-			menuSelected++;
-		} else {
-			menuSelected = 0;
-		}
-		this.getRootPane().setDefaultButton(listeBoutton.get(menuSelected));
+		unselectedButton(listeBoutton.get(menuSelected++ % listeBoutton.size()));
+		selectedButton(listeBoutton.get(menuSelected % listeBoutton.size()));
+		this.getSIVOX().playText(listeBoutton.get(menuSelected % listeBoutton.size()).getText());
 	}
+
+	public void up() {
+		unselectedButton(listeBoutton.get(menuSelected % listeBoutton.size()));
+		menuSelected = menuSelected == 0 ? (listeBoutton.size() - 1) : menuSelected - 1;
+		selectedButton(listeBoutton.get(menuSelected % listeBoutton.size()));
+		this.getSIVOX().playText(listeBoutton.get(menuSelected % listeBoutton.size()).getText());
+	}	
+	
+	private void unselectedButton(JButton button) {
+		button.setFont(new Font(FONT_TYPE_UNSELECTED_DEFAULT, Font.BOLD, TAILLE_UNSELECTED_DEFAULT));
+		button.setBorder(new LineBorder(BORDURE_SELECTED_DEFAULT,BORDURE_SIZE_UNSELECTED_DEFAULT));
+		button.setBackground(BACKGROUND_SELECTED_DEFAULT);
+		button.setForeground(FOREGROUND_SELECTED_DEFAULT);	
+		button.setFocusPainted(false);
+	}
+	
+	private void selectedButton(JButton button) {
+		button.setFont(new Font(FONT_TYPE_SELECTED_DEFAULT, Font.BOLD, TAILLE_SELECTED_DEFAULT));
+		button.setBorder(new LineBorder(BORDURE_UNSELECTED_DEFAULT ,BORDURE_SIZE_SELECTED_DEFAULT));
+		button.setBackground(BACKGROUND_UNSELECTED_DEFAULT);
+		button.setForeground(FOREGROUND_UNSELECTED_DEFAULT);
+		button.setFocusPainted(false);
+		this.getRootPane().setDefaultButton(button);
+	}
+	
 }

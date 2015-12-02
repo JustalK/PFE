@@ -24,7 +24,6 @@ import java.util.logging.SimpleFormatter;
 import t2s.newProsodies.Analyser;
 import t2s.son.JukeBox;
 import t2s.son.LecteurTexte;
-import t2s.son.SimpleTextToSpeech;
 import t2s.son.SynthetiseurMbrola;
 import t2s.util.ConfigFile;
 
@@ -232,11 +231,6 @@ public final class SIVOXDevint implements Constants {
 			vox = voix;
 		}
 		lt.setVoix(vox);
-	}
-	
-	public final void googlePlay(String text) throws Exception {
-        String textEncode = URLEncoder.encode(text, "utf-8");
-        new SimpleTextToSpeech().go(textEncode);
 	}
 	
 	/**
