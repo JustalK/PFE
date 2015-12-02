@@ -12,6 +12,6 @@ public class CloseListener extends Listener {
 	
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		fenetre.close();
+		fenetre.dispose();
 	}
 }

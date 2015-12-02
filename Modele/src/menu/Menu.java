@@ -5,9 +5,8 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.ActionListener;
-import java.awt.event.KeyEvent;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.swing.JButton;
 import javax.swing.JLabel;
@@ -18,35 +17,28 @@ import devint.Fenetre;
 import jeu.Moteur;
 import listener.CloseListener;
 import listener.LauchGameListener;
-import listener.SpaceAction;
 
 public class Menu extends Fenetre implements ConstantesMenu {
     private static final long serialVersionUID = 1L;
     private boolean play;
-    private boolean playMenu;
     
     private GridBagConstraints c = new GridBagConstraints(); 
     private JPanel menu = new JPanel(); 
     private int countMenu = 0;
+    private int menuSelected = 0;
     
-	private Set<Integer> keyPressed;
-    private Clavier clavier;
+    private List<JButton> listeBoutton;
     
     public Menu() {
     	this.play = false;
+    	listeBoutton = new ArrayList<JButton>();
     	
     	menu.setBackground(BACKGROUND_COLOR);
-    	
     	
 		GridBagLayout layoutMenu = new GridBagLayout();
 		c.fill = GridBagConstraints.BOTH;
 		c.insets = new Insets(MARGE_TOP_BOT,MARGE_LEFT_RIGHT,MARGE_TOP_BOT,MARGE_LEFT_RIGHT);
 		menu.setLayout(layoutMenu);	
-    	
-
-        keyPressed  = new HashSet<Integer>();
-        this.clavier = new Clavier(keyPressed);
-        this.addKeyListener(clavier);
 		
 		addLabel(TITLE_GAME);
     	addMenu("Jouer",new LauchGameListener(this));
@@ -54,34 +46,23 @@ public class Menu extends Fenetre implements ConstantesMenu {
     	
     	this.add(menu);
 
+    	addControl("DOWN",new DownAction(this));
+    	
         // Affiche la fenetre
         this.setVisible(true);
-        loop();
+        
+		menuSelected = 0;
+		this.getRootPane().setDefaultButton(listeBoutton.get(menuSelected));
     }
 
     public void loop() {
-        this.playMenu = true;
-        while(playMenu) {
-        	update();
+        while(this.isDisplayable()) {
         	if(play) {
-            	menu.setVisible(false);
             	new Moteur();
 	        	this.play = false;
-            	menu.setVisible(true);
         	}
         }   
-        this.dispose();
     }
-    
-    private void spam() {
-    	System.out.println("zzzzzzzz");
-    }
-    
-    public void update() {
-    	if(keyPressed.contains(KeyEvent.VK_ESCAPE)) {
-    		System.out.println("azeazezaeazeazea");
-    	}
-	}
 
 	private void addLabel(String title) {
 		JLabel menu0 = new JLabel(title.toUpperCase(),JLabel.CENTER);
@@ -116,16 +97,21 @@ public class Menu extends Fenetre implements ConstantesMenu {
 	        c.gridy = countMenu;
 	    	c.gridwidth = 3;		
 	    	menu.add(button, c);
+	    	listeBoutton.add(button);
 	    	countMenu++;
     	}
-    }
-    
-    public void close() {
-    	this.playMenu = false;
-    	this.dispose();
     }
 
 	public void lauch() {
     	this.play = true;
+	}
+	
+	public void down() {
+		if(menuSelected<listeBoutton.size()-1) {
+			menuSelected++;
+		} else {
+			menuSelected = 0;
+		}
+		this.getRootPane().setDefaultButton(listeBoutton.get(menuSelected));
 	}
 }

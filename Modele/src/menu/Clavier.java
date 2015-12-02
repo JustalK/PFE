@@ -12,7 +12,6 @@ public class Clavier extends Thread implements KeyListener,ConstantesMenu {
     
     @Override
     public void keyPressed(KeyEvent e) {
-    	System.out.println("key");
     	keyPressed.add(e.getKeyCode());
     }
     

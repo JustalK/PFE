@@ -4,10 +4,10 @@ import java.awt.event.KeyEvent;
 import java.util.HashSet;
 import java.util.Set;
 
+import javax.swing.Action;
 import javax.swing.JFrame;
 import javax.swing.KeyStroke;
 
-import listener.SpaceAction;
 import menu.Clavier;
 
 public abstract class Fenetre extends JFrame {
@@ -18,12 +18,20 @@ public abstract class Fenetre extends JFrame {
 	   
         // Permet de mettre la fenetre en plein ecran
         this.setExtendedState(MAXIMIZED_BOTH);
-        
-    	this.getRootPane().getInputMap().put(KeyStroke.getKeyStroke("F2"), "myAction");
-    	this.getRootPane().getActionMap().put("myAction",new SpaceAction());
-        // Permet de creer le lecteur (listener - Ty english) de touche
-        //keyPressed  = new HashSet<Integer>();
-        //clavier = new Clavier(keyPressed);
-        //this.addKeyListener(clavier);
+    	
+        // Key Binding - Mieux qu'un keyListener car pas besoin du focus :)
+    	this.getRootPane().getInputMap().put(KeyStroke.getKeyStroke("F5"), "F5");
+    	this.getRootPane().getActionMap().put("F5",new F5Action());
+    	addControl("F1",new F1Action());
+    	addControl("F2",new F2Action());
+    	addControl("F3",new F3Action());
+    	addControl("F4",new F4Action());
+    	addControl("F5",new F5Action());
+    	addControl("ESCAPE",new EchapAction(this));
+	}
+	
+	public void addControl(String key,Action action) {
+    	this.getRootPane().getInputMap().put(KeyStroke.getKeyStroke(key), key);
+    	this.getRootPane().getActionMap().put(key,action);		
 	}
 }
