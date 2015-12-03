@@ -1,6 +1,8 @@
 package devint;
 
 import java.awt.Font;
+import java.awt.event.KeyEvent;
+
 import javax.swing.Action;
 import javax.swing.JFrame;
 import javax.swing.KeyStroke;
@@ -37,7 +39,6 @@ public abstract class Fenetre extends JFrame implements ConstantesDevint {
     	addControl("ESCAPE",new EchapAction(this));
     	
     	this.sivox = new SIVOXDevint(2);
-    	this.sivox.playWav(ACCUEIL_SON);
   
     	this.syntheseNiveauChoice = 2;
     	
@@ -53,6 +54,16 @@ public abstract class Fenetre extends JFrame implements ConstantesDevint {
 	public void addControl(String key,Action action) {
     	this.getRootPane().getInputMap().put(KeyStroke.getKeyStroke(key), key);
     	this.getRootPane().getActionMap().put(key,action);		
+	}
+	
+	public void addControlDown(int key,Action action) {
+    	this.getRootPane().getInputMap().put(KeyStroke.getKeyStroke(key, 0, false), key+"Down");
+    	this.getRootPane().getActionMap().put(key+"Down",action);
+	}
+	
+	public void addControlUp(int key,Action action) {
+    	this.getRootPane().getInputMap().put(KeyStroke.getKeyStroke(key, 0, true), key+"Up");
+    	this.getRootPane().getActionMap().put(key+"Up",action);		
 	}
 	
 	public Font getFont() {

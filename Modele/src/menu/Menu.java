@@ -12,7 +12,7 @@ import javax.swing.JPanel;
 import javax.swing.border.LineBorder;
 
 import devint.Fenetre;
-import jeu.Moteur;
+import jeu.Jeu;
 import listener.CloseListener;
 import listener.LauchGameListener;
 
@@ -30,6 +30,7 @@ public class Menu extends Fenetre implements ConstantesMenu {
     public Menu() {
     	this.play = false;
     	listeBoutton = new ArrayList<JButton>();
+    	//this.getSIVOX().playWav(ACCUEIL_SON);
     	
 		GridBagLayout layoutMenu = new GridBagLayout();
 		c.fill = GridBagConstraints.BOTH;
@@ -40,7 +41,7 @@ public class Menu extends Fenetre implements ConstantesMenu {
 		menu.setLayout(layoutMenu);	
 		
 		addLabel(TITLE_GAME);
-    	addMenu("Jouer",new LauchGameListener(this));
+    	addMenu("Jeu 1",new LauchGameListener(this));
     	addMenu("Option",new LauchGameListener(this));
     	addMenu("Quitter",new CloseListener(this));
     	addControl("DOWN",new DownAction(this));
@@ -54,8 +55,10 @@ public class Menu extends Fenetre implements ConstantesMenu {
         while(this.isDisplayable()) {
         	render();
         	if(play) {
-            	new Moteur();
+        		this.setVisible(false);
+            	new Jeu();
 	        	this.play = false;
+        		this.setVisible(true);
         	}
         }   
     }
