@@ -26,12 +26,11 @@ public class Menu extends Fenetre implements ConstantesMenu {
     private int menuSelected = 0;
     
     private List<JButton> listeBoutton;
+    private JLabel title;
     
     public Menu() {
     	this.play = false;
     	listeBoutton = new ArrayList<JButton>();
-    	
-    	menu.setBackground(getBackground());
     	
 		GridBagLayout layoutMenu = new GridBagLayout();
 		c.fill = GridBagConstraints.BOTH;
@@ -57,17 +56,31 @@ public class Menu extends Fenetre implements ConstantesMenu {
 
     public void loop() {
         while(this.isDisplayable()) {
+        	render();
         	if(play) {
             	new Moteur();
 	        	this.play = false;
         	}
         }   
     }
-
+    
+    private void render() {
+    	menu.setBackground(getBackground());		
+    	this.title.setFont(getFont());
+    	this.title.setForeground(getForeground());
+    	
+    	int tmp = menuSelected % listeBoutton.size();
+    	for(int i=0; i<listeBoutton.size();i++) {
+    		if(i==tmp) {
+    			selectedButton(listeBoutton.get(i));
+    		} else {
+    			unselectedButton(listeBoutton.get(i));
+    		}
+    	}
+    }
+    
 	private void addLabel(String title) {
-		JLabel menu0 = new JLabel(title.toUpperCase(),JLabel.CENTER);
-		menu0.setFont(getFont());
-		menu0.setForeground(getForeground());
+		this.title = new JLabel(title.toUpperCase(),JLabel.CENTER);
         c.fill = GridBagConstraints.BOTH;
         c.ipady = 100;      
         c.weightx = 1.0;
@@ -75,7 +88,7 @@ public class Menu extends Fenetre implements ConstantesMenu {
         c.gridx = 0;
         c.gridy = countMenu;
     	c.gridwidth = 3;		
-    	menu.add(menu0, c);
+    	menu.add(this.title, c);
     	
     	countMenu++;
     }

@@ -1,8 +1,6 @@
 package devint;
 
-import java.awt.Color;
 import java.awt.Font;
-
 import javax.swing.Action;
 import javax.swing.JFrame;
 import javax.swing.KeyStroke;
@@ -10,7 +8,8 @@ import javax.swing.KeyStroke;
 import t2s.SIVOXDevint;
 
 public abstract class Fenetre extends JFrame implements ConstantesDevint {
-    private SIVOXDevint sivox;
+	private static final long serialVersionUID = 1L;
+	private SIVOXDevint sivox;
 	private Font font;
     private java.awt.Color background;
     private java.awt.Color foreground;
@@ -18,6 +17,9 @@ public abstract class Fenetre extends JFrame implements ConstantesDevint {
     private java.awt.Color buttonUnselectedBackground;
     private java.awt.Color buttonSelectedForeground;
     private java.awt.Color buttonUnselectedForeground;
+    private int colorChoice;
+    private int fontChoice;
+    private int syntheseNiveauChoice;
 	
 	public Fenetre() {
 		// Enleve la barre de menu dans la JFrame - C'est moche sans !
@@ -30,24 +32,24 @@ public abstract class Fenetre extends JFrame implements ConstantesDevint {
     	addControl("F1",new F1Action(this));
     	addControl("F2",new F2Action(this));
     	addControl("F3",new F3Action(this));
-    	addControl("F4",new F4Action());
-    	addControl("F5",new F5Action());
+    	addControl("F4",new F4Action(this));
+    	addControl("F5",new F5Action(this));
     	addControl("ESCAPE",new EchapAction(this));
     	
     	// Synthese vocale
     	this.sivox = new SIVOXDevint(2);
     	this.sivox.playWav(ACCUEIL_SON);
+  
+    	this.syntheseNiveauChoice = 2;
     	
     	//
-    	font = new Font(FONT_TYPE_DEFAULT, Font.BOLD, TAILLE_DEFAULT);
-    	
-    	//
-    	background = BACKGROUND_DEFAULT;
-    	foreground = FOREGROUND_DEFAULT;
-    	buttonSelectedBackground = BUTTON_BACKGROUND_SELECTED_DEFAULT;
-    	buttonUnselectedBackground = BUTTON_BACKGROUND_UNSELECTED_DEFAULT;
-    	buttonSelectedForeground = BUTTON_FOREGROUND_SELECTED_DEFAULT;
-    	buttonUnselectedForeground = BUTTON_FOREGROUND_UNSELECTED_DEFAULT;
+    	font = FONT_DEFAULT[0];
+    	background = BACKGROUND_DEFAULT[0];
+    	foreground = FOREGROUND_DEFAULT[0];
+    	buttonSelectedBackground = BUTTON_BACKGROUND_SELECTED_DEFAULT[0];
+    	buttonUnselectedBackground = BUTTON_BACKGROUND_UNSELECTED_DEFAULT[0];
+    	buttonSelectedForeground = BUTTON_FOREGROUND_SELECTED_DEFAULT[0];
+    	buttonUnselectedForeground = BUTTON_FOREGROUND_UNSELECTED_DEFAULT[0];
 	}
 	
 	public void addControl(String key,Action action) {
@@ -83,19 +85,29 @@ public abstract class Fenetre extends JFrame implements ConstantesDevint {
 		return buttonUnselectedForeground;
 	}	
 	
-	public void changeColor() {
-    	background = FOREGROUND_DEFAULT;
-    	foreground = BACKGROUND_DEFAULT;
-    	buttonSelectedBackground = BACKGROUND_DEFAULT;
-    	buttonUnselectedBackground = BACKGROUND_DEFAULT;
-    	buttonSelectedForeground = BACKGROUND_DEFAULT;
-    	buttonUnselectedForeground = BACKGROUND_DEFAULT;
-    	this.validate();
-    	this.revalidate();
-    	this.repaint();
-	}
-	
 	public SIVOXDevint getSIVOX() {
 		return sivox;
+	}
+	
+	public int getSyntheseNiveau() {
+		return syntheseNiveauChoice;
+	}
+	
+	public void changeSyntheseNiveau() {
+		syntheseNiveauChoice = ++syntheseNiveauChoice % NBR_SYNTHESE_NIVEAU;
+		System.out.println(syntheseNiveauChoice);
+	}
+	
+	public void changeFont() {
+		font = FONT_DEFAULT[++fontChoice % FONT_DEFAULT.length];
+	}
+	
+	public void changeColor() {
+    	background = BACKGROUND_DEFAULT[++colorChoice % BACKGROUND_DEFAULT.length];
+    	foreground = FOREGROUND_DEFAULT[colorChoice % BACKGROUND_DEFAULT.length];
+    	buttonSelectedBackground = BUTTON_BACKGROUND_SELECTED_DEFAULT[colorChoice % BACKGROUND_DEFAULT.length];
+    	buttonUnselectedBackground = BUTTON_BACKGROUND_UNSELECTED_DEFAULT[colorChoice % BACKGROUND_DEFAULT.length];
+    	buttonSelectedForeground = BUTTON_FOREGROUND_SELECTED_DEFAULT[colorChoice % BACKGROUND_DEFAULT.length];
+    	buttonUnselectedForeground = BUTTON_FOREGROUND_UNSELECTED_DEFAULT[colorChoice % BACKGROUND_DEFAULT.length];
 	}
 }
