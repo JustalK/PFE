@@ -22,8 +22,7 @@ public class Menu extends Fenetre implements ConstantesMenu {
     
     private GridBagConstraints c = new GridBagConstraints(); 
     private JPanel menu = new JPanel(); 
-    private int countMenu = 0;
-    private int menuSelected = 0;
+    private int countMenu, menuSelected;
     
     private List<JButton> listeBoutton;
     private JLabel title;
@@ -35,23 +34,20 @@ public class Menu extends Fenetre implements ConstantesMenu {
 		GridBagLayout layoutMenu = new GridBagLayout();
 		c.fill = GridBagConstraints.BOTH;
 		c.insets = new Insets(MARGE_TOP_BOT,MARGE_LEFT_RIGHT,MARGE_TOP_BOT,MARGE_LEFT_RIGHT);
+        c.fill = GridBagConstraints.BOTH;
+        c.ipady = 100;
+    	c.gridwidth = 3;
 		menu.setLayout(layoutMenu);	
 		
 		addLabel(TITLE_GAME);
     	addMenu("Jouer",new LauchGameListener(this));
     	addMenu("Option",new LauchGameListener(this));
     	addMenu("Quitter",new CloseListener(this));
-    	
-    	this.add(menu);
-
     	addControl("DOWN",new DownAction(this));
     	addControl("UP",new UpAction(this));
     	
-        // Affiche la fenetre
+    	this.add(menu);
         this.setVisible(true);
-        
-		menuSelected = 0;
-		selectedButton(listeBoutton.get(menuSelected));
     }
 
     public void loop() {
@@ -69,63 +65,47 @@ public class Menu extends Fenetre implements ConstantesMenu {
     	this.title.setFont(getFont());
     	this.title.setForeground(getForeground());
     	
-    	int tmp = menuSelected % listeBoutton.size();
     	for(int i=0; i<listeBoutton.size();i++) {
-    		if(i==tmp) {
+    		if(i==menuSelected % listeBoutton.size()) {
     			selectedButton(listeBoutton.get(i));
     		} else {
     			unselectedButton(listeBoutton.get(i));
     		}
     	}
     }
-    
-	private void addLabel(String title) {
-		this.title = new JLabel(title.toUpperCase(),JLabel.CENTER);
-        c.fill = GridBagConstraints.BOTH;
-        c.ipady = 100;      
-        c.weightx = 1.0;
-        c.weighty = 1.0;
-        c.gridx = 0;
-        c.gridy = countMenu;
-    	c.gridwidth = 3;		
-    	menu.add(this.title, c);
-    	
-    	countMenu++;
-    }
-    
-    private void addMenu(String title,ActionListener action) {
-    	if(title!=null) {
-			JButton button = new JButton(title.toUpperCase());
-			button.addActionListener(action);
-			unselectedButton(button);
-	        c.fill = GridBagConstraints.BOTH;
-	        c.ipady = 100;  
-	        c.weightx = 1.0;
-	        c.weighty = 1.0;
-	        c.gridx = 0;
-	        c.gridy = countMenu;
-	    	c.gridwidth = 3;		
-	    	menu.add(button, c);
-	    	listeBoutton.add(button);
-	    	countMenu++;
-    	}
-    }
 
 	public void lauch() {
     	this.play = true;
-	}
+	}    
+    
+	private void addLabel(String title) {
+		this.title = new JLabel(title.toUpperCase(),JLabel.CENTER);      
+        c.weightx = c.weighty = 1.0;
+        c.gridy = countMenu++;
+    	menu.add(this.title, c);
+    }
+    
+    private void addMenu(String title,ActionListener action) {
+		JButton button = new JButton(title.toUpperCase());
+		button.addActionListener(action);
+		unselectedButton(button);
+        c.weightx = c.weighty = 1.0;
+        c.gridy = countMenu++;	
+    	menu.add(button, c);
+    	listeBoutton.add(button);
+    }
 	
 	public void down() {
 		unselectedButton(listeBoutton.get(menuSelected++ % listeBoutton.size()));
 		selectedButton(listeBoutton.get(menuSelected % listeBoutton.size()));
-		this.getSIVOX().playText(listeBoutton.get(menuSelected % listeBoutton.size()).getText());
+		this.getSIVOX().playText(listeBoutton.get(menuSelected % listeBoutton.size()).getText(),SYNTHESE_MOYENNE);
 	}
 
 	public void up() {
 		unselectedButton(listeBoutton.get(menuSelected % listeBoutton.size()));
 		menuSelected = menuSelected == 0 ? (listeBoutton.size() - 1) : menuSelected - 1;
 		selectedButton(listeBoutton.get(menuSelected % listeBoutton.size()));
-		this.getSIVOX().playText(listeBoutton.get(menuSelected % listeBoutton.size()).getText());
+		this.getSIVOX().playText(listeBoutton.get(menuSelected % listeBoutton.size()).getText(),SYNTHESE_MOYENNE);
 	}	
 	
 	private void unselectedButton(JButton button) {
@@ -136,7 +116,7 @@ public class Menu extends Fenetre implements ConstantesMenu {
 	}
 	
 	private void selectedButton(JButton button) {
-		button.setFont(getFont().deriveFont(TAILLE_SELECTED_DEFAULT));
+		button.setFont(getFont().deriveFont(getFont().getSize()*1.f+20)); // Tricky, tricky Hehe !
 		button.setBorder(new LineBorder(BORDURE_UNSELECTED_DEFAULT ,BORDURE_SIZE_SELECTED_DEFAULT));
 		button.setBackground(getButtonSelectedBackground());
 		button.setForeground(getButtonSelectedForeground());

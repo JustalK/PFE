@@ -39,6 +39,7 @@ public final class SIVOXDevint implements Constants {
 	private Analyser	       an;
 	private boolean	           on;	     // true/false pour valider/invalider la synthèse SIVOX
 	private int	               prosodie; // code la prosodie utilisée, de 1 à 3 (3 par défaut)
+	private int syntheseNiveau;
 	
 	/**
 	 * Constructeur par défaut : voix de Thierry
@@ -81,6 +82,7 @@ public final class SIVOXDevint implements Constants {
 			e.printStackTrace();
 		}		
 		
+		this.syntheseNiveau = 2;
 		this.jk = new JukeBox();
 		this.lt = new LecteurTexte(jk);
 		this.on = on;
@@ -88,6 +90,16 @@ public final class SIVOXDevint implements Constants {
 		this.prosodie = prosodie;
 		this.setVoix(voix);
 		logger.info("Creation d'une SIVOXDevint [ prosodie : "+this.prosodie+" | Voix : "+voix+" | Etat : "+this.on+" ]");
+	}
+	
+	public final void playText(final String text,int syntheseNiveau) {
+		if(this.syntheseNiveau<=syntheseNiveau) {
+			playText(text);
+		}
+	}
+	
+	public final void setSyntheseNiveau(int syntheseNiveau) {
+		this.syntheseNiveau = syntheseNiveau; 
 	}
 	
 	/**

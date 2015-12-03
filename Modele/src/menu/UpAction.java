@@ -1,10 +1,7 @@
 package menu;
 
 import java.awt.event.ActionEvent;
-
 import javax.swing.AbstractAction;
-
-import devint.Fenetre;
 
 public class UpAction extends AbstractAction {
 	private static final long serialVersionUID = 1L;

@@ -36,13 +36,11 @@ public abstract class Fenetre extends JFrame implements ConstantesDevint {
     	addControl("F5",new F5Action(this));
     	addControl("ESCAPE",new EchapAction(this));
     	
-    	// Synthese vocale
     	this.sivox = new SIVOXDevint(2);
     	this.sivox.playWav(ACCUEIL_SON);
   
     	this.syntheseNiveauChoice = 2;
     	
-    	//
     	font = FONT_DEFAULT[0];
     	background = BACKGROUND_DEFAULT[0];
     	foreground = FOREGROUND_DEFAULT[0];
@@ -95,7 +93,8 @@ public abstract class Fenetre extends JFrame implements ConstantesDevint {
 	
 	public void changeSyntheseNiveau() {
 		syntheseNiveauChoice = ++syntheseNiveauChoice % NBR_SYNTHESE_NIVEAU;
-		System.out.println(syntheseNiveauChoice);
+		this.sivox.playText(PHRASE_SYNTHESE_NIVEAU[syntheseNiveauChoice]);
+		this.sivox.setSyntheseNiveau(syntheseNiveauChoice);
 	}
 	
 	public void changeFont() {

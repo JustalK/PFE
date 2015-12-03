@@ -12,6 +12,11 @@ interface ConstantesDevint {
 	int TAILLE_DEFAULT = 50;
 
 	int NBR_SYNTHESE_NIVEAU = 3;
+	String[] PHRASE_SYNTHESE_NIVEAU = {"Synthese maximale","Synthese moyenne","Synthese minimale"};
+	int SYNTHESE_MAXIMALE = 2;
+	int SYNTHESE_MOYENNE = 1;
+	int SYNTHESE_MINIMALE = 0;
+	
 	
 	Font FONT_DEFAULT[] = {new Font("Arial", Font.BOLD, 50),new Font("Arial", Font.BOLD, 60),new Font("Arial", Font.BOLD, 70),new Font("Arial", Font.BOLD, 90),new Font("Arial", Font.BOLD, 40)};
 	
