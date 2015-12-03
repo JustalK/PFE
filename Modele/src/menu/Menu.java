@@ -1,6 +1,4 @@
 package menu;
-import java.awt.Color;
-import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
@@ -11,7 +9,6 @@ import java.util.List;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.KeyStroke;
 import javax.swing.border.LineBorder;
 
 import devint.Fenetre;
@@ -34,7 +31,7 @@ public class Menu extends Fenetre implements ConstantesMenu {
     	this.play = false;
     	listeBoutton = new ArrayList<JButton>();
     	
-    	menu.setBackground(BACKGROUND_COLOR);
+    	menu.setBackground(getBackground());
     	
 		GridBagLayout layoutMenu = new GridBagLayout();
 		c.fill = GridBagConstraints.BOTH;
@@ -69,8 +66,8 @@ public class Menu extends Fenetre implements ConstantesMenu {
 
 	private void addLabel(String title) {
 		JLabel menu0 = new JLabel(title.toUpperCase(),JLabel.CENTER);
-		menu0.setFont(new Font(FONT_TYPE_TITLE, Font.BOLD, FONT_TYPE_SIZE_TITLE));
-		menu0.setForeground(FOREGROUND_TITLE);
+		menu0.setFont(getFont());
+		menu0.setForeground(getForeground());
         c.fill = GridBagConstraints.BOTH;
         c.ipady = 100;      
         c.weightx = 1.0;
@@ -119,19 +116,17 @@ public class Menu extends Fenetre implements ConstantesMenu {
 	}	
 	
 	private void unselectedButton(JButton button) {
-		button.setFont(new Font(FONT_TYPE_UNSELECTED_DEFAULT, Font.BOLD, TAILLE_UNSELECTED_DEFAULT));
+		button.setFont(getFont());
 		button.setBorder(new LineBorder(BORDURE_SELECTED_DEFAULT,BORDURE_SIZE_UNSELECTED_DEFAULT));
-		button.setBackground(BACKGROUND_SELECTED_DEFAULT);
-		button.setForeground(FOREGROUND_SELECTED_DEFAULT);	
-		button.setFocusPainted(false);
+		button.setBackground(getButtonUnselectedBackground());
+		button.setForeground(getButtonUnselectedForeground());	
 	}
 	
 	private void selectedButton(JButton button) {
-		button.setFont(new Font(FONT_TYPE_SELECTED_DEFAULT, Font.BOLD, TAILLE_SELECTED_DEFAULT));
+		button.setFont(getFont().deriveFont(TAILLE_SELECTED_DEFAULT));
 		button.setBorder(new LineBorder(BORDURE_UNSELECTED_DEFAULT ,BORDURE_SIZE_SELECTED_DEFAULT));
-		button.setBackground(BACKGROUND_UNSELECTED_DEFAULT);
-		button.setForeground(FOREGROUND_UNSELECTED_DEFAULT);
-		button.setFocusPainted(false);
+		button.setBackground(getButtonSelectedBackground());
+		button.setForeground(getButtonSelectedForeground());
 		this.getRootPane().setDefaultButton(button);
 	}
 	

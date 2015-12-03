@@ -14,7 +14,7 @@ public interface ConstantesMenu {
 	
 	// Style du menu pour les boutons selectionne
 	String FONT_TYPE_SELECTED_DEFAULT="Arial";
-	int TAILLE_SELECTED_DEFAULT = 70;
+	float TAILLE_SELECTED_DEFAULT = 70;
 	java.awt.Color BORDURE_SELECTED_DEFAULT = Color.BLACK;
 	int BORDURE_SIZE_SELECTED_DEFAULT = 12;
 	java.awt.Color BACKGROUND_SELECTED_DEFAULT = Color.WHITE;
