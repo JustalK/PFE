@@ -8,9 +8,10 @@ import javax.swing.JPanel;
 import com.sun.glass.events.KeyEvent;
 
 import menu.ConstantesMenu;
+import menu.DownAction;
 import devint.Fenetre;
 
-public class Jeu extends Fenetre implements ConstantesMenu {
+public class Jeu extends Fenetre implements ConstantesJeu {
 	private static final long serialVersionUID = 1L;
     private JPanel personnage1;
     private JPanel personnage2;
@@ -22,6 +23,8 @@ public class Jeu extends Fenetre implements ConstantesMenu {
     private int yPlayer2;
     private int xMonster;
     private int yMonster;
+    private boolean play;
+    private boolean win;
     
     private JLabel info;
     
@@ -43,7 +46,7 @@ public class Jeu extends Fenetre implements ConstantesMenu {
 	   int fps = 0;
 	   
 	   reset();
-        while (this.isDisplayable()) {
+       while (this.isDisplayable()) {
             long now = System.nanoTime();
             long updateLength = now - lastLoopTime;
             lastLoopTime = now;
@@ -58,7 +61,10 @@ public class Jeu extends Fenetre implements ConstantesMenu {
                fps = 0;
             }
             
-        	update();
+            
+            if(play) {
+            	update();
+            }
         	render();
         	
         	try {
@@ -105,6 +111,8 @@ public class Jeu extends Fenetre implements ConstantesMenu {
     	addControlDown(KeyEvent.VK_D,new Action(this,7,true));
     	addControlUp(KeyEvent.VK_D,new Action(this,7,false));
     	
+    	addControl("SPACE",new SpaceAction(this));
+    	
     	personnage2 = new JPanel();
     	personnage2.setBounds(xPlayer2, yPlayer2, 100, 100);
     	personnage2.setBackground(getBackground());
@@ -115,6 +123,10 @@ public class Jeu extends Fenetre implements ConstantesMenu {
     	monster.setBounds(xMonster, yMonster, 50, 50);
     	monster.setBackground(getBackground());
     	world.add(monster);       	
+
+   		info = new JLabel(CONSIGNE,JLabel.CENTER);
+   		info.setFont(getFont());
+   		world.add(info);
     	
     	this.add(world);
     }
@@ -131,24 +143,63 @@ public class Jeu extends Fenetre implements ConstantesMenu {
     	if(controlPlayers[7]) xPlayer2 = xPlayer2+5 > this.getWidth()-personnage2.getWidth() ? xPlayer2 : xPlayer2+5;
     }
     
-    public void render() {
-		personnage1.setBounds(xPlayer1, yPlayer1, 100, 100);
-		personnage2.setBounds(xPlayer2, yPlayer2, 100, 100);
-		monster.setBounds(xMonster, yMonster, 50, 50);
+    public void render() {	
+		if(win) {
+			info.setText(WIN);
+			info.setVisible(true);
+		} else if(play) {
+			info.setVisible(false);
+	   		monster.setVisible(true);
+			monster.setBounds(xMonster, yMonster, 50, 50);		
+			personnage1.setBounds(xPlayer1, yPlayer1, 100, 100);
+			personnage2.setBounds(xPlayer2, yPlayer2, 100, 100);
+		} else {
+	   		monster.setVisible(false);
+			info.setBounds(0, 0, this.getWidth(), this.getHeight());
+		} 
     	personnage1.setBackground(getForeground());
     	personnage2.setBackground(getForeground());
     	monster.setBackground(getForeground());
     	world.setBackground(getBackground());
+    	
+    	if(xMonster>xPlayer1 && xMonster<xPlayer1+100) {
+    		if(yMonster>yPlayer1 && yMonster<yPlayer1+100) {
+    			win= true;
+    		}
+    	}
+    	if(xMonster>xPlayer2 && xMonster<xPlayer2+100) {
+    		if(yMonster>yPlayer2 && yMonster<yPlayer2+100) {
+    			win= true;
+    		}
+    	}
     }
     
     public void reset() {
+   		xPlayer1 = 0;
+   		yPlayer1 = 0;
    		xPlayer2 = this.getWidth()-100;
    		yPlayer2 = this.getHeight()-100;
    		xMonster = (this.getWidth()-50)/2;
    		yMonster = (this.getHeight()-50)/2;
+   		monster.setVisible(false);
+		personnage1.setBounds(xPlayer1, yPlayer1, 100, 100);
+		personnage2.setBounds(xPlayer2, yPlayer2, 100, 100);
+		info.setText(CONSIGNE);
+		info.setVisible(true);
+   		play = false;
+   		win = false;
     }
     
 	public void action(int position, boolean value) {
 		controlPlayers[position] = value;
+	}
+	
+	public void lauch() {
+		if(!play) {
+			this.play = true;
+		} else {
+			this.win = false;
+			reset();
+		}
 	}
 }
