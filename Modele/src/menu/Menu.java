@@ -56,7 +56,7 @@ public class Menu extends Fenetre implements ConstantesMenu {
         	render();
         	if(play) {
         		this.setVisible(false);
-            	new Jeu();
+            	new Jeu().loop();
 	        	this.play = false;
         		this.setVisible(true);
         	}

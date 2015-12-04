@@ -28,39 +28,27 @@ public class Jeu extends Fenetre implements ConstantesJeu {
     
     private JLabel info;
     
-    //
+    // Ce tableau permet de gerer les differentes touches de deplacement
+    // L'ordre des variables sont les suivantes
+    // {Joueur 1 haut,Joueur 1 bas,Joueur 1 gauche,Joueur 1 droite,Joueur 2 haut,Joueur 2 bas,Joueur 2 gauche,Joueur 2 droite}
+    // Pour les SI3 : J'ai utilise cela parce que cela me permet de faire un "key binding" unique pour les 2 joueurs
     private boolean[] controlPlayers = {false,false,false,false,false,false,false,false};
 	
     public Jeu() {
         init();
         this.setVisible(true);
         this.setFocusable(true);
-        loop();
 	}
 
 	public void loop() {
 	   long lastLoopTime = System.nanoTime();
 	   final int TARGET_FPS = 60;
 	   final long OPTIMAL_TIME = 1000000000 / TARGET_FPS; 
-	   long lastFpsTime = 0L;
-	   int fps = 0;
 	   
 	   reset();
        while (this.isDisplayable()) {
             long now = System.nanoTime();
-            long updateLength = now - lastLoopTime;
             lastLoopTime = now;
-            
-            lastFpsTime += updateLength;
-            fps++;
-            
-            if (lastFpsTime >= 1000000000)
-            {
-               //System.out.println("(FPS: "+fps+")");
-               lastFpsTime = 0;
-               fps = 0;
-            }
-            
             
             if(play) {
             	update();
@@ -75,6 +63,18 @@ public class Jeu extends Fenetre implements ConstantesJeu {
         }
     }
     
+	/**
+	 * Methode qui ajoute tous les composants necessaires dans le layer principale de la fenetre<br />
+	 * Pour les SI3 : Explication in coming ! <br />
+	 * Il y a un panel "world" qui englobe toutes la fenetre qui apparait.<br />
+	 * On va ajouter a ce panel tous les Jcomposant que l'on souhaite.<br />
+	 * Dans le cas ci-dessous, j'ajoute le Panel du personnage1, du personnage2, du petit carre et ainsi que le label qui affiche le texte.<br />
+	 * Tous les composants que l'on souhaite ajouter doivent se trouver ici meme si ils seront declare invisible. Si dans la boucle de jeu, vous cree un composant, le jeu pourrait ralentir.<br />
+	 * <br />
+	 * Puis j'ajoute les differents controller afin d'activer ou de desactiver les deplacements.<br />
+	 * addControlDown permet de passer "true" une variable de deplacement pendant que l'on appuie sur la touche<br />
+	 * addControlUp permet de passer "false" une variable de deplacement lorsque l'on relache une touche<br />
+	 */
     public void init() {
     	world = new JPanel();
     	world.setBackground(getForeground());
@@ -131,6 +131,11 @@ public class Jeu extends Fenetre implements ConstantesJeu {
     	this.add(world);
     }
     
+    /**
+     * Methode qui gere l'ensemble des updates de deplacement des joueurs
+     * Pour les SI3 : Si une des touche est active alors on incremente ou decremente de 5 la position x ou y du personnage.
+     * J'utilise les operateurs ternaire pour checker si la valeur depasse ou non les limites de l'ecran
+     */
     public void update() {
     	if(controlPlayers[0]) yPlayer1 = yPlayer1+5 > this.getHeight()-personnage1.getHeight() ? yPlayer1 : yPlayer1+5;
     	if(controlPlayers[1]) yPlayer1 = yPlayer1-5 < 0 ? 0 : yPlayer1-5;
@@ -143,6 +148,10 @@ public class Jeu extends Fenetre implements ConstantesJeu {
     	if(controlPlayers[7]) xPlayer2 = xPlayer2+5 > this.getWidth()-personnage2.getWidth() ? xPlayer2 : xPlayer2+5;
     }
     
+    /**
+     * Le coeur du jeu - Le decisionnaire !
+     * Pour les SI3 : Cette methode effectue les changements graphiques et verifie que le joueur a gagne ou pas
+     */
     public void render() {	
 		if(win) {
 			info.setText(WIN);
