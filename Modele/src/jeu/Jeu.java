@@ -150,7 +150,7 @@ public class Jeu extends Fenetre implements ConstantesJeu {
 		} else if(play) {
 			info.setVisible(false);
 	   		monster.setVisible(true);
-			monster.setBounds(xMonster, yMonster, 50, 50);		
+			monster.setBounds(xMonster, yMonster, TAILLE_X_MONSTER, TAILLE_Y_MONSTER);		
 			personnage1.setBounds(xPlayer1, yPlayer1, 100, 100);
 			personnage2.setBounds(xPlayer2, yPlayer2, 100, 100);
 		} else {
@@ -162,13 +162,13 @@ public class Jeu extends Fenetre implements ConstantesJeu {
     	monster.setBackground(getForeground());
     	world.setBackground(getBackground());
     	
-    	if(xMonster>xPlayer1 && xMonster<xPlayer1+100) {
-    		if(yMonster>yPlayer1 && yMonster<yPlayer1+100) {
+    	if(xMonster+TAILLE_X_MONSTER/2>xPlayer1 && xMonster+TAILLE_X_MONSTER/2<xPlayer1+100) {
+    		if(yMonster+TAILLE_Y_MONSTER/2>yPlayer1 && yMonster+TAILLE_Y_MONSTER/2<yPlayer1+100) {
     			win= true;
     		}
     	}
-    	if(xMonster>xPlayer2 && xMonster<xPlayer2+100) {
-    		if(yMonster>yPlayer2 && yMonster<yPlayer2+100) {
+    	if(xMonster+TAILLE_X_MONSTER/2>xPlayer2 && xMonster+TAILLE_X_MONSTER/2<xPlayer2+100) {
+    		if(yMonster+TAILLE_Y_MONSTER/2>yPlayer2 && yMonster+TAILLE_Y_MONSTER/2<yPlayer2+100) {
     			win= true;
     		}
     	}
