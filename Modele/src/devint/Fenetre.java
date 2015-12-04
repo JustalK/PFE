@@ -112,6 +112,8 @@ public abstract class Fenetre extends JFrame implements ConstantesDevint {
 		font = FONT_DEFAULT[++fontChoice % FONT_DEFAULT.length];
 	}
 	
+	
+	
 	public void changeColor() {
     	background = BACKGROUND_DEFAULT[++colorChoice % BACKGROUND_DEFAULT.length];
     	foreground = FOREGROUND_DEFAULT[colorChoice % BACKGROUND_DEFAULT.length];
