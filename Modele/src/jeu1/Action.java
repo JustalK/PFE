@@ -1,4 +1,4 @@
-package jeu;
+package jeu1;
 
 import java.awt.event.ActionEvent;
 

@@ -12,13 +12,9 @@ import javax.swing.JPanel;
 import javax.swing.border.LineBorder;
 
 import devint.Fenetre;
-import jeu.Jeu;
-import listener.CloseListener;
-import listener.LauchGameListener;
 
 public class Menu extends Fenetre implements ConstantesMenu {
     private static final long serialVersionUID = 1L;
-    private boolean play;
     
     private GridBagConstraints c = new GridBagConstraints(); 
     private JPanel menu = new JPanel(); 
@@ -26,9 +22,9 @@ public class Menu extends Fenetre implements ConstantesMenu {
     
     private List<JButton> listeBoutton;
     private JLabel title;
+    private int gameChoice;
     
     public Menu() {
-    	this.play = false;
     	listeBoutton = new ArrayList<JButton>();
     	//this.getSIVOX().playWav(ACCUEIL_SON);
     	
@@ -41,9 +37,10 @@ public class Menu extends Fenetre implements ConstantesMenu {
 		menu.setLayout(layoutMenu);	
 		
 		addLabel(TITLE_GAME);
-    	addMenu("Jeu 1",new LauchGameListener(this));
-    	addMenu("Option",new LauchGameListener(this));
-    	addMenu("Quitter",new CloseListener(this));
+    	addMenu("Jeu 1",new Action(this,1));
+    	addMenu("Jeu 2",new Action(this,2));
+    	addMenu("Option",new Action(this,-1));
+    	addMenu("Quitter",new Action(this,-2));
     	addControl("DOWN",new DownAction(this));
     	addControl("UP",new UpAction(this));
     	
@@ -54,11 +51,27 @@ public class Menu extends Fenetre implements ConstantesMenu {
     public void loop() {
         while(this.isDisplayable()) {
         	render();
-        	if(play) {
+        	switch(gameChoice) {
+        	case -2:
+        		this.dispose();
+        		break;
+        	case -1:
+        		//TODO Option
+        		break;
+        	case 1:
         		this.setVisible(false);
-            	new Jeu().loop();
-	        	this.play = false;
+            	new jeu1.Jeu().loop();
+	        	gameChoice = 0;
         		this.setVisible(true);
+        		break;
+        	case 2:
+        		this.setVisible(false);
+            	new jeu2.Jeu().loop();
+	        	gameChoice = 0;
+        		this.setVisible(true);
+        		break;
+        	default:
+        			break;
         	}
         }   
     }
@@ -75,11 +88,7 @@ public class Menu extends Fenetre implements ConstantesMenu {
     			unselectedButton(listeBoutton.get(i));
     		}
     	}
-    }
-
-	public void lauch() {
-    	this.play = true;
-	}    
+    } 
     
 	private void addLabel(String title) {
 		this.title = new JLabel(title.toUpperCase(),JLabel.CENTER);      
@@ -124,6 +133,10 @@ public class Menu extends Fenetre implements ConstantesMenu {
 		button.setBackground(getButtonSelectedBackground());
 		button.setForeground(getButtonSelectedForeground());
 		this.getRootPane().setDefaultButton(button);
+	}
+
+	public void chooseChoice(int choice) {
+		this.gameChoice = choice;
 	}
 	
 }

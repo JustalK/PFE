@@ -1,4 +1,4 @@
-package jeu;
+package jeu1;
 
 public interface ConstantesJeu {
 	// POUR LES SI3 : Le System.getProperty("line.separator") ou \n ne fonctionne pas dans un JLabel
