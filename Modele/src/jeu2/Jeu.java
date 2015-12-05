@@ -3,6 +3,8 @@ package jeu2;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
+import menu.DownAction;
+
 import com.sun.glass.events.KeyEvent;
 
 import jeu2.Action;
@@ -21,6 +23,8 @@ public class Jeu extends Fenetre implements ConstantesJeu {
     
     private boolean end;
     private boolean pressed;
+    
+    private int record;
 	
     public Jeu() {
         init();
@@ -29,14 +33,13 @@ public class Jeu extends Fenetre implements ConstantesJeu {
 	}
     
     public void init() {
-    	ch = new Chronometer();
-    	this.pressed = true;
     	world = new JPanel();
     	world.setBackground(getForeground());
     	world.setLayout(null); 
     	
     	addControlDown(KeyEvent.VK_SPACE,new Action(this,true));
     	addControlUp(KeyEvent.VK_SPACE,new Action(this,false));
+    	addControlDown(KeyEvent.VK_ENTER,new Restart(this));
     	
    		info = new JLabel(CONSIGNE,JLabel.CENTER);
    		info.setFont(getFont());
@@ -72,6 +75,10 @@ public class Jeu extends Fenetre implements ConstantesJeu {
 	    }
 
 	private void reset() {
+		count=0;
+    	ch = new Chronometer();
+    	this.pressed = true;
+    	info.setText(CONSIGNE);
 	}
 
 	private void render() {
@@ -82,8 +89,13 @@ public class Jeu extends Fenetre implements ConstantesJeu {
 	private void update() {
 		ch.stop();
 		int seconds = (int)ch.getSeconds();
-		String timer = seconds < 10 ? "00:0"+seconds : "00:"+seconds;
-		info.setText("<html><center>"+timer+"<br /><br />"+String.valueOf(count)+"</center></html>");
+		if(seconds<10) {
+			String timer = seconds < 10 ? "00:0"+seconds : "00:"+seconds;
+			info.setText("<html><center>"+timer+"<br /><br />"+String.valueOf(count)+"</center></html>");
+			record = count;
+		} else {
+			info.setText("<html><center>BRAVO<br />Vous avez appuye "+record+" fois sur espace<br /><br /><br />Pour recommencer, appuyez sur 'Entree'</center></html>");
+		}
 	}
 
 	public void action(boolean value) {
@@ -93,5 +105,9 @@ public class Jeu extends Fenetre implements ConstantesJeu {
 			pressed = false;
 		}
 		if(!value) pressed = true;
+	}
+
+	public void restart() {
+		reset();
 	}
 }
