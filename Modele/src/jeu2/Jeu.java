@@ -3,16 +3,24 @@ package jeu2;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
+import com.sun.glass.events.KeyEvent;
+
+import jeu2.Action;
 import jeu2.ConstantesJeu;
 import devint.Fenetre;
 
 public class Jeu extends Fenetre implements ConstantesJeu {
 	private static final long serialVersionUID = 1L;
 
+	private Chronometer ch;
+	
 	private JPanel world;
     private JLabel info;
+    private JLabel infoCount;
+    private int count;
     
-    private boolean play;
+    private boolean end;
+    private boolean pressed;
 	
     public Jeu() {
         init();
@@ -21,9 +29,14 @@ public class Jeu extends Fenetre implements ConstantesJeu {
 	}
     
     public void init() {
+    	ch = new Chronometer();
+    	this.pressed = true;
     	world = new JPanel();
     	world.setBackground(getForeground());
     	world.setLayout(null); 
+    	
+    	addControlDown(KeyEvent.VK_SPACE,new Action(this,true));
+    	addControlUp(KeyEvent.VK_SPACE,new Action(this,false));
     	
    		info = new JLabel(CONSIGNE,JLabel.CENTER);
    		info.setFont(getFont());
@@ -43,7 +56,7 @@ public class Jeu extends Fenetre implements ConstantesJeu {
 	            long now = System.nanoTime();
 	            lastLoopTime = now;
 	            
-	            if(play) {
+	            if(count>0) {
 	            	update();
 	            }
 	        	render();
@@ -52,6 +65,8 @@ public class Jeu extends Fenetre implements ConstantesJeu {
 					Thread.sleep( (lastLoopTime-System.nanoTime() + OPTIMAL_TIME)/1000000 );
 				} catch (InterruptedException e) {
 					e.printStackTrace();
+				} catch(IllegalArgumentException e) {
+					
 				}
 	        }
 	    }
@@ -65,6 +80,18 @@ public class Jeu extends Fenetre implements ConstantesJeu {
 	}
 
 	private void update() {
-		
+		ch.stop();
+		int seconds = (int)ch.getSeconds();
+		String timer = seconds < 10 ? "00:0"+seconds : "00:"+seconds;
+		info.setText("<html><center>"+timer+"<br /><br />"+String.valueOf(count)+"</center></html>");
+	}
+
+	public void action(boolean value) {
+		if(pressed) {
+			if(count==0) ch.start();
+			count++;
+			pressed = false;
+		}
+		if(!value) pressed = true;
 	}
 }
