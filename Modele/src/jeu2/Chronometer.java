@@ -15,19 +15,28 @@ public final class Chronometer {
         return end-begin;
     }
  
+    public String getChrono() {
+    	String tmp = new String();
+    	// Je pense pas que le jeu depassera l'heure Haha ! Inutile de travailler inutilement
+    	tmp = getHours()<10 ? "0"+getHours() : ""+getHours(); 
+    	tmp = (getMinutes() % 60)<10 ? tmp+":0"+(getMinutes() % 60) : tmp+":"+(getMinutes() % 60);   	
+    	tmp = (getSeconds() % 60)<10 ? tmp+":0"+(getSeconds() % 60) : tmp+":"+(getSeconds() % 60);  
+    	return tmp;
+    }
+    
     public long getMilliseconds() {
         return end-begin;
     }
  
-    public double getSeconds() {
-        return (end - begin) / 1000.0;
+    public int getSeconds() {
+        return (int)((end - begin) / 1000.0);
     }
  
-    public double getMinutes() {
-        return (end - begin) / 60000.0;
+    public int getMinutes() {
+        return (int)((end - begin) / 60000.0);
     }
  
-    public double getHours() {
-        return (end - begin) / 3600000.0;
+    public int getHours() {
+        return (int)((end - begin) / 3600000.0);
     }
 }

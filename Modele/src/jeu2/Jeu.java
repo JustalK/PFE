@@ -18,10 +18,7 @@ public class Jeu extends Fenetre implements ConstantesJeu {
 	
 	private JPanel world;
     private JLabel info;
-    private JLabel infoCount;
     private int count;
-    
-    private boolean end;
     private boolean pressed;
     
     private int record;
@@ -90,8 +87,7 @@ public class Jeu extends Fenetre implements ConstantesJeu {
 		ch.stop();
 		int seconds = (int)ch.getSeconds();
 		if(seconds<10) {
-			String timer = seconds < 10 ? "00:0"+seconds : "00:"+seconds;
-			info.setText("<html><center>"+timer+"<br /><br />"+String.valueOf(count)+"</center></html>");
+			info.setText("<html><center>"+ch.getChrono()+"<br /><br />"+String.valueOf(count)+"</center></html>");
 			record = count;
 		} else {
 			info.setText("<html><center>BRAVO<br />Vous avez appuye "+record+" fois sur espace<br /><br /><br />Pour recommencer, appuyez sur 'Entree'</center></html>");
