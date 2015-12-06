@@ -1,14 +1,12 @@
-package jeu2;
+package jeuChronometre;
+
+import java.awt.event.KeyEvent;
 
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
-import menu.DownAction;
-
-import com.sun.glass.events.KeyEvent;
-
-import jeu2.Action;
-import jeu2.ConstantesJeu;
+import jeuChronometre.Action;
+import jeuChronometre.ConstantesJeu;
 import devint.Fenetre;
 
 public class Jeu extends Fenetre implements ConstantesJeu {
@@ -47,9 +45,7 @@ public class Jeu extends Fenetre implements ConstantesJeu {
     }
     
 	public void loop() {
-		   long lastLoopTime = System.nanoTime();
-		   final int TARGET_FPS = 60;
-		   final long OPTIMAL_TIME = 1000000000 / TARGET_FPS; 
+		   long lastLoopTime;
 		   
 		   reset();
 	       while (this.isDisplayable()) {
@@ -64,9 +60,7 @@ public class Jeu extends Fenetre implements ConstantesJeu {
 	        	try {
 					Thread.sleep( (lastLoopTime-System.nanoTime() + OPTIMAL_TIME)/1000000 );
 				} catch (InterruptedException e) {
-					e.printStackTrace();
-				} catch(IllegalArgumentException e) {
-					
+					throw new IllegalArgumentException("");
 				}
 	        }
 	    }

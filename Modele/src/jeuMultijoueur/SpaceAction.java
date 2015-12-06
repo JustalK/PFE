@@ -1,22 +1,19 @@
-package jeu2;
+package jeuMultijoueur;
 
 import java.awt.event.ActionEvent;
 
 import javax.swing.AbstractAction;
 
-import menu.Menu;
-
-public class Restart extends AbstractAction {
+public class SpaceAction extends AbstractAction {
 	private static final long serialVersionUID = 1L;
-	private Jeu jeu2;
+	private transient Jeu jeu1;
 	
-	public Restart(Jeu jeu2) {
-		this.jeu2 = jeu2;
+	public SpaceAction(Jeu jeu1) {
+		this.jeu1 = jeu1;
 	}
 
 	@Override
 	public void actionPerformed(ActionEvent arg0) {
-		this.jeu2.restart();
+		this.jeu1.lauch();
 	}
-
 }

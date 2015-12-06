@@ -6,7 +6,7 @@ import javax.swing.AbstractAction;
 
 public class EchapAction extends AbstractAction {
 	private static final long serialVersionUID = 1L;
-	private Fenetre fenetre;
+	private transient Fenetre fenetre;
 	
 	public EchapAction(Fenetre fenetre) {
 		this.fenetre = fenetre;

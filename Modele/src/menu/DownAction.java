@@ -5,7 +5,7 @@ import javax.swing.AbstractAction;
 
 public class DownAction extends AbstractAction {
 	private static final long serialVersionUID = 1L;
-	private Menu fenetre;
+	private transient Menu fenetre;
 	
 	public DownAction(Menu fenetre) {
 		this.fenetre = fenetre;

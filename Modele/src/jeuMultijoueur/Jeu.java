@@ -1,14 +1,11 @@
-package jeu1;
+package jeuMultijoueur;
 
-import java.awt.Color;
+
+import java.awt.event.KeyEvent;
 
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
-import com.sun.glass.events.KeyEvent;
-
-import menu.ConstantesMenu;
-import menu.DownAction;
 import devint.Fenetre;
 
 public class Jeu extends Fenetre implements ConstantesJeu {
@@ -30,7 +27,7 @@ public class Jeu extends Fenetre implements ConstantesJeu {
     
     // Ce tableau permet de gerer les differentes touches de deplacement
     // L'ordre des variables sont les suivantes
-    // {Joueur 1 haut,Joueur 1 bas,Joueur 1 gauche,Joueur 1 droite,Joueur 2 haut,Joueur 2 bas,Joueur 2 gauche,Joueur 2 droite}
+    // Joueur 1 haut,Joueur 1 bas,Joueur 1 gauche,Joueur 1 droite,Joueur 2 haut,Joueur 2 bas,Joueur 2 gauche,Joueur 2 droite
     // Pour les SI3 : J'ai utilise cela parce que cela me permet de faire un "key binding" unique pour les 2 joueurs
     private boolean[] controlPlayers = {false,false,false,false,false,false,false,false};
 	
@@ -41,9 +38,7 @@ public class Jeu extends Fenetre implements ConstantesJeu {
 	}
 
 	public void loop() {
-	   long lastLoopTime = System.nanoTime();
-	   final int TARGET_FPS = 60;
-	   final long OPTIMAL_TIME = 1000000000 / TARGET_FPS; 
+	   long lastLoopTime;
 	   
 	   reset();
        while (this.isDisplayable()) {
@@ -58,7 +53,7 @@ public class Jeu extends Fenetre implements ConstantesJeu {
         	try {
 				Thread.sleep( (lastLoopTime-System.nanoTime() + OPTIMAL_TIME)/1000000 );
 			} catch (InterruptedException e) {
-				e.printStackTrace();
+				throw new IllegalArgumentException("");
 			}
         }
     }
@@ -137,15 +132,28 @@ public class Jeu extends Fenetre implements ConstantesJeu {
      * J'utilise les operateurs ternaire pour checker si la valeur depasse ou non les limites de l'ecran
      */
     public void update() {
+    	updatePlayer1();
+    	updatePlayer2();
+    }
+    
+    /**
+     * Avant que l'on ose insulter mon niveau de programmation. Hoo le nul, il a fait de la duplication de code !<br />
+     * Comme java, ce langage debile, passe les variables primitive par copie.<br />
+     * Je suis oblige de faire une duplication de code pour faire la meme chose a moins d'utiliser un POJO (mais j'ai la flemme).<br />
+     * Et si je le faisais, je suis pas sur que tous le monde comprendrais pourquoi j'ai fait ce choix.
+     */
+    public void updatePlayer1() {
     	if(controlPlayers[0]) yPlayer1 = yPlayer1+5 > this.getHeight()-personnage1.getHeight() ? yPlayer1 : yPlayer1+5;
     	if(controlPlayers[1]) yPlayer1 = yPlayer1-5 < 0 ? 0 : yPlayer1-5;
     	if(controlPlayers[2]) xPlayer1 = xPlayer1-5 < 0 ? 0 : xPlayer1-5;
-    	if(controlPlayers[3]) xPlayer1 = xPlayer1+5 > this.getWidth()-personnage1.getWidth() ? xPlayer1 : xPlayer1+5;
-    	
+    	if(controlPlayers[3]) xPlayer1 = xPlayer1+5 > this.getWidth()-personnage1.getWidth() ? xPlayer1 : xPlayer1+5;   	
+    }
+    
+    public void updatePlayer2() {
     	if(controlPlayers[4]) yPlayer2 = yPlayer2+5 > this.getHeight()-personnage2.getHeight() ? yPlayer2 : yPlayer2+5;
     	if(controlPlayers[5]) yPlayer2 = yPlayer2-5 < 0 ? 0 : yPlayer2-5;
     	if(controlPlayers[6]) xPlayer2 = xPlayer2-5 < 0 ? 0 : xPlayer2-5;
-    	if(controlPlayers[7]) xPlayer2 = xPlayer2+5 > this.getWidth()-personnage2.getWidth() ? xPlayer2 : xPlayer2+5;
+    	if(controlPlayers[7]) xPlayer2 = xPlayer2+5 > this.getWidth()-personnage2.getWidth() ? xPlayer2 : xPlayer2+5;    	
     }
     
     /**
@@ -171,18 +179,16 @@ public class Jeu extends Fenetre implements ConstantesJeu {
     	monster.setBackground(getForeground());
     	world.setBackground(getBackground());
     	
-    	if(xMonster+TAILLE_X_MONSTER/2>xPlayer1 && xMonster+TAILLE_X_MONSTER/2<xPlayer1+100) {
-    		if(yMonster+TAILLE_Y_MONSTER/2>yPlayer1 && yMonster+TAILLE_Y_MONSTER/2<yPlayer1+100) {
-    			win= true;
-    		}
-    	}
-    	if(xMonster+TAILLE_X_MONSTER/2>xPlayer2 && xMonster+TAILLE_X_MONSTER/2<xPlayer2+100) {
-    		if(yMonster+TAILLE_Y_MONSTER/2>yPlayer2 && yMonster+TAILLE_Y_MONSTER/2<yPlayer2+100) {
-    			win= true;
-    		}
-    	}
+    	winPlayer(xPlayer1,yPlayer1);
+    	winPlayer(xPlayer2,yPlayer2);
     }
     
+    public void winPlayer(int xPlayer,int yPlayer) {
+    	if(xMonster+TAILLE_X_MONSTER/2>xPlayer && xMonster+TAILLE_X_MONSTER/2<xPlayer+100 && yMonster+TAILLE_Y_MONSTER/2>yPlayer && yMonster+TAILLE_Y_MONSTER/2<yPlayer+100) {
+    		win= true;
+    	}
+    }
+
     public void reset() {
    		xPlayer1 = 0;
    		yPlayer1 = 0;

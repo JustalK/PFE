@@ -1,25 +1,24 @@
-package jeu2;
+package jeuMultijoueur;
 
 import java.awt.event.ActionEvent;
 
 import javax.swing.AbstractAction;
 
-import menu.Menu;
-
 public class Action extends AbstractAction {
 	private static final long serialVersionUID = 1L;
-	private Jeu jeu2;
+	private transient Jeu jeu1;
 	private int position;
 	private boolean value;
 	
-	public Action(Jeu jeu2,boolean value) {
-		this.jeu2 = jeu2;
+	public Action(Jeu jeu1,int position,boolean value) {
+		this.jeu1 = jeu1;
+		this.position = position;
 		this.value = value;
 	}
 
 	@Override
 	public void actionPerformed(ActionEvent arg0) {
-		this.jeu2.action(value);
+		this.jeu1.action(position,value);
 	}
 
 }

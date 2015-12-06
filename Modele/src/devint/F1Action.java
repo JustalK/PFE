@@ -1,12 +1,12 @@
 package devint;
 
 import java.awt.event.ActionEvent;
-
 import javax.swing.AbstractAction;
+import static devint.ConstantesDevint.*;
 
-public class F1Action extends AbstractAction implements ConstantesDevint {
+public class F1Action extends AbstractAction {
 	private static final long serialVersionUID = 1L;
-	private Fenetre fenetre;
+	private transient Fenetre fenetre;
 	
 	public F1Action(Fenetre fenetre) {
 		this.fenetre = fenetre;

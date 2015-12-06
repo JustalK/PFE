@@ -1,4 +1,4 @@
-package jeu1;
+package jeuMultijoueur;
 
 public interface ConstantesJeu {
 	// POUR LES SI3 : Le System.getProperty("line.separator") ou \n ne fonctionne pas dans un JLabel
@@ -12,4 +12,7 @@ public interface ConstantesJeu {
 			+ "Appuyer sur espace pour recommencer</center></html>";
 	int TAILLE_X_MONSTER = 50;
 	int TAILLE_Y_MONSTER = 50;
+
+	int TARGET_FPS = 60;
+	long OPTIMAL_TIME = 1000000000L / TARGET_FPS;
 }

@@ -10,6 +10,7 @@ import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.border.LineBorder;
+import static devint.ConstantesDevint.*;
 
 import devint.Fenetre;
 
@@ -17,7 +18,7 @@ public class Menu extends Fenetre implements ConstantesMenu {
     private static final long serialVersionUID = 1L;
     
     private GridBagConstraints c = new GridBagConstraints(); 
-    private JPanel menu = new JPanel(); 
+    private JPanel menuPrincipal = new JPanel(); 
     private int countMenu, menuSelected;
     
     private List<JButton> listeBoutton;
@@ -26,7 +27,7 @@ public class Menu extends Fenetre implements ConstantesMenu {
     
     public Menu() {
     	listeBoutton = new ArrayList<JButton>();
-    	//this.getSIVOX().playWav(ACCUEIL_SON);
+    	this.getSIVOX().playWav(ACCUEIL_SON);
     	
 		GridBagLayout layoutMenu = new GridBagLayout();
 		c.fill = GridBagConstraints.BOTH;
@@ -34,7 +35,7 @@ public class Menu extends Fenetre implements ConstantesMenu {
         c.fill = GridBagConstraints.BOTH;
         c.ipady = 100;
     	c.gridwidth = 3;
-		menu.setLayout(layoutMenu);	
+		menuPrincipal.setLayout(layoutMenu);	
 		
 		addLabel(TITLE_GAME);
     	addMenu("Jeu 1",new Action(this,1));
@@ -44,7 +45,7 @@ public class Menu extends Fenetre implements ConstantesMenu {
     	addControl("DOWN",new DownAction(this));
     	addControl("UP",new UpAction(this));
     	
-    	this.add(menu);
+    	this.add(menuPrincipal);
         this.setVisible(true);
     }
 
@@ -60,13 +61,13 @@ public class Menu extends Fenetre implements ConstantesMenu {
         		break;
         	case 1:
         		this.setVisible(false);
-            	new jeu1.Jeu().loop();
+            	new jeuMultijoueur.Jeu().loop();
 	        	gameChoice = 0;
         		this.setVisible(true);
         		break;
         	case 2:
         		this.setVisible(false);
-            	new jeu2.Jeu().loop();
+            	new jeuChronometre.Jeu().loop();
 	        	gameChoice = 0;
         		this.setVisible(true);
         		break;
@@ -77,7 +78,7 @@ public class Menu extends Fenetre implements ConstantesMenu {
     }
     
     private void render() {
-    	menu.setBackground(getBackground());		
+    	menuPrincipal.setBackground(getBackground());		
     	this.title.setFont(getFont());
     	this.title.setForeground(getForeground());
     	
@@ -94,7 +95,7 @@ public class Menu extends Fenetre implements ConstantesMenu {
 		this.title = new JLabel(title.toUpperCase(),JLabel.CENTER);      
         c.weightx = c.weighty = 1.0;
         c.gridy = countMenu++;
-    	menu.add(this.title, c);
+    	menuPrincipal.add(this.title, c);
     }
     
     private void addMenu(String title,ActionListener action) {
@@ -103,7 +104,7 @@ public class Menu extends Fenetre implements ConstantesMenu {
 		unselectedButton(button);
         c.weightx = c.weighty = 1.0;
         c.gridy = countMenu++;	
-    	menu.add(button, c);
+    	menuPrincipal.add(button, c);
     	listeBoutton.add(button);
     }
 	

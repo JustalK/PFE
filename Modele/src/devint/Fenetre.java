@@ -1,20 +1,21 @@
 package devint;
 
+import java.awt.Color;
 import java.awt.Font;
-import java.awt.event.KeyEvent;
 
 import javax.swing.Action;
 import javax.swing.JFrame;
 import javax.swing.KeyStroke;
 
 import t2s.SIVOXDevint;
+import static devint.ConstantesDevint.*;
 
-public abstract class Fenetre extends JFrame implements ConstantesDevint {
+public abstract class Fenetre extends JFrame {
 	private static final long serialVersionUID = 1L;
-	private SIVOXDevint sivox;
-	private Font font;
-    private java.awt.Color background;
-    private java.awt.Color foreground;
+	private transient SIVOXDevint sivox;
+	private Font fontDefault;
+    private java.awt.Color backgroundDefault;
+    private java.awt.Color foregroundDefault;
     private java.awt.Color buttonSelectedBackground;
     private java.awt.Color buttonUnselectedBackground;
     private java.awt.Color buttonSelectedForeground;
@@ -22,6 +23,16 @@ public abstract class Fenetre extends JFrame implements ConstantesDevint {
     private int colorChoice;
     private int fontChoice;
     private int syntheseNiveauChoice;
+    
+
+	private static final String[] PHRASE_SYNTHESE_NIVEAU = {"Synthese maximale","Synthese moyenne","Synthese minimale"};	
+	private static final Font FONT_DEFAULT[] = {new Font("Arial", Font.BOLD, 50),new Font("Arial", Font.BOLD, 60),new Font("Arial", Font.BOLD, 70),new Font("Arial", Font.BOLD, 90),new Font("Arial", Font.BOLD, 40)};
+	private static final java.awt.Color BACKGROUND_DEFAULT[] = {new Color(155,215,202),new Color(255,0,203),new Color(0,255,0)};
+	private static final java.awt.Color FOREGROUND_DEFAULT[] = {Color.BLACK,new Color(0,0,255),new Color(255,255,0)};
+	private static final java.awt.Color BUTTON_BACKGROUND_SELECTED_DEFAULT[] = {Color.BLACK,new Color(0,0,255),new Color(255,0,0)};
+	private static final java.awt.Color BUTTON_BACKGROUND_UNSELECTED_DEFAULT[] = {Color.WHITE,Color.WHITE,new Color(0,255,255)};
+	private static final java.awt.Color BUTTON_FOREGROUND_SELECTED_DEFAULT[] = {Color.WHITE,Color.WHITE,Color.WHITE};
+	private static final java.awt.Color BUTTON_FOREGROUND_UNSELECTED_DEFAULT[] = {Color.BLACK,Color.BLACK,Color.BLACK};
 	
 	public Fenetre() {
 		// Enleve la barre de menu dans la JFrame - C'est moche sans !
@@ -42,9 +53,9 @@ public abstract class Fenetre extends JFrame implements ConstantesDevint {
   
     	this.syntheseNiveauChoice = 2;
     	
-    	font = FONT_DEFAULT[0];
-    	background = BACKGROUND_DEFAULT[0];
-    	foreground = FOREGROUND_DEFAULT[0];
+    	fontDefault = FONT_DEFAULT[0];
+    	backgroundDefault = BACKGROUND_DEFAULT[0];
+    	foregroundDefault = FOREGROUND_DEFAULT[0];
     	buttonSelectedBackground = BUTTON_BACKGROUND_SELECTED_DEFAULT[0];
     	buttonUnselectedBackground = BUTTON_BACKGROUND_UNSELECTED_DEFAULT[0];
     	buttonSelectedForeground = BUTTON_FOREGROUND_SELECTED_DEFAULT[0];
@@ -66,16 +77,19 @@ public abstract class Fenetre extends JFrame implements ConstantesDevint {
     	this.getRootPane().getActionMap().put(key+"Up",action);		
 	}
 	
+	@Override
 	public Font getFont() {
-		return font;
+		return fontDefault;
 	}
 	
+	@Override
 	public java.awt.Color getBackground() {
-		return background;
+		return backgroundDefault;
 	}
 
+	@Override
 	public java.awt.Color getForeground() {
-		return foreground;
+		return foregroundDefault;
 	}
 	
 	public java.awt.Color getButtonSelectedBackground() {
@@ -109,14 +123,14 @@ public abstract class Fenetre extends JFrame implements ConstantesDevint {
 	}
 	
 	public void changeFont() {
-		font = FONT_DEFAULT[++fontChoice % FONT_DEFAULT.length];
+		fontDefault = FONT_DEFAULT[++fontChoice % FONT_DEFAULT.length];
 	}
 	
 	
 	
 	public void changeColor() {
-    	background = BACKGROUND_DEFAULT[++colorChoice % BACKGROUND_DEFAULT.length];
-    	foreground = FOREGROUND_DEFAULT[colorChoice % BACKGROUND_DEFAULT.length];
+    	backgroundDefault = BACKGROUND_DEFAULT[++colorChoice % BACKGROUND_DEFAULT.length];
+    	foregroundDefault = FOREGROUND_DEFAULT[colorChoice % BACKGROUND_DEFAULT.length];
     	buttonSelectedBackground = BUTTON_BACKGROUND_SELECTED_DEFAULT[colorChoice % BACKGROUND_DEFAULT.length];
     	buttonUnselectedBackground = BUTTON_BACKGROUND_UNSELECTED_DEFAULT[colorChoice % BACKGROUND_DEFAULT.length];
     	buttonSelectedForeground = BUTTON_FOREGROUND_SELECTED_DEFAULT[colorChoice % BACKGROUND_DEFAULT.length];
