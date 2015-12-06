@@ -15,12 +15,7 @@ public class Jeu extends Fenetre {
     private JPanel personnage2;
     private JPanel monster;
     private JPanel world;
-    private int xPlayer1;
-    private int yPlayer1;
-    private int xPlayer2;
-    private int yPlayer2;
-    private int xMonster;
-    private int yMonster;
+    private Positions positionsPersonnage1, positionsPersonnage2, positionsMonster;
     private boolean play;
     private boolean win;
 
@@ -86,7 +81,6 @@ public class Jeu extends Fenetre {
      */
     public void init() {
         world = new JPanel();
-        world.setBackground(getForeground());
         world.setLayout(null);
 
         // Player 1
@@ -103,8 +97,6 @@ public class Jeu extends Fenetre {
         addControlUp(KeyEvent.VK_RIGHT, new Action(this, 3, false));
 
         personnage1 = new JPanel();
-        personnage1.setBounds(xPlayer1, yPlayer1, 100, 100);
-        personnage1.setBackground(getBackground());
         world.add(personnage1);
 
         // Player2
@@ -123,14 +115,10 @@ public class Jeu extends Fenetre {
         addControl("SPACE", new SpaceAction(this));
 
         personnage2 = new JPanel();
-        personnage2.setBounds(xPlayer2, yPlayer2, 100, 100);
-        personnage2.setBackground(getBackground());
         world.add(personnage2);
 
         // Monster
         monster = new JPanel();
-        monster.setBounds(xMonster, yMonster, 50, 50);
-        monster.setBackground(getBackground());
         world.add(monster);
 
         info = new JLabel(CONSIGNE, JLabel.CENTER);
@@ -147,43 +135,15 @@ public class Jeu extends Fenetre {
      * pour checker si la valeur depasse ou non les limites de l'ecran
      */
     public void update() {
-        updatePlayer1();
-        updatePlayer2();
+        updatePlayer(0,1,2,3,positionsPersonnage1);
+        updatePlayer(4,5,6,7,positionsPersonnage2);
     }
 
-    /**
-     * Avant que l'on ose insulter mon niveau de programmation. Hoo le nul, il a
-     * fait de la duplication de code !<br />
-     * Comme java, ce langage debile, passe les variables primitive par copie.<br />
-     * Je suis oblige de faire une duplication de code pour faire la meme chose
-     * a moins d'utiliser un POJO (mais j'ai la flemme).<br />
-     * Et si je le faisais, je suis pas sur que tous le monde comprendrais
-     * pourquoi j'ai fait ce choix.
-     */
-    public void updatePlayer1() {
-        if (controlPlayers[0])
-            yPlayer1 = yPlayer1 + 5 > this.getHeight()
-                    - personnage1.getHeight() ? yPlayer1 : yPlayer1 + 5;
-        if (controlPlayers[1])
-            yPlayer1 = yPlayer1 - 5 < 0 ? 0 : yPlayer1 - 5;
-        if (controlPlayers[2])
-            xPlayer1 = xPlayer1 - 5 < 0 ? 0 : xPlayer1 - 5;
-        if (controlPlayers[3])
-            xPlayer1 = xPlayer1 + 5 > this.getWidth() - personnage1.getWidth() ? xPlayer1
-                    : xPlayer1 + 5;
-    }
-
-    public void updatePlayer2() {
-        if (controlPlayers[4])
-            yPlayer2 = yPlayer2 + 5 > this.getHeight()
-                    - personnage2.getHeight() ? yPlayer2 : yPlayer2 + 5;
-        if (controlPlayers[5])
-            yPlayer2 = yPlayer2 - 5 < 0 ? 0 : yPlayer2 - 5;
-        if (controlPlayers[6])
-            xPlayer2 = xPlayer2 - 5 < 0 ? 0 : xPlayer2 - 5;
-        if (controlPlayers[7])
-            xPlayer2 = xPlayer2 + 5 > this.getWidth() - personnage2.getWidth() ? xPlayer2
-                    : xPlayer2 + 5;
+    private void updatePlayer(int bot,int top,int left,int right,Positions positions) {
+        if (controlPlayers[bot]) {positions.moveBot();}
+        if (controlPlayers[top]) {positions.moveTop();}
+        if (controlPlayers[left]) {positions.moveLeft();}
+        if (controlPlayers[right]) {positions.moveRight();}
     }
 
     /**
@@ -198,10 +158,9 @@ public class Jeu extends Fenetre {
         } else if (play) {
             info.setVisible(false);
             monster.setVisible(true);
-            monster.setBounds(xMonster, yMonster, TAILLE_X_MONSTER,
-                    TAILLE_Y_MONSTER);
-            personnage1.setBounds(xPlayer1, yPlayer1, 100, 100);
-            personnage2.setBounds(xPlayer2, yPlayer2, 100, 100);
+            monster.setBounds(positionsMonster.getPositionX(), positionsMonster.getPositionY(), TAILLE_X_MONSTER, TAILLE_Y_MONSTER);
+            personnage1.setBounds(positionsPersonnage1.getPositionX(), positionsPersonnage1.getPositionY(), 100, 100);
+            personnage2.setBounds(positionsPersonnage2.getPositionX(), positionsPersonnage2.getPositionY(), 100, 100);
         } else {
             monster.setVisible(false);
             info.setBounds(0, 0, this.getWidth(), this.getHeight());
@@ -211,29 +170,26 @@ public class Jeu extends Fenetre {
         monster.setBackground(getForeground());
         world.setBackground(getBackground());
 
-        winPlayer(xPlayer1, yPlayer1);
-        winPlayer(xPlayer2, yPlayer2);
+        winPlayer(positionsPersonnage1.getPositionX(), positionsPersonnage1.getPositionY());
+        winPlayer(positionsPersonnage2.getPositionX(), positionsPersonnage2.getPositionY());
     }
 
     public void winPlayer(int xPlayer, int yPlayer) {
-        if (xMonster + TAILLE_X_MONSTER / 2 > xPlayer
-                && xMonster + TAILLE_X_MONSTER / 2 < xPlayer + 100
-                && yMonster + TAILLE_Y_MONSTER / 2 > yPlayer
-                && yMonster + TAILLE_Y_MONSTER / 2 < yPlayer + 100) {
+        if (positionsMonster.getPositionX() + TAILLE_X_MONSTER / 2 > xPlayer
+                && positionsMonster.getPositionX() + TAILLE_X_MONSTER / 2 < xPlayer + 100
+                && positionsMonster.getPositionY() + TAILLE_Y_MONSTER / 2 > yPlayer
+                && positionsMonster.getPositionY() + TAILLE_Y_MONSTER / 2 < yPlayer + 100) {
             win = true;
         }
     }
 
     public void reset() {
-        xPlayer1 = 0;
-        yPlayer1 = 0;
-        xPlayer2 = this.getWidth() - 100;
-        yPlayer2 = this.getHeight() - 100;
-        xMonster = (this.getWidth() - 50) / 2;
-        yMonster = (this.getHeight() - 50) / 2;
+        positionsPersonnage1 = new Positions(0,0,0,this.getWidth(),0,this.getHeight());
+        positionsPersonnage2 = new Positions(this.getWidth() - 100,this.getHeight() - 100,0,this.getWidth(),0,this.getHeight());
+        positionsMonster = new Positions((this.getWidth() - 50) / 2,(this.getHeight() - 50) / 2,0,this.getWidth(),0,this.getHeight());
         monster.setVisible(false);
-        personnage1.setBounds(xPlayer1, yPlayer1, 100, 100);
-        personnage2.setBounds(xPlayer2, yPlayer2, 100, 100);
+        personnage1.setBounds(positionsPersonnage1.getPositionX(), positionsPersonnage1.getPositionY(), 100, 100);
+        personnage2.setBounds(positionsPersonnage2.getPositionX(), positionsPersonnage2.getPositionY(), 100, 100);
         info.setText(CONSIGNE);
         info.setVisible(true);
         play = false;

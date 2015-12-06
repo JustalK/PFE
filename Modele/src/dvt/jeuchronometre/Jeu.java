@@ -52,9 +52,8 @@ public class Jeu extends Fenetre {
             long now = System.nanoTime();
             lastLoopTime = now;
 
-            if (count > 0) {
-                update();
-            }
+            
+            update();
             render();
 
             try {
@@ -81,16 +80,18 @@ public class Jeu extends Fenetre {
     }
 
     private void update() {
-        ch.stop();
-        int seconds = (int) ch.getSeconds();
-        if (seconds < 10) {
-            info.setText("<html><center>" + ch.getChrono() + "<br /><br />"
-                    + count + "</center></html>");
-            record = count;
-        } else {
-            info.setText("<html><center>BRAVO<br />Vous avez appuye "
-                    + record
-                    + " fois sur espace<br /><br /><br />Pour recommencer, appuyez sur 'Entree'</center></html>");
+        if (count > 0) {
+            ch.stop();
+            int seconds = (int) ch.getSeconds();
+            if (seconds < 10) {
+                info.setText("<html><center>" + ch.getChrono() + "<br /><br />"
+                        + count + "</center></html>");
+                record = count;
+            } else {
+                info.setText("<html><center>BRAVO<br />Vous avez appuye "
+                        + record
+                        + " fois sur espace<br /><br /><br />Pour recommencer, appuyez sur 'Entree'</center></html>");
+            }
         }
     }
 
