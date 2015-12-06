@@ -45,7 +45,7 @@ public class Jeu extends Fenetre {
     }
 
     public void loop() {
-        long lastLoopTime;
+        long lastLoopTime,timeLoop;
 
         reset();
         while (this.isDisplayable()) {
@@ -58,7 +58,10 @@ public class Jeu extends Fenetre {
             render();
 
             try {
-                Thread.sleep((lastLoopTime - System.nanoTime() + OPTIMAL_TIME) / 1000000);
+                timeLoop = (lastLoopTime - System.nanoTime() + OPTIMAL_TIME) / 1000000;
+                if(timeLoop>0) {
+                    Thread.sleep(timeLoop);
+                }
             } catch (InterruptedException e) {
                 throw new IllegalArgumentException("");
             }

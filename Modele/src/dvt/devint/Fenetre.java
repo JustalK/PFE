@@ -139,17 +139,11 @@ public abstract class Fenetre extends JFrame {
     }
 
     public void changeColor() {
-        backgroundDefault = BACKGROUND_DEFAULT[++colorChoice
-                % BACKGROUND_DEFAULT.length];
-        foregroundDefault = FOREGROUND_DEFAULT[colorChoice
-                % BACKGROUND_DEFAULT.length];
-        buttonSelectedBackground = BUTTON_BACKGROUND_SELECTED_DEFAULT[colorChoice
-                % BACKGROUND_DEFAULT.length];
-        buttonUnselectedBackground = BUTTON_BACKGROUND_UNSELECTED_DEFAULT[colorChoice
-                % BACKGROUND_DEFAULT.length];
-        buttonSelectedForeground = BUTTON_FOREGROUND_SELECTED_DEFAULT[colorChoice
-                % BACKGROUND_DEFAULT.length];
-        buttonUnselectedForeground = BUTTON_FOREGROUND_UNSELECTED_DEFAULT[colorChoice
-                % BACKGROUND_DEFAULT.length];
+        backgroundDefault = BACKGROUND_DEFAULT[++colorChoice % BACKGROUND_DEFAULT.length];
+        foregroundDefault = FOREGROUND_DEFAULT[colorChoice % BACKGROUND_DEFAULT.length];
+        buttonSelectedBackground = BUTTON_BACKGROUND_SELECTED_DEFAULT[colorChoice % BACKGROUND_DEFAULT.length];
+        buttonUnselectedBackground = BUTTON_BACKGROUND_UNSELECTED_DEFAULT[colorChoice % BACKGROUND_DEFAULT.length];
+        buttonSelectedForeground = BUTTON_FOREGROUND_SELECTED_DEFAULT[colorChoice % BACKGROUND_DEFAULT.length];
+        buttonUnselectedForeground = BUTTON_FOREGROUND_UNSELECTED_DEFAULT[colorChoice % BACKGROUND_DEFAULT.length];
     }
 }

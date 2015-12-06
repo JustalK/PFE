@@ -64,12 +64,14 @@ public class Menu extends Fenetre {
                 break;
             case 1:
                 this.setVisible(false);
+                this.getSIVOX().stop();
                 new dvt.jeumultijoueur.Jeu().loop();
                 gameChoice = 0;
                 this.setVisible(true);
                 break;
             case 2:
                 this.setVisible(false);
+                this.getSIVOX().stop();
                 new dvt.jeuchronometre.Jeu().loop();
                 gameChoice = 0;
                 this.setVisible(true);
@@ -114,9 +116,8 @@ public class Menu extends Fenetre {
     public void down() {
         unselectedButton(listeBoutton.get(menuSelected++ % listeBoutton.size()));
         selectedButton(listeBoutton.get(menuSelected % listeBoutton.size()));
-        this.getSIVOX().playText(
-                listeBoutton.get(menuSelected % listeBoutton.size()).getText(),
-                SYNTHESE_MOYENNE);
+        this.getSIVOX().playText(listeBoutton.get(menuSelected % listeBoutton.size()).getText(),SYNTHESE_MOYENNE);
+        this.getSIVOX().playText("CETTE OPTION EST "+listeBoutton.get(menuSelected % listeBoutton.size()).getText(),SYNTHESE_MINIMALE);
     }
 
     public void up() {
@@ -124,9 +125,8 @@ public class Menu extends Fenetre {
         menuSelected = menuSelected == 0 ? (listeBoutton.size() - 1)
                 : menuSelected - 1;
         selectedButton(listeBoutton.get(menuSelected % listeBoutton.size()));
-        this.getSIVOX().playText(
-                listeBoutton.get(menuSelected % listeBoutton.size()).getText(),
-                SYNTHESE_MOYENNE);
+        this.getSIVOX().playText(listeBoutton.get(menuSelected % listeBoutton.size()).getText(),SYNTHESE_MOYENNE);
+        this.getSIVOX().playText("CETTE OPTION EST "+listeBoutton.get(menuSelected % listeBoutton.size()).getText(),SYNTHESE_MINIMALE);
     }
 
     private void unselectedButton(JButton button) {
