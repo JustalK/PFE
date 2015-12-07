@@ -2,6 +2,10 @@ package dvt.menu;
 
 import java.awt.Color;
 
+/**
+ * Permet de rassembler l'ensemble des constanstes du menu dans une classe
+ * @author Justal Kevin
+ */
 public final class ConstantesMenu {
     // Titre du jeu
     public static final String TITLE_GAME = "Modele de Jeu";
@@ -34,6 +38,9 @@ public final class ConstantesMenu {
     public static final int MARGE_LEFT_RIGHT = 80;
     public static final int MARGE_TOP_BOT = 3;
     
+    /**
+     * Le constructeur ne devra jamais etre utilise !
+     */
     private ConstantesMenu() {
         throw new AssertionError();
     }

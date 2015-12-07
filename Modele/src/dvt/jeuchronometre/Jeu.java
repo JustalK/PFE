@@ -9,24 +9,31 @@ import static dvt.jeuchronometre.ConstantesJeu.*;
 import dvt.devint.Fenetre;
 import dvt.jeuchronometre.Action;
 
+/**
+ * Permet de gerer le jeu et la fenetre qui contient le jeu
+ * @author Justal Kevin
+ */
 public class Jeu extends Fenetre {
     private static final long serialVersionUID = 1L;
-
     private Chronometer ch;
-
     private JPanel world;
     private JLabel info;
     private int count;
     private boolean pressed;
-
     private int record;
 
+    /**
+     * Permet de creer et initialiser la fenetre de jeu
+     */
     public Jeu() {
         init();
         this.setVisible(true);
         this.setFocusable(true);
     }
 
+    /**
+     * L'initalisation du jeu
+     */
     public void init() {
         world = new JPanel();
         world.setBackground(getForeground());
@@ -44,6 +51,9 @@ public class Jeu extends Fenetre {
         this.add(world);
     }
 
+    /**
+     * La loop du jeu qui permet de garder un FPS (frame per seconds) constant peu importe le PC
+     */
     public void loop() {
         long lastLoopTime,timeLoop;
 
@@ -67,6 +77,9 @@ public class Jeu extends Fenetre {
         }
     }
 
+    /**
+     * Permet de reset le jeu afin de recommencer une partie
+     */
     private void reset() {
         count = 0;
         ch = new Chronometer();
@@ -74,11 +87,9 @@ public class Jeu extends Fenetre {
         info.setText(CONSIGNE);
     }
 
-    private void render() {
-        info.setBounds(0, 0, this.getWidth(), this.getHeight());
-        world.setBackground(getBackground());
-    }
-
+    /**
+     * Permet de faire l'update du jeu
+     */
     private void update() {
         if (count > 0) {
             ch.stop();
@@ -95,6 +106,18 @@ public class Jeu extends Fenetre {
         }
     }
 
+    /**
+     * Permet de faire le rendue du jeu suivant les modifications faites dans l'update
+     */
+    private void render() {
+        info.setBounds(0, 0, this.getWidth(), this.getHeight());
+        world.setBackground(getBackground());
+    }    
+    
+    /**
+     * Permet de gerer les resultats des actions
+     * @param value La valeur que l'action nous renvoie
+     */
     public void action(boolean value) {
         if (pressed) {
             if (count == 0)
@@ -106,6 +129,9 @@ public class Jeu extends Fenetre {
             pressed = true;
     }
 
+    /**
+     * Permet de gerer l'action pour redemarrer le jeu
+     */
     public void restart() {
         reset();
     }

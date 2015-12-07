@@ -1,5 +1,9 @@
 package dvt.jeumultijoueur;
 
+/**
+ * Permet de rassembler l'ensemble des constanstes du jeu dans une classe
+ * @author Justal Kevin
+ */
 public final class ConstantesJeu {
     // POUR LES SI3 : Le System.getProperty("line.separator") ou \n ne
     // fonctionne pas dans un JLabel
@@ -16,6 +20,9 @@ public final class ConstantesJeu {
     public static final int TARGET_FPS = 60;
     public static final long OPTIMAL_TIME = 1000000000L / TARGET_FPS;
     
+    /**
+     * Le constructeur ne devra jamais etre utilise !
+     */
     private ConstantesJeu() {
         throw new AssertionError();
     }

@@ -9,6 +9,10 @@ import dvt.devint.Fenetre;
 import static dvt.jeuchronometre.ConstantesJeu.OPTIMAL_TIME;
 import static dvt.jeumultijoueur.ConstantesJeu.*;
 
+/**
+ * Permet de gerer le jeu et la fenetre qui contient le jeu
+ * @author Justal Kevin
+ */
 public class Jeu extends Fenetre {
     private static final long serialVersionUID = 1L;
     private JPanel personnage1;
@@ -27,37 +31,15 @@ public class Jeu extends Fenetre {
     // haut,Joueur 2 bas,Joueur 2 gauche,Joueur 2 droite
     // Pour les SI3 : J'ai utilise cela parce que cela me permet de faire un
     // "key binding" unique pour les 2 joueurs
-    private boolean[] controlPlayers = { false, false, false, false, false,
-            false, false, false };
+    private boolean[] controlPlayers = { false, false, false, false, false,false, false, false };
 
+    /**
+     * Permet de creer et initialiser la fenetre de jeu
+     */
     public Jeu() {
         init();
         this.setVisible(true);
         this.setFocusable(true);
-    }
-
-    public void loop() {
-        long lastLoopTime,timeLoop;
-
-        reset();
-        while (this.isDisplayable()) {
-            long now = System.nanoTime();
-            lastLoopTime = now;
-
-            if (play) {
-                update();
-            }
-            render();
-
-            try {
-                timeLoop = (lastLoopTime - System.nanoTime() + OPTIMAL_TIME) / 1000000;
-                if(timeLoop>0) {
-                    Thread.sleep(timeLoop);
-                }
-            } catch (InterruptedException e) {
-                throw new IllegalArgumentException("");
-            }
-        }
     }
 
     /**
@@ -126,6 +108,33 @@ public class Jeu extends Fenetre {
         world.add(info);
 
         this.add(world);
+    }    
+    
+    /**
+     * La loop du jeu qui permet de garder un FPS (frame per seconds) constant peu importe le PC
+     */
+    public void loop() {
+        long lastLoopTime,timeLoop;
+
+        reset();
+        while (this.isDisplayable()) {
+            long now = System.nanoTime();
+            lastLoopTime = now;
+
+            if (play) {
+                update();
+            }
+            render();
+
+            try {
+                timeLoop = (lastLoopTime - System.nanoTime() + OPTIMAL_TIME) / 1000000;
+                if(timeLoop>0) {
+                    Thread.sleep(timeLoop);
+                }
+            } catch (InterruptedException e) {
+                throw new IllegalArgumentException("");
+            }
+        }
     }
 
     /**
@@ -139,6 +148,14 @@ public class Jeu extends Fenetre {
         updatePlayer(4,5,6,7,positionsPersonnage2);
     }
 
+    /**
+     * Permet de gerer l'update d'un joueur
+     * @param bot La position dans l'array du mouvement vers le bas
+     * @param top La position dans l'array du mouvement vers le haut
+     * @param left La position dans l'array du mouvement vers la gauche
+     * @param right La position dans l'array du mouvement vers la droite
+     * @param positions Les positions que l'on souhaite modifie
+     */
     private void updatePlayer(int bot,int top,int left,int right,Positions positions) {
         if (controlPlayers[bot]) {positions.moveBot();}
         if (controlPlayers[top]) {positions.moveTop();}
@@ -174,6 +191,11 @@ public class Jeu extends Fenetre {
         winPlayer(positionsPersonnage2.getPositionX(), positionsPersonnage2.getPositionY());
     }
 
+    /**
+     * Permet de gerer la victoire d'un des joueur
+     * @param xPlayer La position X du joueur
+     * @param yPlayer La position Y du joueur
+     */
     public void winPlayer(int xPlayer, int yPlayer) {
         if (positionsMonster.getPositionX() + TAILLE_X_MONSTER / 2 > xPlayer
                 && positionsMonster.getPositionX() + TAILLE_X_MONSTER / 2 < xPlayer + 100
@@ -183,6 +205,9 @@ public class Jeu extends Fenetre {
         }
     }
 
+    /**
+     * Permet de recommencer une partie en remettant a zero les diffrentes variable du jeu
+     */
     public void reset() {
         positionsPersonnage1 = new Positions(0,0,0,this.getWidth(),0,this.getHeight());
         positionsPersonnage2 = new Positions(this.getWidth() - 100,this.getHeight() - 100,0,this.getWidth(),0,this.getHeight());
@@ -196,10 +221,18 @@ public class Jeu extends Fenetre {
         win = false;
     }
 
+    /**
+     * Permet de gerer l'action lors de l'appuie sur une touche
+     * @param position La position dans l'array que l'on souhaite modifie
+     * @param value La valeur que l'on souhaite passe dans l'array
+     */
     public void action(int position, boolean value) {
         controlPlayers[position] = value;
     }
 
+    /**
+     * Permet de gerer les actions lie a l'appuie sur la touche space
+     */
     public void lauch() {
         if (!play) {
             this.play = true;
