@@ -28,6 +28,7 @@ public class Player extends Thread implements Constants {
 	public Player(String path,boolean loop) {
 		logger.info("Player.class : Creation d'un player en mode loop="+loop+" pour "+path);
 		this.path = path;
+		
 		this.loop = loop;
 		
 		try {
