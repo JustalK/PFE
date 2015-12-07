@@ -16,6 +16,10 @@ import static dvt.devint.ConstantesDevint.*;
 import static dvt.menu.ConstantesMenu.*;
 import dvt.devint.Fenetre;
 
+/**
+ * Permet de gerer le menu et la fenetre qui contient le menu
+ * @author Justal Kevin
+ */
 public class Menu extends Fenetre {
     private static final long serialVersionUID = 1L;
 
@@ -96,6 +100,10 @@ public class Menu extends Fenetre {
         }
     }
 
+    /**
+     * Permet d'ajouter du texte dans le menu
+     * @param title Le titre du jeu
+     */
     private void addLabel(String title) {
         this.title = new JLabel(title.toUpperCase(), JLabel.CENTER);
         c.weightx = c.weighty = 1.0;
@@ -103,6 +111,11 @@ public class Menu extends Fenetre {
         menuPrincipal.add(this.title, c);
     }
 
+    /**
+     * Permet d'ajouter un bouton
+     * @param title Le texte sur le bouton
+     * @param action L'action que l'on lie au bouton
+     */
     private void addMenu(String title, ActionListener action) {
         JButton button = new JButton(title.toUpperCase());
         button.addActionListener(action);
@@ -113,6 +126,9 @@ public class Menu extends Fenetre {
         listeBoutton.add(button);
     }
 
+    /**
+     * Permet de gere l'action lorsque 'lon appuie sur bas
+     */
     public void down() {
         unselectedButton(listeBoutton.get(menuSelected++ % listeBoutton.size()));
         selectedButton(listeBoutton.get(menuSelected % listeBoutton.size()));
@@ -120,6 +136,9 @@ public class Menu extends Fenetre {
         this.getSIVOX().playText("CETTE OPTION EST "+listeBoutton.get(menuSelected % listeBoutton.size()).getText(),SYNTHESE_MINIMALE);
     }
 
+    /**
+     * Permet de gerer l'action lorsque l'on appuie sur haut
+     */
     public void up() {
         unselectedButton(listeBoutton.get(menuSelected % listeBoutton.size()));
         menuSelected = menuSelected == 0 ? (listeBoutton.size() - 1)
@@ -129,6 +148,10 @@ public class Menu extends Fenetre {
         this.getSIVOX().playText("CETTE OPTION EST "+listeBoutton.get(menuSelected % listeBoutton.size()).getText(),SYNTHESE_MINIMALE);
     }
 
+    /**
+     * Permet de gerer le style lorsqu'un bouton n'est pas selectionner
+     * @param button Le bouton sur lequel on souhaite fixer le style
+     */
     private void unselectedButton(JButton button) {
         button.setFont(getFont());
         button.setBorder(new LineBorder(BORDURE_SELECTED_DEFAULT,
@@ -137,6 +160,10 @@ public class Menu extends Fenetre {
         button.setForeground(getButtonUnselectedForeground());
     }
 
+    /**
+     * Permet de gerer le style lorsqu'un bouton est selectionne
+     * @param button Le bouton sur lequel on souhaite fixer le style
+     */
     private void selectedButton(JButton button) {
         button.setFont(getFont().deriveFont(getFont().getSize() * 1.f + 20)); // Tricky,
                                                                               // tricky
@@ -149,6 +176,10 @@ public class Menu extends Fenetre {
         this.getRootPane().setDefaultButton(button);
     }
 
+    /**
+     * Permet de gerer les action lie au choix dans le menu
+     * @param choice Le choix que l'on a effectue dans le menu
+     */
     public void chooseChoice(int choice) {
         this.gameChoice = choice;
     }
