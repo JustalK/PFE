@@ -31,6 +31,10 @@ public class Menu extends Fenetre {
     private JLabel title;
     private int gameChoice;
 
+    /**
+     * Le constructeur du menu<br />
+     * Permet de construire un Menu avec tout les composants
+     */
     public Menu() {
         listeBoutton = new ArrayList<JButton>();
         this.getSIVOX().playWav(ACCUEIL_SON);
@@ -56,6 +60,9 @@ public class Menu extends Fenetre {
         this.setVisible(true);
     }
 
+    /**
+     * La loop du menu
+     */
     public void loop() {
         while (this.isDisplayable()) {
             render();
@@ -86,6 +93,9 @@ public class Menu extends Fenetre {
         }
     }
 
+    /**
+     * Permet de gerer le rendu du menu
+     */
     private void render() {
         menuPrincipal.setBackground(getBackground());
         this.title.setFont(getFont());
