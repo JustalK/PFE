@@ -51,6 +51,7 @@ public class Menu extends Fenetre {
         addLabel(TITLE_GAME);
         addMenu("Jeu 1", new Action(this, 1));
         addMenu("Jeu 2", new Action(this, 2));
+        addMenu("Jeu 3", new Action(this, 3));
         addMenu("Option", new Action(this, -1));
         addMenu("Quitter", new Action(this, -2));
         addControl("DOWN", new DownAction(this));
@@ -77,19 +78,24 @@ public class Menu extends Fenetre {
                 this.setVisible(false);
                 this.getSIVOX().stop();
                 new dvt.jeumultijoueur.Jeu().loop();
-                gameChoice = 0;
                 this.setVisible(true);
                 break;
             case 2:
                 this.setVisible(false);
                 this.getSIVOX().stop();
                 new dvt.jeuchronometre.Jeu().loop();
-                gameChoice = 0;
                 this.setVisible(true);
                 break;
+            case 3:
+                this.setVisible(false);
+                this.getSIVOX().stop();
+                new dvt.jeuquizz.Jeu().loop();
+                this.setVisible(true);
+                break;                
             default:
                 break;
             }
+            gameChoice = 0;
         }
     }
 

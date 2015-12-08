@@ -4,16 +4,13 @@ import java.awt.event.KeyEvent;
 
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-
-import dvt.devint.Fenetre;
-import static dvt.jeuchronometre.ConstantesJeu.OPTIMAL_TIME;
 import static dvt.jeumultijoueur.ConstantesJeu.*;
 
 /**
  * Permet de gerer le jeu et la fenetre qui contient le jeu
  * @author Justal Kevin
  */
-public class Jeu extends Fenetre {
+public class Jeu extends dvt.devint.Jeu {
     private static final long serialVersionUID = 1L;
     private JPanel personnage1;
     private JPanel personnage2;
@@ -32,15 +29,6 @@ public class Jeu extends Fenetre {
     // Pour les SI3 : J'ai utilise cela parce que cela me permet de faire un
     // "key binding" unique pour les 2 joueurs
     private boolean[] controlPlayers = { false, false, false, false, false,false, false, false };
-
-    /**
-     * Permet de creer et initialiser la fenetre de jeu
-     */
-    public Jeu() {
-        init();
-        this.setVisible(true);
-        this.setFocusable(true);
-    }
 
     /**
      * Methode qui ajoute tous les composants necessaires dans le layer
@@ -109,33 +97,6 @@ public class Jeu extends Fenetre {
 
         this.add(world);
     }    
-    
-    /**
-     * La loop du jeu qui permet de garder un FPS (frame per seconds) constant peu importe le PC
-     */
-    public void loop() {
-        long lastLoopTime,timeLoop;
-
-        reset();
-        while (this.isDisplayable()) {
-            long now = System.nanoTime();
-            lastLoopTime = now;
-
-            if (play) {
-                update();
-            }
-            render();
-
-            try {
-                timeLoop = (lastLoopTime - System.nanoTime() + OPTIMAL_TIME) / 1000000;
-                if(timeLoop>0) {
-                    Thread.sleep(timeLoop);
-                }
-            } catch (InterruptedException e) {
-                throw new IllegalArgumentException("");
-            }
-        }
-    }
 
     /**
      * Methode qui gere l'ensemble des updates de deplacement des joueurs Pour
@@ -144,8 +105,10 @@ public class Jeu extends Fenetre {
      * pour checker si la valeur depasse ou non les limites de l'ecran
      */
     public void update() {
-        updatePlayer(0,1,2,3,positionsPersonnage1);
-        updatePlayer(4,5,6,7,positionsPersonnage2);
+        if (play) {
+            updatePlayer(0,1,2,3,positionsPersonnage1);
+            updatePlayer(4,5,6,7,positionsPersonnage2);
+        }
     }
 
     /**
