@@ -1,4 +1,4 @@
-package dvt.jeumultijoueur;
+package dvt.jeuquizz;
 
 import java.awt.event.ActionEvent;
 
@@ -10,8 +10,7 @@ import javax.swing.AbstractAction;
  */
 public class Action extends AbstractAction {
     private static final long serialVersionUID = 1L;
-    private transient JeuMulti jeu1;
-    private int position;
+    private transient JeuQuizz jeu;
     private boolean value;
 
     /**
@@ -20,15 +19,18 @@ public class Action extends AbstractAction {
      * @param position La position dans l'array que l'on fera le changement
      * @param value La valeur que l'on souhaite modifie
      */    
-    public Action(JeuMulti jeu1, int position, boolean value) {
-        this.jeu1 = jeu1;
-        this.position = position;
+    public Action(JeuQuizz jeu, boolean value) {
+        this.jeu = jeu;
         this.value = value;
     }
 
     @Override
     public void actionPerformed(ActionEvent arg0) {
-        this.jeu1.action(position, value);
+        if(value) {
+            this.jeu.right();
+        } else {
+            this.jeu.left();
+        }
     }
 
 }

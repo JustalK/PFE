@@ -10,13 +10,13 @@ import javax.swing.AbstractAction;
  */
 public class Restart extends AbstractAction {
     private static final long serialVersionUID = 1L;
-    private transient Jeu jeu2;
+    private transient JeuChrono jeu2;
 
     /**
      * L'objet qui sera cree lors de l'appuie sur une touche
      * @param jeu2 La fentre ou se trouve le lien entre l'action et la touche
      */
-    public Restart(Jeu jeu2) {
+    public Restart(JeuChrono jeu2) {
         this.jeu2 = jeu2;
     }
 

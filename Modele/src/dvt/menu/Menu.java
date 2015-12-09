@@ -10,9 +10,9 @@ import java.util.List;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.border.LineBorder;
 
 import static dvt.devint.ConstantesDevint.*;
+import static dvt.jeuchronometre.ConstantesJeu.OPTIMAL_TIME;
 import static dvt.menu.ConstantesMenu.*;
 import dvt.devint.Fenetre;
 
@@ -28,7 +28,7 @@ public class Menu extends Fenetre {
     private int countMenu, menuSelected;
 
     private List<JButton> listeBoutton;
-    private JLabel title;
+    private JLabel titleJeu;
     private int gameChoice;
 
     /**
@@ -65,7 +65,11 @@ public class Menu extends Fenetre {
      * La loop du menu
      */
     public void loop() {
+        long lastLoopTime,timeLoop;
+
         while (this.isDisplayable()) {
+            long now = System.nanoTime();
+            lastLoopTime = now;
             render();
             switch (gameChoice) {
             case -2:
@@ -77,25 +81,34 @@ public class Menu extends Fenetre {
             case 1:
                 this.setVisible(false);
                 this.getSIVOX().stop();
-                new dvt.jeumultijoueur.Jeu().loop();
+                new dvt.jeumultijoueur.JeuMulti().loop();
                 this.setVisible(true);
                 break;
             case 2:
                 this.setVisible(false);
                 this.getSIVOX().stop();
-                new dvt.jeuchronometre.Jeu().loop();
+                new dvt.jeuchronometre.JeuChrono().loop();
                 this.setVisible(true);
                 break;
             case 3:
                 this.setVisible(false);
                 this.getSIVOX().stop();
-                new dvt.jeuquizz.Jeu().loop();
+                new dvt.jeuquizz.JeuQuizz().loop();
                 this.setVisible(true);
                 break;                
             default:
                 break;
             }
             gameChoice = 0;
+            
+            try {
+                timeLoop = (lastLoopTime - System.nanoTime() + OPTIMAL_TIME) / 1000000;
+                if(timeLoop>0) {
+                    Thread.sleep(timeLoop);
+                }
+            } catch (InterruptedException e) {
+                throw new IllegalArgumentException("");
+            }
         }
     }
 
@@ -104,8 +117,8 @@ public class Menu extends Fenetre {
      */
     private void render() {
         menuPrincipal.setBackground(getBackground());
-        this.title.setFont(getFont());
-        this.title.setForeground(getForeground());
+        this.titleJeu.setFont(getFont());
+        this.titleJeu.setForeground(getForeground());
 
         for (int i = 0; i < listeBoutton.size(); i++) {
             if (i == menuSelected % listeBoutton.size()) {
@@ -121,10 +134,10 @@ public class Menu extends Fenetre {
      * @param title Le titre du jeu
      */
     private void addLabel(String title) {
-        this.title = new JLabel(title.toUpperCase(), JLabel.CENTER);
+        this.titleJeu = new JLabel(title.toUpperCase(), JLabel.CENTER);
         c.weightx = c.weighty = 1.0;
         c.gridy = countMenu++;
-        menuPrincipal.add(this.title, c);
+        menuPrincipal.add(this.titleJeu, c);
     }
 
     /**
@@ -162,34 +175,6 @@ public class Menu extends Fenetre {
         selectedButton(listeBoutton.get(menuSelected % listeBoutton.size()));
         this.getSIVOX().playText(listeBoutton.get(menuSelected % listeBoutton.size()).getText(),SYNTHESE_MOYENNE);
         this.getSIVOX().playText("CETTE OPTION EST "+listeBoutton.get(menuSelected % listeBoutton.size()).getText(),SYNTHESE_MINIMALE);
-    }
-
-    /**
-     * Permet de gerer le style lorsqu'un bouton n'est pas selectionner
-     * @param button Le bouton sur lequel on souhaite fixer le style
-     */
-    private void unselectedButton(JButton button) {
-        button.setFont(getFont());
-        button.setBorder(new LineBorder(BORDURE_SELECTED_DEFAULT,
-                BORDURE_SIZE_UNSELECTED_DEFAULT));
-        button.setBackground(getButtonUnselectedBackground());
-        button.setForeground(getButtonUnselectedForeground());
-    }
-
-    /**
-     * Permet de gerer le style lorsqu'un bouton est selectionne
-     * @param button Le bouton sur lequel on souhaite fixer le style
-     */
-    private void selectedButton(JButton button) {
-        button.setFont(getFont().deriveFont(getFont().getSize() * 1.f + 20)); // Tricky,
-                                                                              // tricky
-                                                                              // Hehe
-                                                                              // !
-        button.setBorder(new LineBorder(BORDURE_UNSELECTED_DEFAULT,
-                BORDURE_SIZE_SELECTED_DEFAULT));
-        button.setBackground(getButtonSelectedBackground());
-        button.setForeground(getButtonSelectedForeground());
-        this.getRootPane().setDefaultButton(button);
     }
 
     /**

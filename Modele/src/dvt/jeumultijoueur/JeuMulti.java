@@ -4,19 +4,20 @@ import java.awt.event.KeyEvent;
 
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+
 import static dvt.jeumultijoueur.ConstantesJeu.*;
 
 /**
  * Permet de gerer le jeu et la fenetre qui contient le jeu
  * @author Justal Kevin
  */
-public class Jeu extends dvt.devint.Jeu {
+public class JeuMulti extends dvt.devint.Jeu {
     private static final long serialVersionUID = 1L;
     private JPanel personnage1;
     private JPanel personnage2;
     private JPanel monster;
     private JPanel world;
-    private Positions positionsPersonnage1, positionsPersonnage2, positionsMonster;
+    private transient Positions positionsPersonnage1, positionsPersonnage2, positionsMonster;
     private boolean play;
     private boolean win;
 
@@ -49,6 +50,7 @@ public class Jeu extends dvt.devint.Jeu {
      * addControlUp permet de passer "false" une variable de deplacement lorsque
      * l'on relache une touche<br />
      */
+    @Override
     public void init() {
         world = new JPanel();
         world.setLayout(null);
@@ -104,6 +106,7 @@ public class Jeu extends dvt.devint.Jeu {
      * de 5 la position x ou y du personnage. J'utilise les operateurs ternaire
      * pour checker si la valeur depasse ou non les limites de l'ecran
      */
+    @Override
     public void update() {
         if (play) {
             updatePlayer(0,1,2,3,positionsPersonnage1);
@@ -131,6 +134,7 @@ public class Jeu extends dvt.devint.Jeu {
      * effectue les changements graphiques et verifie que le joueur a gagne ou
      * pas
      */
+    @Override
     public void render() {
         if (win) {
             info.setText(WIN);
@@ -171,6 +175,7 @@ public class Jeu extends dvt.devint.Jeu {
     /**
      * Permet de recommencer une partie en remettant a zero les diffrentes variable du jeu
      */
+    @Override
     public void reset() {
         positionsPersonnage1 = new Positions(0,0,0,this.getWidth(),0,this.getHeight());
         positionsPersonnage2 = new Positions(this.getWidth() - 100,this.getHeight() - 100,0,this.getWidth(),0,this.getHeight());

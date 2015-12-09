@@ -1,4 +1,5 @@
-package dvt.jeumultijoueur;
+package dvt.jeuquizz;
+
 
 import java.awt.event.ActionEvent;
 
@@ -8,11 +9,9 @@ import javax.swing.AbstractAction;
  * Permet de gerer l'action lors de l'appuie sur certaines touches
  * @author Justal Kevin
  */
-public class Action extends AbstractAction {
+public class EnterAction extends AbstractAction {
     private static final long serialVersionUID = 1L;
-    private transient JeuMulti jeu1;
-    private int position;
-    private boolean value;
+    private transient JeuQuizz jeu;
 
     /**
      * L'objet qui sera cree lors de l'appuie sur une touche
@@ -20,15 +19,13 @@ public class Action extends AbstractAction {
      * @param position La position dans l'array que l'on fera le changement
      * @param value La valeur que l'on souhaite modifie
      */    
-    public Action(JeuMulti jeu1, int position, boolean value) {
-        this.jeu1 = jeu1;
-        this.position = position;
-        this.value = value;
+    public EnterAction(JeuQuizz jeu) {
+        this.jeu = jeu;
     }
 
     @Override
     public void actionPerformed(ActionEvent arg0) {
-        this.jeu1.action(position, value);
+           this.jeu.valid();
     }
 
 }

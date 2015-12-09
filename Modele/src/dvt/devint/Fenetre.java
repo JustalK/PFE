@@ -4,11 +4,17 @@ import java.awt.Color;
 import java.awt.Font;
 
 import javax.swing.Action;
+import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.KeyStroke;
+import javax.swing.border.LineBorder;
 
 import t2s.SIVOXDevint;
 import static dvt.devint.ConstantesDevint.*;
+import static dvt.menu.ConstantesMenu.BORDURE_SELECTED_DEFAULT;
+import static dvt.menu.ConstantesMenu.BORDURE_SIZE_SELECTED_DEFAULT;
+import static dvt.menu.ConstantesMenu.BORDURE_SIZE_UNSELECTED_DEFAULT;
+import static dvt.menu.ConstantesMenu.BORDURE_UNSELECTED_DEFAULT;
 
 /**
  * Permet de fixer l'ensemble des des methodes pour toutes les fenetres cree.
@@ -200,5 +206,33 @@ public abstract class Fenetre extends JFrame {
         buttonUnselectedBackground = BUTTON_BACKGROUND_UNSELECTED_DEFAULT[colorChoice % BACKGROUND_DEFAULT.length];
         buttonSelectedForeground = BUTTON_FOREGROUND_SELECTED_DEFAULT[colorChoice % BACKGROUND_DEFAULT.length];
         buttonUnselectedForeground = BUTTON_FOREGROUND_UNSELECTED_DEFAULT[colorChoice % BACKGROUND_DEFAULT.length];
+    }
+    
+    /**
+     * Permet de gerer le style lorsqu'un bouton n'est pas selectionner
+     * @param button Le bouton sur lequel on souhaite fixer le style
+     */
+    public void unselectedButton(JButton button) {
+        button.setFont(getFont());
+        button.setBorder(new LineBorder(BORDURE_SELECTED_DEFAULT,
+                BORDURE_SIZE_UNSELECTED_DEFAULT));
+        button.setBackground(getButtonUnselectedBackground());
+        button.setForeground(getButtonUnselectedForeground());
+    }
+
+    /**
+     * Permet de gerer le style lorsqu'un bouton est selectionne
+     * @param button Le bouton sur lequel on souhaite fixer le style
+     */
+    public void selectedButton(JButton button) {
+        button.setFont(getFont().deriveFont(getFont().getSize() * 1.f + 20)); // Tricky,
+                                                                              // tricky
+                                                                              // Hehe
+                                                                              // !
+        button.setBorder(new LineBorder(BORDURE_UNSELECTED_DEFAULT,
+                BORDURE_SIZE_SELECTED_DEFAULT));
+        button.setBackground(getButtonSelectedBackground());
+        button.setForeground(getButtonSelectedForeground());
+        this.getRootPane().setDefaultButton(button);
     }
 }

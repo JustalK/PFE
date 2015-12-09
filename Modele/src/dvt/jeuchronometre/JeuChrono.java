@@ -12,9 +12,9 @@ import dvt.jeuchronometre.Action;
  * Permet de gerer le jeu et la fenetre qui contient le jeu
  * @author Justal Kevin
  */
-public class Jeu extends dvt.devint.Jeu {
+public class JeuChrono extends dvt.devint.Jeu {
     private static final long serialVersionUID = 1L;
-    private Chronometer ch;
+    private transient Chronometer ch;
     private JPanel world;
     private JLabel info;
     private int count;
@@ -24,6 +24,7 @@ public class Jeu extends dvt.devint.Jeu {
     /**
      * L'initalisation du jeu
      */
+    @Override
     public void init() {
         world = new JPanel();
         world.setBackground(getForeground());
@@ -44,6 +45,7 @@ public class Jeu extends dvt.devint.Jeu {
     /**
      * Permet de reset le jeu afin de recommencer une partie
      */
+    @Override
     public void reset() {
         count = 0;
         ch = new Chronometer();
@@ -54,6 +56,7 @@ public class Jeu extends dvt.devint.Jeu {
     /**
      * Permet de faire l'update du jeu
      */
+    @Override
     public void update() {
         if (count > 0) {
             ch.stop();
@@ -73,6 +76,7 @@ public class Jeu extends dvt.devint.Jeu {
     /**
      * Permet de faire le rendue du jeu suivant les modifications faites dans l'update
      */
+    @Override
     public void render() {
         info.setBounds(0, 0, this.getWidth(), this.getHeight());
         world.setBackground(getBackground());

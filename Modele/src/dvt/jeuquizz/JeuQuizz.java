@@ -1,7 +1,5 @@
 package dvt.jeuquizz;
 
-import static dvt.menu.ConstantesMenu.BORDURE_SELECTED_DEFAULT;
-import static dvt.menu.ConstantesMenu.BORDURE_SIZE_UNSELECTED_DEFAULT;
 import static dvt.menu.ConstantesMenu.MARGE_LEFT_RIGHT;
 import static dvt.menu.ConstantesMenu.MARGE_TOP_BOT;
 
@@ -12,9 +10,10 @@ import java.awt.Insets;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.border.LineBorder;
 
-public class Jeu extends dvt.devint.Jeu {
+import dvt.jeuquizz.Action;
+
+public class JeuQuizz extends dvt.devint.Jeu {
     private static final long serialVersionUID = 1L;
     private JPanel world;
     private GridBagConstraints c;
@@ -22,11 +21,19 @@ public class Jeu extends dvt.devint.Jeu {
     private JButton button1,button2,button3;
     private static final String[] QUESTIONS = {"Combien font 4*4 ?", "Combien font 30-5 ?", "Combien font 5+5 ?" };
     private static final int[] ANSWERS = {16,25,10};
+    private int random;
+    private int choix;
+    private boolean valid;
     
     @Override
     public void init() {
         world = new JPanel();
         c = new GridBagConstraints();
+        
+
+        addControl("LEFT", new Action(this,false));
+        addControl("RIGHT", new Action(this,true));
+        addControl("ENTER", new EnterAction(this));
         
         GridBagLayout layoutMenu = new GridBagLayout();
         world.setLayout(layoutMenu);
@@ -68,36 +75,72 @@ public class Jeu extends dvt.devint.Jeu {
     
     @Override
     public void update() {
-        // TODO Auto-generated method stub
-        
+        /** Dont need any update **/
     }
 
     @Override
     public void render() {
-        question.setFont(getFont());
-        button1.setFont(getFont());
-        button1.setBorder(new LineBorder(BORDURE_SELECTED_DEFAULT,BORDURE_SIZE_UNSELECTED_DEFAULT));
-        button1.setBackground(getButtonUnselectedBackground());
-        button1.setForeground(getButtonUnselectedForeground());
-        button2.setFont(getFont());
-        button2.setBorder(new LineBorder(BORDURE_SELECTED_DEFAULT,BORDURE_SIZE_UNSELECTED_DEFAULT));
-        button2.setBackground(getButtonUnselectedBackground());
-        button2.setForeground(getButtonUnselectedForeground());
-        button3.setFont(getFont());
-        button3.setBorder(new LineBorder(BORDURE_SELECTED_DEFAULT,BORDURE_SIZE_UNSELECTED_DEFAULT));
-        button3.setBackground(getButtonUnselectedBackground());
-        button3.setForeground(getButtonUnselectedForeground());
-        world.setBackground(getBackground());
+        try {
+            if(valid && choix == random) {
+                question.setText("BONNE REPONSE !");
+                Thread.sleep(1000);
+                reset();
+            } else if(valid) {
+                question.setText("MAUVAISE REPONSE !");
+                Thread.sleep(1000);
+                reset();
+            } else {
+                question.setText(QUESTIONS[random]);
+            }
+            question.setFont(getFont());
+            world.setBackground(getBackground());            
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
         
     }
-
+    
+    public void left() {
+        if(choix == 1) {
+            unselectedButton(button2);
+            choix--;
+            selectedButton(button1);
+        } else if(choix == 2) {
+            unselectedButton(button3);
+            choix--;
+            selectedButton(button2);
+        }        
+    }
+    
+    public void right() {
+        if(choix == 0) {
+            unselectedButton(button1);
+            choix++;
+            selectedButton(button2);
+        } else if(choix == 1) {
+            unselectedButton(button2);
+            choix++;
+            selectedButton(button3);
+        }
+    }
+    
     @Override
     public void reset() {
-       int random = (int)(Math.random() * QUESTIONS.length);
+       random = (int)(Math.random() * QUESTIONS.length);
        question.setText(QUESTIONS[random]);
-       button1.setText(String.valueOf(ANSWERS[random]));
-       button2.setText(String.valueOf(ANSWERS[(random+1) % ANSWERS.length]));
-       button3.setText(String.valueOf(ANSWERS[(random+2) % ANSWERS.length]));
+       button1.setText(String.valueOf(ANSWERS[0]));
+       button2.setText(String.valueOf(ANSWERS[1]));
+       button3.setText(String.valueOf(ANSWERS[2]));
+       choix = 0;
+       selectedButton(button1);
+       unselectedButton(button2);
+       unselectedButton(button3);
+       valid = false;
+    }
+
+    public void valid() {
+        valid = true;
     }
 
 }

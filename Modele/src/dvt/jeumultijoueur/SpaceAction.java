@@ -10,13 +10,13 @@ import javax.swing.AbstractAction;
  */
 public class SpaceAction extends AbstractAction {
     private static final long serialVersionUID = 1L;
-    private transient Jeu jeu1;
+    private transient JeuMulti jeu1;
 
     /**
      * L'objet qui sera cree lors de l'appuie sur la touche Space
      * @param jeu2 La fentre ou se trouve le lien entre l'action et la touche space
      */
-    public SpaceAction(Jeu jeu1) {
+    public SpaceAction(JeuMulti jeu1) {
         this.jeu1 = jeu1;
     }
 
