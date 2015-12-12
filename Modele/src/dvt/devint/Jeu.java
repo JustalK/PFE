@@ -10,8 +10,9 @@ public abstract class Jeu extends Fenetre {
      */
     public Jeu() {
         init();
+        this.pack(); 
+        this.requestFocusInWindow();
         this.setVisible(true);
-        this.setFocusable(true);
     }
     
     /**

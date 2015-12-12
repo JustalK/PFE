@@ -92,12 +92,21 @@ public final class SIVOXDevint implements Constants {
 		logger.info("Creation d'une SIVOXDevint [ prosodie : "+this.prosodie+" | Voix : "+voix+" | Etat : "+this.on+" ]");
 	}
 	
+	/**
+	 * Permet de faire lire une phrase par la synthese et de definir le niveau de cette phrase
+	 * @param text Le texte que l'on souhaite faire lire
+	 * @param syntheseNiveau Le niveau de la synthese
+	 */
 	public final void playText(final String text,int syntheseNiveau) {
 		if(this.syntheseNiveau<=syntheseNiveau) {
 			playText(text);
 		}
 	}
 	
+	/**
+	 * Permet de definir le niveau de la synthese
+	 * @param syntheseNiveau Le niveau de la synthese
+	 */
 	public final void setSyntheseNiveau(int syntheseNiveau) {
 		this.syntheseNiveau = syntheseNiveau; 
 	}
