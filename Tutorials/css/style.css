@@ -1,0 +1,8 @@
+@CHARSET "ISO-8859-1";
+
+html,body {
+	/* Full page */
+	background: #000000;
+	height: 100%;
+	margin: 0;
+}
