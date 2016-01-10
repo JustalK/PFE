@@ -52,8 +52,8 @@ public class Menu extends Fenetre {
         addMenu("Jeu 1", new Action(this, 1));
         addMenu("Jeu 2", new Action(this, 2));
         addMenu("Jeu 3", new Action(this, 3));
-        addMenu("Option", new Action(this, -1));
-        addMenu("Quitter", new Action(this, -2));
+        addMenu("Option", new Action(this, 4));
+        addMenu("Quitter", new Action(this, 5));
         addControl("DOWN", new DownAction(this));
         addControl("UP", new UpAction(this));
 
@@ -72,10 +72,10 @@ public class Menu extends Fenetre {
             lastLoopTime = now;
             render();
             switch (gameChoice) {
-            case -2:
+            case 5:
                 this.dispose();
                 break;
-            case -1:
+            case 4:
                 // TODO Option
                 break;
             case 1:
@@ -99,6 +99,7 @@ public class Menu extends Fenetre {
             default:
                 break;
             }
+            
             gameChoice = 0;
             
             try {
@@ -178,10 +179,28 @@ public class Menu extends Fenetre {
     }
 
     /**
+     * Permet de gerer l'action lorsque l'on appuie sur haut
+     */
+    public void actionChoice(int choice) {
+        menuSelected = choice;
+        unselectedButton(listeBoutton.get(menuSelected % listeBoutton.size()));
+        menuSelected = menuSelected == 0 ? (listeBoutton.size() - 1)
+                : menuSelected - 1;
+        selectedButton(listeBoutton.get(menuSelected % listeBoutton.size()));
+        this.getSIVOX().playText(listeBoutton.get(menuSelected % listeBoutton.size()).getText(),SYNTHESE_MOYENNE);
+        this.getSIVOX().playText("CETTE OPTION EST "+listeBoutton.get(menuSelected % listeBoutton.size()).getText(),SYNTHESE_MINIMALE);
+
+        for (int i = 0; i < listeBoutton.size(); i++) {
+            listeBoutton.get(i).setFocusable(false);
+        }
+    }    
+    
+    /**
      * Permet de gerer les action lie au choix dans le menu
      * @param choice Le choix que l'on a effectue dans le menu
      */
     public void chooseChoice(int choice) {
+        actionChoice(choice);
         this.gameChoice = choice;
     }
 

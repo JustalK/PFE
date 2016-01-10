@@ -95,8 +95,7 @@ public class JeuQuizz extends dvt.devint.Jeu {
             question.setFont(getFont());
             world.setBackground(getBackground());            
         } catch (InterruptedException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
+            throw new IllegalArgumentException(e);
         }
         
     }

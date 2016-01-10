@@ -60,7 +60,7 @@ public class JeuChrono extends dvt.devint.Jeu {
     public void update() {
         if (count > 0) {
             ch.stop();
-            int seconds = (int) ch.getSeconds();
+            int seconds = ch.getSeconds();
             if (seconds < 10) {
                 info.setText("<html><center>" + ch.getChrono() + "<br /><br />"
                         + count + "</center></html>");
