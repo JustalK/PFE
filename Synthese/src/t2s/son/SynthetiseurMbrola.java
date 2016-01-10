@@ -151,9 +151,11 @@ public class SynthetiseurMbrola {
 		}
 		// chaine de caractere contenant la commande mbrola
 		//TODO Changer cela pour que le mbrola suiva la config, actuellement il faut l'installer a cote de java
-		this.exe = "C:/Users/Latsuj/Desktop/donneesMbrola/Mbrola/WindowsMbrolaExe/mbrola.exe";
-		voix = "C:/Users/Latsuj/Desktop/donneesMbrola/Mbrola/fr2/fr2";
-		final String cmd = this.exe + " -t " + RAPIDITE + " " + " -f " + FR + " " + " -v " + VOLUME + " " + voix + " " + this.pathFichier + this.fichier + ".pho " + this.pathFichier + this.fichier
+		//this.exe = "C:/Users/Latsuj/Desktop/donneesMbrola/Mbrola/WindowsMbrolaExe/mbrola.exe";
+		//voix = "C:/Users/Latsuj/Desktop/donneesMbrola/Mbrola/fr2/fr2";
+		//this.exe = "C:/Users/Latsuj/Desktop/donneesMbrola/Mbrola/WindowsMbrolaExe/mbrola.exe";
+		//voix = "C:/Users/Latsuj/Desktop/donneesMbrola/Mbrola/fr2/fr2";
+		final String cmd = exe + " -t " + RAPIDITE + " " + " -f " + FR + " " + " -v " + VOLUME + " " + voix + " " + this.pathFichier + this.fichier + ".pho " + this.pathFichier + this.fichier
 		        + ".wav";
 		
 		try {
