@@ -142,4 +142,19 @@ public class JeuQuizz extends dvt.devint.Jeu {
         valid = true;
     }
 
+    /**
+     * ###################################################################################################"
+     */
+    
+    public boolean getValid() {
+        return valid;
+    }
+    
+    public int getRandom() {
+        return random;
+    }
+    
+    public int getChoice() {
+        return choix;
+    }
 }

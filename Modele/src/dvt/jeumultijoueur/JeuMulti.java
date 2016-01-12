@@ -209,4 +209,20 @@ public class JeuMulti extends dvt.devint.Jeu {
             reset();
         }
     }
+    
+    /**
+     * ###################################################################################################"
+     */
+    
+    public boolean[] getControlPLayer() {
+        return controlPlayers;
+    }
+    
+    public boolean getPlay() {
+        return play;
+    }
+    
+    public boolean getWin() {
+        return win;
+    }
 }

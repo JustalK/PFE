@@ -103,4 +103,16 @@ public class JeuChrono extends dvt.devint.Jeu {
     public void restart() {
         reset();
     }
+    
+    /**
+     * ###################################################################################################"
+     */
+    
+    public int getCount() {
+        return count;
+    }
+    
+    public boolean getPressed() {
+        return pressed;
+    }
 }

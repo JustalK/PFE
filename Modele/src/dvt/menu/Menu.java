@@ -52,7 +52,7 @@ public class Menu extends Fenetre {
         addMenu("Jeu 1", new Action(this, 1));
         addMenu("Jeu 2", new Action(this, 2));
         addMenu("Jeu 3", new Action(this, 3));
-        addMenu("Option", new Action(this, 4));
+        addMenu("Score Jeu 2", new Action(this, 4));
         addMenu("Quitter", new Action(this, 5));
         addControl("DOWN", new DownAction(this));
         addControl("UP", new UpAction(this));
@@ -76,7 +76,10 @@ public class Menu extends Fenetre {
                 this.dispose();
                 break;
             case 4:
-                // TODO Option
+                this.setVisible(false);
+                this.getSIVOX().stop();
+                new dvt.score.Score().loop();
+                this.setVisible(true);
                 break;
             case 1:
                 this.setVisible(false);
@@ -134,7 +137,7 @@ public class Menu extends Fenetre {
      * Permet d'ajouter du texte dans le menu
      * @param title Le titre du jeu
      */
-    private void addLabel(String title) {
+    public void addLabel(String title) {
         this.titleJeu = new JLabel(title.toUpperCase(), JLabel.CENTER);
         c.weightx = c.weighty = 1.0;
         c.gridy = countMenu++;
@@ -146,7 +149,7 @@ public class Menu extends Fenetre {
      * @param title Le texte sur le bouton
      * @param action L'action que l'on lie au bouton
      */
-    private void addMenu(String title, ActionListener action) {
+    public void addMenu(String title, ActionListener action) {
         JButton button = new JButton(title.toUpperCase());
         button.addActionListener(action);
         unselectedButton(button);
@@ -204,4 +207,31 @@ public class Menu extends Fenetre {
         this.gameChoice = choice;
     }
 
+    /**
+     * ###################################################################################################"
+     */
+    
+    public GridBagConstraints getC() {
+        return c;
+    }
+    
+    public JPanel getMenuPrincipal() {
+        return menuPrincipal;
+    }
+    
+    public int getCountMenu() {
+        return countMenu;
+    }
+    
+    public int getMenuSelected() {
+        return menuSelected;
+    }
+    
+    public List<JButton> getListeBoutton() {
+        return listeBoutton;
+    }
+    
+    public JLabel getTitleJeu() {
+        return titleJeu;
+    }
 }
