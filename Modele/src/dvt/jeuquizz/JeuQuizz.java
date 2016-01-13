@@ -1,5 +1,6 @@
 package dvt.jeuquizz;
 
+import static dvt.devint.ConstantesDevint.SYNTHESE_MOYENNE;
 import static dvt.menu.ConstantesMenu.MARGE_LEFT_RIGHT;
 import static dvt.menu.ConstantesMenu.MARGE_TOP_BOT;
 
@@ -82,10 +83,14 @@ public class JeuQuizz extends dvt.devint.Jeu {
     public void render() {
         try {
             if(valid && choix == random) {
+                this.getSIVOX().stop();
+                this.getSIVOX().playText("BONNE REPONSE !",SYNTHESE_MOYENNE);
                 question.setText("BONNE REPONSE !");
                 Thread.sleep(1000);
                 reset();
             } else if(valid) {
+                this.getSIVOX().stop();
+                this.getSIVOX().playText("MAUVAISE REPONSE !",SYNTHESE_MOYENNE);
                 question.setText("MAUVAISE REPONSE !");
                 Thread.sleep(1000);
                 reset();
@@ -109,7 +114,9 @@ public class JeuQuizz extends dvt.devint.Jeu {
             unselectedButton(button3);
             choix--;
             selectedButton(button2);
-        }        
+        } 
+        this.getSIVOX().stop();
+        this.getSIVOX().playText(String.valueOf(ANSWERS[choix]),SYNTHESE_MOYENNE);    
     }
     
     public void right() {
@@ -122,12 +129,15 @@ public class JeuQuizz extends dvt.devint.Jeu {
             choix++;
             selectedButton(button3);
         }
+        this.getSIVOX().stop();
+        this.getSIVOX().playText(String.valueOf(ANSWERS[choix]),SYNTHESE_MOYENNE); 
     }
     
     @Override
     public void reset() {
        random = (int)(Math.random() * QUESTIONS.length);
        question.setText(QUESTIONS[random]);
+       getSIVOX().playText(QUESTIONS[random]);
        button1.setText(String.valueOf(ANSWERS[0]));
        button2.setText(String.valueOf(ANSWERS[1]));
        button3.setText(String.valueOf(ANSWERS[2]));

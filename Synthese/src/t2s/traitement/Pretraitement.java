@@ -356,6 +356,7 @@ public class Pretraitement {
 	 * @param i
 	 *            un Indice
 	 * @return renvoi le texte '_premier', '_iaime', '_premiaire' ou la chaine vide
+	 * @author Correction - Justal Kevin
 	 */
 	private String ordinal(final String s, final Indice i) {
 		final String fin = encode(s.substring(i.val()), ConfigFile.rechercher("ENCODAGE_FICHIER"), "UTF-8");
@@ -364,13 +365,15 @@ public class Pretraitement {
 				i.inc(2);
 				return "_premier";
 			}
-			if (fin.substring(0, 3).equals("i�me")) {
-				i.inc(3);
-				return "_iaime";
-			}
-			if (fin.substring(0, 3).equals("i�re")) {
-				i.inc(3);
-				return "_premiaire";
+			if (fin.length() >= 3) {
+				if (fin.substring(0, 3).equals("i�me")) {
+					i.inc(3);
+					return "_iaime";
+				}
+				if (fin.substring(0, 3).equals("i�re")) {
+					i.inc(3);
+					return "_premiaire";
+				}
 			}
 		}
 		return "";

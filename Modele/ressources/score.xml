@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<score>
+   <joueur name="Kevin">
+      <score>114</score>
+   </joueur>
+   <joueur name="Audric">
+      <score>68</score>
+   </joueur>
+   <joueur name="Alexandre">
+      <score>83</score>
+   </joueur>
+   <joueur name="Thibaut">
+      <score>133</score>
+   </joueur>
+</score>
