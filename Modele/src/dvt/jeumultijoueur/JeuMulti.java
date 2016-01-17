@@ -5,6 +5,7 @@ import java.awt.event.KeyEvent;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
+import static dvt.devint.ConstantesDevint.*;
 import static dvt.jeumultijoueur.ConstantesJeu.*;
 
 /**
@@ -94,6 +95,7 @@ public class JeuMulti extends dvt.devint.Jeu {
         world.add(monster);
 
         info = new JLabel(CONSIGNE, JLabel.CENTER);
+        this.getSIVOX().playText(CONSIGNE_WITHOUT_HTML,SYNTHESE_MAXIMALE);
         info.setFont(getFont());
         world.add(info);
 
@@ -151,6 +153,8 @@ public class JeuMulti extends dvt.devint.Jeu {
         }
         personnage1.setBackground(getForeground());
         personnage2.setBackground(getForeground());
+        info.setFont(getFont());
+        info.setForeground(getForeground());
         monster.setBackground(getForeground());
         world.setBackground(getBackground());
 

@@ -5,8 +5,10 @@ import java.awt.event.KeyEvent;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
+import static dvt.devint.ConstantesDevint.*;
 import static dvt.jeuchronometre.ConstantesJeu.*;
 import dvt.jeuchronometre.Action;
+import dvt.score.Score;
 
 /**
  * Permet de gerer le jeu et la fenetre qui contient le jeu
@@ -20,6 +22,7 @@ public class JeuChrono extends dvt.devint.Jeu {
     private int count;
     private boolean pressed;
     private int record;
+    private boolean once;
 
     /**
      * L'initalisation du jeu
@@ -50,7 +53,10 @@ public class JeuChrono extends dvt.devint.Jeu {
         count = 0;
         ch = new Chronometer();
         this.pressed = true;
+        this.once = false;
         info.setText(CONSIGNE);
+        this.getSIVOX().stop();
+        this.getSIVOX().playText(CONSIGNE_WITHOUT_HTML,SYNTHESE_MAXIMALE);
     }
 
     /**
@@ -69,6 +75,12 @@ public class JeuChrono extends dvt.devint.Jeu {
                 info.setText("<html><center>BRAVO<br />Vous avez appuye "
                         + record
                         + " fois sur espace<br /><br /><br />Pour recommencer, appuyez sur 'Entree'</center></html>");
+                if(!once) {
+                    this.getSIVOX().stop();
+                    Score.writeXML("NAME IF YOU WANT", record);
+                    this.getSIVOX().playText("Vous avez appuye "+record+" fois sur espace ! Pour rejouer, appuyez sur Entree",SYNTHESE_MAXIMALE); 
+                    this.once = !once;
+                }
             }
         }
     }
@@ -79,6 +91,8 @@ public class JeuChrono extends dvt.devint.Jeu {
     @Override
     public void render() {
         info.setBounds(0, 0, this.getWidth(), this.getHeight());
+        this.info.setFont(getFont());
+        this.info.setForeground(getForeground());
         world.setBackground(getBackground());
     }    
     
@@ -87,10 +101,17 @@ public class JeuChrono extends dvt.devint.Jeu {
      * @param value La valeur que l'action nous renvoie
      */
     public void action(boolean value) {
-        if (pressed) {
-            if (count == 0)
+        if (pressed && !once) {
+            if (count == 0) {
                 ch.start();
+                this.getSIVOX().stop();
+                this.getSIVOX().playText("La partie est lancee !",SYNTHESE_MAXIMALE);
+            }
             count++;
+            if(count % 10 == 0) {
+                this.getSIVOX().stop();
+                this.getSIVOX().playText(String.valueOf(count),SYNTHESE_MOYENNE); 
+            }
             pressed = false;
         }
         if (!value)

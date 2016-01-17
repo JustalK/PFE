@@ -1,15 +1,19 @@
-<?xml version="1.0"?>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <score>
-   <joueur name="Kevin">
+   <joueur>
+   	  <name>Kevin</name>
       <score>114</score>
    </joueur>
-   <joueur name="Audric">
-      <score>68</score>
-   </joueur>
-   <joueur name="Alexandre">
-      <score>83</score>
-   </joueur>
-   <joueur name="Thibaut">
-      <score>133</score>
-   </joueur>
+<joueur>
+    <score>90</score>
+    <name>NAME IF YOU WANT</name>
+  </joueur>
+<joueur>
+    <score>68</score>
+    <name>NAME IF YOU WANT</name>
+  </joueur>
+<joueur>
+    <score>89</score>
+    <name>NAME IF YOU WANT</name>
+  </joueur>
 </score>

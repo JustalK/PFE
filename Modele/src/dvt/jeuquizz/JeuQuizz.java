@@ -20,7 +20,7 @@ public class JeuQuizz extends dvt.devint.Jeu {
     private GridBagConstraints c;
     private JLabel question;
     private JButton button1,button2,button3;
-    private static final String[] QUESTIONS = {"Combien font 4*4 ?", "Combien font 30-5 ?", "Combien font 5+5 ?" };
+    private static final String[] QUESTIONS = {"Combien font 4 fois 4 ?", "Combien font 30-5 ?", "Combien font 5+5 ?" };
     private static final int[] ANSWERS = {16,25,10};
     private int random;
     private int choix;
@@ -98,7 +98,16 @@ public class JeuQuizz extends dvt.devint.Jeu {
                 question.setText(QUESTIONS[random]);
             }
             question.setFont(getFont());
-            world.setBackground(getBackground());            
+            question.setForeground(getForeground());
+            question.setBackground(getBackground());
+            world.setBackground(getBackground());
+            world.setForeground(getForeground());
+            button1.setForeground(getButtonSelectedForeground());
+            button1.setBackground(getButtonSelectedBackground());
+            button2.setForeground(getButtonSelectedForeground());
+            button2.setBackground(getButtonSelectedBackground());
+            button3.setForeground(getButtonSelectedForeground());
+            button3.setBackground(getButtonSelectedBackground());
         } catch (InterruptedException e) {
             throw new IllegalArgumentException(e);
         }

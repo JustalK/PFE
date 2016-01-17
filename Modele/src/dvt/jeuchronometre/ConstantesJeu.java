@@ -11,7 +11,10 @@ public final class ConstantesJeu {
     public static final String CONSIGNE = "<html>"
             + "<center>APPUYER LE PLUS DE FOIS SUR ESPACE<br />"
             + "Vous avez 10 secondes pour faire le meilleur score<br /><br />"
-            + "Le jeu commencera des que vous appuyerez sur espace</center></html>";
+            + "Le jeu commencera dès l'appuie sur espace</center></html>";
+    public static final String CONSIGNE_WITHOUT_HTML = "APPUYER LE PLUS DE FOIS SUR ESPACE."
+            + " Vous avez 10 secondes pour faire le meilleur score. "
+            + "Le jeu commencera dès l'appuie sur espace";
     public static final int TARGET_FPS = 60;
     public static final long OPTIMAL_TIME = 1000000000L / TARGET_FPS;
     

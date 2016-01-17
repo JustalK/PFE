@@ -12,6 +12,10 @@ public final class ConstantesJeu {
             + "Joueur 1 : Touches Directionnelles<br />"
             + "Joueur 2 : Touches ZQSD<br /><br />"
             + "Appuyer sur ESPACE pour commencer</center></html>";
+    public static final String CONSIGNE_WITHOUT_HTML = "ATTRAPER LE PETIT CARREE."
+            + "Joueur 1 utilisera les touches directionnelles."
+            + "Joueur 2 utilisera les touches. Z. Q. S. et D."
+            + "Appuyer sur ESPACE pour commencer.";
     public static final String WIN = "<html><center>UN JOUEUR A GAGNE<br /><br /><br /><br />"
             + "Appuyer sur espace pour recommencer</center></html>";
     public static final int TAILLE_X_MONSTER = 50;

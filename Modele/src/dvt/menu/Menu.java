@@ -79,24 +79,28 @@ public class Menu extends Fenetre {
                 this.setVisible(false);
                 this.getSIVOX().stop();
                 new dvt.score.Score().loop();
+                this.getSIVOX().stop();
                 this.setVisible(true);
                 break;
             case 1:
                 this.setVisible(false);
                 this.getSIVOX().stop();
                 new dvt.jeumultijoueur.JeuMulti().loop();
+                this.getSIVOX().stop();
                 this.setVisible(true);
                 break;
             case 2:
                 this.setVisible(false);
                 this.getSIVOX().stop();
                 new dvt.jeuchronometre.JeuChrono().loop();
+                this.getSIVOX().stop();
                 this.setVisible(true);
                 break;
             case 3:
                 this.setVisible(false);
                 this.getSIVOX().stop();
                 new dvt.jeuquizz.JeuQuizz().loop();
+                this.getSIVOX().stop();
                 this.setVisible(true);
                 break;                
             default:
@@ -165,7 +169,8 @@ public class Menu extends Fenetre {
     public void down() {
         unselectedButton(listeBoutton.get(menuSelected++ % listeBoutton.size()));
         selectedButton(listeBoutton.get(menuSelected % listeBoutton.size()));
-        this.getSIVOX().playText(listeBoutton.get(menuSelected % listeBoutton.size()).getText(),SYNTHESE_MOYENNE);
+        this.getSIVOX().stop();
+        this.getSIVOX().playText(listeBoutton.get(menuSelected % listeBoutton.size()).getText(),SYNTHESE_MAXIMALE);
         this.getSIVOX().playText("CETTE OPTION EST "+listeBoutton.get(menuSelected % listeBoutton.size()).getText(),SYNTHESE_MINIMALE);
     }
 
@@ -177,7 +182,8 @@ public class Menu extends Fenetre {
         menuSelected = menuSelected == 0 ? (listeBoutton.size() - 1)
                 : menuSelected - 1;
         selectedButton(listeBoutton.get(menuSelected % listeBoutton.size()));
-        this.getSIVOX().playText(listeBoutton.get(menuSelected % listeBoutton.size()).getText(),SYNTHESE_MOYENNE);
+        this.getSIVOX().stop();
+        this.getSIVOX().playText(listeBoutton.get(menuSelected % listeBoutton.size()).getText(),SYNTHESE_MAXIMALE);
         this.getSIVOX().playText("CETTE OPTION EST "+listeBoutton.get(menuSelected % listeBoutton.size()).getText(),SYNTHESE_MINIMALE);
     }
 

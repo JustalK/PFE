@@ -1,9 +1,13 @@
 package dvt.devint;
 
 import java.awt.Color;
+import java.awt.Cursor;
 import java.awt.Font;
+import java.awt.Point;
+import java.awt.Toolkit;
 
 import javax.swing.Action;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.KeyStroke;
@@ -32,19 +36,21 @@ public abstract class Fenetre extends JFrame {
     private java.awt.Color buttonUnselectedForeground;
     private int colorChoice;
     private int fontChoice;
+    private int mouseChoice;
     private int syntheseNiveauChoice;
 
     private static final String[] PHRASE_SYNTHESE_NIVEAU = {"Synthese maximale", "Synthese moyenne", "Synthese minimale" };
+    private static final String[] CURSOR_TYPE = {"csr5.png", "csr.png", "csr1.png", "csr2.png", "csr3.png", "csr4.png" };
     private static final Font[] FONT_DEFAULT = {
             new Font(FONT_TYPE_DEFAULT, Font.BOLD, 50), new Font(FONT_TYPE_DEFAULT, Font.BOLD, 60),
             new Font(FONT_TYPE_DEFAULT, Font.BOLD, 70), new Font(FONT_TYPE_DEFAULT, Font.BOLD, 90),
             new Font(FONT_TYPE_DEFAULT, Font.BOLD, 40) };
-    private static final java.awt.Color[] BACKGROUND_DEFAULT = {new Color(155, 215, 202), new Color(255, 0, 203),new Color(0, 255, 0) };
-    private static final java.awt.Color[] FOREGROUND_DEFAULT = { Color.BLACK,new Color(0, 0, 255), new Color(255, 255, 0) };
-    private static final java.awt.Color[] BUTTON_BACKGROUND_SELECTED_DEFAULT = {Color.BLACK, new Color(0, 0, 255), new Color(255, 0, 0) };
-    private static final java.awt.Color[] BUTTON_BACKGROUND_UNSELECTED_DEFAULT = {Color.WHITE, Color.WHITE, new Color(0, 255, 255) };
-    private static final java.awt.Color[] BUTTON_FOREGROUND_SELECTED_DEFAULT = {Color.WHITE, Color.WHITE, Color.WHITE };
-    private static final java.awt.Color[] BUTTON_FOREGROUND_UNSELECTED_DEFAULT = {Color.BLACK, Color.BLACK, Color.BLACK };
+    private static final java.awt.Color[] BACKGROUND_DEFAULT = {new Color(155, 215, 202), new Color(255, 0, 203),new Color(0, 255, 0),new Color(0, 255, 255), new Color(255-155, 255-215, 255-202) };
+    private static final java.awt.Color[] FOREGROUND_DEFAULT = { Color.BLACK,new Color(0, 0, 255), new Color(255, 255, 0), new Color(255, 0, 255), Color.WHITE };
+    private static final java.awt.Color[] BUTTON_BACKGROUND_SELECTED_DEFAULT = {Color.BLACK, new Color(0, 0, 255), new Color(255, 0, 0), new Color(255, 255, 0), Color.WHITE };
+    private static final java.awt.Color[] BUTTON_BACKGROUND_UNSELECTED_DEFAULT = {Color.WHITE, Color.WHITE, new Color(0, 255, 255), new Color(255, 0, 255), Color.BLACK };
+    private static final java.awt.Color[] BUTTON_FOREGROUND_SELECTED_DEFAULT = {Color.WHITE, Color.WHITE, Color.WHITE, Color.BLACK, Color.BLACK };
+    private static final java.awt.Color[] BUTTON_FOREGROUND_UNSELECTED_DEFAULT = {Color.BLACK, Color.BLACK, Color.BLACK, Color.WHITE, Color.WHITE };
 
     /**
      * Permet de creer l'objet fenetre avec tout les choix par defaut
@@ -53,13 +59,14 @@ public abstract class Fenetre extends JFrame {
     public Fenetre() {
         this.setUndecorated(true);
         this.setExtendedState(MAXIMIZED_BOTH);
-
+        
         // Key Binding - Mieux qu'un keyListener car pas besoin du focus :)
         addControl("F1", new F1Action(this));
         addControl("F2", new F2Action(this));
         addControl("F3", new F3Action(this));
         addControl("F4", new F4Action(this));
         addControl("F5", new F5Action(this));
+        addControl("F6", new F6Action(this));
         addControl("ESCAPE", new EchapAction(this));
 
         this.sivox = new SIVOXDevint(2);
@@ -73,6 +80,8 @@ public abstract class Fenetre extends JFrame {
         buttonUnselectedBackground = BUTTON_BACKGROUND_UNSELECTED_DEFAULT[0];
         buttonSelectedForeground = BUTTON_FOREGROUND_SELECTED_DEFAULT[0];
         buttonUnselectedForeground = BUTTON_FOREGROUND_UNSELECTED_DEFAULT[0];
+        
+        this.setCursor(Toolkit.getDefaultToolkit().createCustomCursor(new ImageIcon("../ressources/images/"+CURSOR_TYPE[0]).getImage(),new Point(16,16),"custom cursor"));
     }
 
     /**
@@ -195,6 +204,10 @@ public abstract class Fenetre extends JFrame {
         fontDefault = FONT_DEFAULT[++fontChoice % FONT_DEFAULT.length];
     }
 
+    public void changeMouse() {
+        this.setCursor(Toolkit.getDefaultToolkit().createCustomCursor(new ImageIcon("../ressources/images/"+CURSOR_TYPE[++mouseChoice % CURSOR_TYPE.length]).getImage(),new Point(0,0),"custom cursor"));
+    }
+    
     /**
      * Permet de changer la couleur par defaut de l'ensemble des elements
      * @author Justal Kevin
